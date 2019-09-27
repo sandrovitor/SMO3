@@ -1,0 +1,100 @@
+<?php $_shouldextend[1]=1; ?>
+
+<?php $this->startSection('paginaCorrente', 'Administração'); ?>
+
+<?php 
+	$mensagemDeRetorno = '';
+ if($smoMSG != false) {
+ foreach($smoMSG as $s) {
+ $mensagemDeRetorno .= '<div class="alert alert-'.$s['tipo'].'"><strong>'. $s['titulo']. '</strong> '. $s['texto'].'</div>';
+ }
+	}
+
+	if(!isset($pillDefault)) {
+ $surdoPill = 'active';
+	} else {
+ switch($pillDefault) {
+ default:
+ case 'surdo':
+ $surdoPill = 'active';
+ break;
+
+ case 'publicador':
+ $publicadorPill = 'active';
+ break;
+
+ case 'sistema':
+ $sistemaPill = 'active';
+ break;
+
+ case 'bd':
+ $bdPill = 'active';
+ break;
+ }
+	}
+ ?>
+
+<?php $this->startSection('breadcrumb'); ?>
+	<li class="breadcrumb-item active">Administração</li>
+<?php $this->stopSection(); ?>
+
+<?php $this->startSection('mensagemDeRetorno', $mensagemDeRetorno); ?>
+
+<?php $this->startSection('conteudo'); ?>
+	<div class="row">
+ <div class="col-12 mb-2">
+ <ul class="nav nav-pills nav-justified">
+ <li class="nav-item">
+ <a class="nav-link <?php echo static::e(isset($surdoPill) ? $surdoPill : ''); ?>" data-toggle="pill" href="#pill-surdos">Surdos</a>
+ </li>
+ <li class="nav-item">
+ <a class="nav-link <?php echo static::e(isset($publicadorPill) ? $publicadorPill : ''); ?>" data-toggle="pill" href="#pill-publicadores">Publicadores</a>
+ </li>
+ <li class="nav-item">
+ <a class="nav-link <?php echo static::e(isset($sistemaPill) ? $sistemaPill : ''); ?>" data-toggle="pill" href="#pill-sistema">Sistema</a>
+ </li>
+ <li class="nav-item">
+ <a class="nav-link <?php echo static::e(isset($bdPill) ? $bdPill : ''); ?>" data-toggle="pill" href="#pill-bd">Banco de Dados</a>
+ </li>
+ </ul>
+ </div>
+ <div class="col-12">
+ <div class="tab-content">
+ <div class="tab-pane container <?php echo static::e(isset($surdoPill) ? $surdoPill : 'fade'); ?>" id="pill-surdos">
+ <ul class="nav nav-pills">
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSurdoNovo')); ?>">Novo</a></li>
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSurdoVer')); ?>">Listar</a></li>
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSurdoPendencias')); ?>">Pendências</a></li>
+ <li class="nav-item"><a class="nav-link" href="#">Histórico</a></li>
+ </ul>
+ </div>
+ <div class="tab-pane container <?php echo static::e(isset($publicadorPill) ? $publicadorPill : 'fade'); ?>" id="pill-publicadores">
+ <ul class="nav nav-pills">
+ <li class="nav-item"><a class="nav-link" href="#">Novo</a></li>
+ <li class="nav-item"><a class="nav-link" href="#">Editar</a></li>
+ <li class="nav-item"><a class="nav-link" href="#">Território Pessoal</a></li>
+ <li class="nav-item"><a class="nav-link" href="#">Estudos</a></li>
+ </ul>
+ </div>
+ <div class="tab-pane container <?php echo static::e(isset($sistemaPill) ? $sistemaPill : 'fade'); ?>" id="pill-sistema">
+ <ul class="nav nav-pills">
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSisConfig')); ?>">Configurações</a></li>
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSisBairros')); ?>">Bairros</a></li>
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSisVerMapas')); ?>">Ver Mapas</a></li>
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSisEditarMapas')); ?>">Edição de Mapas</a></li>
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSisImpressao')); ?>">Impressão</a></li>
+ <li class="nav-item"><a class="nav-link" href="<?php echo static::e($router->generate('admSisLOG')); ?>">Registro de Eventos</a></li>
+ <li class="nav-item"><a class="nav-link" href="#">Relatórios</a></li>
+ </ul>
+ </div>
+ <div class="tab-pane container <?php echo static::e(isset($bdPill) ? $bdPill : 'fade'); ?>" id="pill-bd">
+ <ul class="nav nav-pills">
+ <li class="nav-item"><a class="nav-link" href="#">Backup</a></li>
+ <li class="nav-item"><a class="nav-link" href="#">Restauração</a></li>
+ </ul>
+ </div>
+ </div>
+ </div>
+	</div>
+<?php $this->stopSection(); ?>
+<?php if (@$_shouldextend[1]) { echo $this->runChild('layouts.layoutadmin'); } ?>

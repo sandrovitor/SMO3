@@ -1,0 +1,6 @@
+{
+	"require": {
+		"aura/router" : "3.*",
+		"zendframework/zend-diactoros": "1.*"
+	}
+}

@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+.bloco-surdo {
+    width: 100%;
+    max-width: 325px;
+    margin: 5px;
+    border: 1px solid rgba(0,0,0, .15);
+    background: rgba(255,255,255,1);
+    border-radius: 10px;
+}
+.bloco-surdo .bloco-header {
+    background: rgba(185, 185, 185, 0.15);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: 10px;
+    margin-bottom: 5px;
+}
+.bloco-header .bloco-more {
+    background: transparent;
+    float: right;
+    border: none;
+}
+.bloco-surdo .bloco-body {
+    padding:10px;
+}
+.bloco-surdo .bloco-footer {
+    padding:10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background: rgba(206, 206, 206, 0.164);
+    border-top:1px solid rgba(0,0,0, .15);
+}

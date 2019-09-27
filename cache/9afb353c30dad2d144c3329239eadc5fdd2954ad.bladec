@@ -1,0 +1,249 @@
+<?php $_shouldextend[1]=1; ?>
+
+<?php 
+ $mensagemDeRetorno = '';
+ if($smoMSG != false) {
+ foreach($smoMSG as $s) {
+ $mensagemDeRetorno .= '<div class="alert alert-'.$s['tipo'].'"><strong>'. $s['titulo']. '</strong> '. $s['texto'].'</div>';
+ }
+	}
+
+ 
+ //var_dump($bairros);
+ 
+
+ //var_dump($regiao);
+ 
+ ?>
+
+<?php $this->startSection('paginaCorrente', 'Administração'); ?>
+
+<?php $this->startSection('breadcrumb'); ?>
+	<li class="breadcrumb-item"><a href="<?php echo static::e($router->generate('admIndex')); ?>">Administração</a></li>
+ <li class="breadcrumb-item"><a href="<?php echo static::e($router->generate('admSistema')); ?>">Sistema</a></li>
+ <li class="breadcrumb-item active">Bairros</li>
+<?php $this->stopSection(); ?>
+
+<?php $this->startSection('mensagemDeRetorno', $mensagemDeRetorno); ?>
+
+<?php $this->startSection('conteudo'); ?>
+ <div class="row">
+ <div class="col-12 d-flex flex-wrap align-items-start">
+ <div class="bloco-surdo border-0">
+ <div class="card">
+ <div class="card-header px-3 py-2">
+ <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">NOVA REGIÃO</a>
+ </div>
+ <div class="card-body px-3 py-2 collapse ">
+ <form action="#" method="post" onsubmit="return false;">
+ <div class="form-group">
+ <label>Escolha a região:</label>
+ <select class="form-control form-control-sm" name="regiao_id" onchange="jss01(this)">
+ <option value="0"></option>
+ <?php $__currentLoopData = $regiao; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $valor): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ 
+ <?php if($valor == ''): ?>
+ <option data-nome="<?php echo static::e($valor); ?>" value="<?php echo static::e($key); ?>">Região <?php echo static::e($key); ?></option>
+ <?php else: ?>
+ <option data-nome="<?php echo static::e($valor); ?>" value="<?php echo static::e($key); ?>">Região <?php echo static::e($key); ?> - <?php echo static::e($valor); ?></option>
+ <?php endif; ?>
+
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ </select>
+ </div>
+ <div class="form-group">
+ <label>Definir nome da região:</label>
+ <input type="text" class="form-control form-control-sm" name="regiao_nome">
+ </div>
+ <button type="submit" class="btn btn-success btn-sm">Criar/Alterar região</button>
+ </form>
+ </div>
+ </div>
+ </div>
+
+ <div class="bloco-surdo border-0">
+ <div class="card">
+ <div class="card-header px-3 py-2">
+ <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">NOVO BAIRRO</a>
+ </div>
+ <div class="card-body px-3 py-2 collapse ">
+ <form action="#" method="post" onsubmit="return false;">
+ <div class="form-group">
+ <label>Nome do bairro:</label>
+ <input type="text" class="form-control form-control-sm" name="bairro_nome">
+ </div>
+ <div class="form-group">
+ <label>Escolha a região:</label>
+ <select class="form-control form-control-sm" name="regiao_id">
+ <?php $__currentLoopData = $regiao; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $valor): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ 
+ <?php if($valor != ''): ?>
+ <option data-nome="<?php echo static::e($valor); ?>" value="<?php echo static::e($key); ?>">Região <?php echo static::e($key); ?> - <?php echo static::e($valor); ?></option>
+ <?php endif; ?>
+
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ </select>
+ </div>
+ <button type="submit" class="btn btn-success btn-sm">Criar bairro</button>
+ </form>
+ </div>
+ </div>
+ </div>
+
+ <div class="bloco-surdo border-0">
+ <div class="card">
+ <div class="card-header px-3 py-2">
+ <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">EDITAR BAIRRO</a>
+ </div>
+ <div class="card-body px-3 py-2 collapse ">
+ <form action="#" method="post" onsubmit="return false;">
+ <div class="form-group">
+ <label>Escolha o bairro:</label>
+ <select class="form-control form-control-sm" name="bairro_id" onchange="jss02(this)">
+ <option value="0"></option>
+ <?php 
+ $x = '';
+ ?>
+ <?php $__currentLoopData = $bairros; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <?php if($x == ''): ?>
+ <optgroup label="Região <?php echo static::e($b->regiao_numero); ?> - <?php echo static::e($b->regiao_nome); ?>">
+ <?php 
+ $x = $b->regiao_nome;
+ ?>
+ <?php elseif($x != $b->regiao_nome): ?>
+ </optgroup>
+ <optgroup label="Região <?php echo static::e($b->regiao_numero); ?> - <?php echo static::e($b->regiao_nome); ?>">
+ <?php 
+ $x = $b->regiao_nome;
+ ?>
+ <?php endif; ?>
+
+ <option value="<?php echo static::e($b->id); ?>" data-regiao="<?php echo static::e($b->regiao_numero); ?>"><?php echo static::e($b->bairro); ?></option>
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ </optgroup>
+ </select>
+ </div>
+ <div class="form-group">
+ <label>Novo nome:</label>
+ <input type="text" class="form-control form-control-sm" name="bairro_nome">
+ </div>
+ <div class="form-group">
+ <label>Alterar região:</label>
+ <select class="form-control form-control-sm" name="região_id">
+ <?php $__currentLoopData = $regiao; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $valor): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ 
+ <?php if($valor != ''): ?>
+ <option data-nome="<?php echo static::e($valor); ?>" value="<?php echo static::e($key); ?>">Região <?php echo static::e($key); ?> - <?php echo static::e($valor); ?></option>
+ <?php endif; ?>
+
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ </select>
+ </div>
+ <button type="submit" class="btn btn-success btn-sm">Criar bairro</button>
+ </form>
+ </div>
+ </div>
+ </div>
+
+ <div class="bloco-surdo border-0">
+ <div class="card">
+ <div class="card-header px-3 py-2">
+ <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">APAGAR BAIRRO</a>
+ </div>
+ <div class="card-body px-3 py-2 collapse ">
+ <form action="#" method="post" onsubmit="return false;">
+ <div class="form-group">
+ <label>Escolha o bairro:</label>
+ <select class="form-control form-control-sm" name="bairro_id">
+ <option value="0"></option>
+ <?php 
+ $x = '';
+ ?>
+ <?php $__currentLoopData = $bairros; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <?php if($x == ''): ?>
+ <optgroup label="Região <?php echo static::e($b->regiao_numero); ?> - <?php echo static::e($b->regiao_nome); ?>">
+ <?php 
+ $x = $b->regiao_nome;
+ ?>
+ <?php elseif($x != $b->regiao_nome): ?>
+ </optgroup>
+ <optgroup label="Região <?php echo static::e($b->regiao_numero); ?> - <?php echo static::e($b->regiao_nome); ?>">
+ <?php 
+ $x = $b->regiao_nome;
+ ?>
+ <?php endif; ?>
+ 
+ <option value="<?php echo static::e($b->id); ?>" data-regiao="<?php echo static::e($b->regiao_numero); ?>"><?php echo static::e($b->bairro); ?></option>
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ </optgroup>
+ </select>
+ </div>
+ <button type="submit" class="btn btn-danger btn-sm">APAGAR bairro?</button>
+ </form>
+ </div>
+ </div>
+ </div>
+
+ <div class="bloco-surdo border-0">
+ <div class="card">
+ <div class="card-header px-3 py-2">
+ <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">LISTA DE BAIRROS</a>
+ </div>
+ <div class="card-body px-3 py-2 collapse " style="font-size: .875rem;">
+ <?php 
+ $x = '';
+ ?>
+ <?php $__currentLoopData = $bairros; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <?php if($x == ''): ?>
+ <h6 class="font-weight-bold">Região <?php echo static::e($b->regiao_numero); ?> - <?php echo static::e($b->regiao_nome); ?></h6>
+ <div class="d-flex flex-wrap">
+ <?php 
+ $x = $b->regiao_nome;
+ ?>
+ <?php elseif($x != $b->regiao_nome): ?>
+ </div>
+ <hr>
+ <h6 class="font-weight-bold">Região <?php echo static::e($b->regiao_numero); ?> - <?php echo static::e($b->regiao_nome); ?></h6>
+ <div class="d-flex flex-wrap">
+ <?php 
+ $x = $b->regiao_nome;
+ ?>
+ <?php endif; ?>
+ <div class="px-1 py-1 flex-fill w-50"><?php echo static::e($b->bairro); ?></div>
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ 
+ </div>
+ </div>
+<?php $this->stopSection(); ?>
+
+<?php $this->startSection('script'); ?>
+<script>
+ function cardBodyCollapse(x) {
+ $(x).parents('.card').children('.card-body.collapse').collapse('toggle');
+ }
+ function jss01(x) {
+ if($(x).find(':selected').val() == 0) {
+ $(x).parents('form').find('[name="regiao_nome"]').val('');
+ } else {
+ $(x).parents('form').find('[name="regiao_nome"]').val( $(x).find(':selected').data('nome') );
+ }
+ }
+ function jss02(x) {
+ if($(x).find(':selected').val() == 0) {
+ $(x).parents('form').find('[name="bairro_nome"]').val('');
+ } else {
+ $(x).parents('form').find('[name="bairro_nome"]').val( $(x).find(':selected').text() );
+ }
+ }
+
+ $(document).ready(function(){
+ 
+ });
+</script>
+<?php $this->stopSection(); ?>
+<?php if (@$_shouldextend[1]) { echo $this->runChild('layouts.layoutadmin'); } ?>

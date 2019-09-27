@@ -1,0 +1,54 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	background-color: #eaeaea;
+}
+h5 {
+	font-weight: bold;
+	margin:7px 0;
+}
+.help-icon {
+	color:gray;
+}
+.panel {
+	border-radius: 0px;
+}
+.panel-heading {
+	padding:5px 15px;
+}
+.panel-content {
+	
+}
+.pos-relative {
+	position: relative;
+	
+}
+
+.index_item {
+	box-sizing:border-box;
+	border: 10px solid #00796b;
+	background: rgb(255, 255, 255);
+	color: #00796b;
+	text-align:center;
+	width: 220px;
+	position: relative;
+	margin: 7px auto;
+	height: 220px;
+	font-size: 2.5rem;
+	font-weight:bold;
+	border-radius:50%;
+	transition-duration:0.5s;
+	cursor:pointer;
+}
+.index_item:hover {
+	border-color: #fff;
+	background: rgb(0, 121, 107);
+	color: #fff;
+}
+
+.index_caption {
+	position:absolute;
+	top: 50%;
+	left:50%;
+	transform: translate(-50%, -50%);
+}

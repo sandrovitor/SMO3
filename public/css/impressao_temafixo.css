@@ -1,0 +1,278 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@page {
+	size: A4;
+	margin:0;
+}
+@media screen {
+	body {font-size: 10px; font-family: Arial, Helvetica, serif;}
+	div.hidden-print {
+		font-family: 'Montserrat', sans-serif;
+        font-size: 16px;
+		padding: 10px;
+		margin: 0 0 10px;
+	    border: solid 2px #333;
+        border-radius: 5px;
+        box-shadow: 2px 0px 10px gray;
+        background: #F8F8F8;
+	}
+	
+	.hidden-print button {
+		margin-left: 15px;
+		padding: 7px 15px;
+		border-radius: none;
+		border: none;
+		background: rgba(39,102,135,.85);
+		color: white;
+		font-size: 14px;
+		cursor:pointer;
+	}
+	
+	.hidden-print button:hover {
+		background: rgba(39,102,135,1);
+	}
+
+    .hidden-print h5 {
+        margin:5px;
+    }
+    .hidden-print a img {
+    	max-width: 120px;
+    	max-height: 60px;
+    	border: 1px solid white;
+    	padding: 2px;
+    }
+    .hidden-print a {
+    	margin: auto 5px;
+    }
+    
+    .hidden-print a:hover img, .hidden-print a:focus img {
+    	border: 1px solid blue;
+    	padding: 2px;
+    }
+    .hidden-print a.active img {
+    	border: 2px solid green;
+    	padding: 2px;
+    }
+    
+    .hidden-print .item_mestre {
+    	margin-left: 10px;
+    }
+    .hidden-print .item_escravo1 {
+    	margin-left: 35px;
+    }
+    .hidden-print h5 a {
+    	color: #0f0f0f;
+    }
+    
+}
+@media print {
+	html, body {
+		margin: 0;
+		font-size: 10px;
+		font-family: Arial, Helvetica, serif;
+	}
+	div.page {
+		width: 210mm;
+		height:297mm;
+		padding-top: 10mm;
+		/*border-bottom: 1mm solid #000;*/
+		box-sizing: border-box;
+	}
+	div > table {
+		position:relative;
+		left:50%;
+		margin-left: -75mm;
+	}
+	div > table.qr-geral {
+		position:relative;
+		left:50%;
+		margin-left: -92mm;
+	}
+	div > table.registro {
+		position: relative;
+		left:50%;
+		margin-left: -90mm;
+	}
+	.hidden-print {
+		display:none;
+	}
+}
+
+/*
+########################################################### ESTRUTURAS DO MAPA, REGISTRO E QR-CODES
+*/
+
+
+
+
+table {
+	border: 1mm solid #000;
+	margin: 0;
+	margin-bottom: 1mm;
+	padding: 0;
+	border-collapse: collapse;
+	width: 143mm;
+	font-size: 8px;
+	text-transform:uppercase;
+}
+td, th { border: 1px solid #000; vertical-align: top; text-align: left; }
+.table-head {
+	height: 6mm;
+    font-weight: bold;
+}
+.table-head td {vertical-align: middle;}
+.table-head .col1 { width: 6.3cm; border-right: 0.1cm solid #000; text-transform: uppercase; font-size: 10.5px }
+
+.table-head .col2 { width: 6.3cm; }
+.table-head .col3 { width: 1.1cm; font-style: italic; font-size: 115%; text-transform: lowercase; }
+
+.table-body { height: 7.6cm; margin-bottom: 20px;}
+.table-body .col1 { width:5.2cm; }
+.table-body .col2 { width:1.1cm; }
+.table-body .col3 { width:6.4cm; }
+.table-body .col4 { width:1.1cm; font-weight:bold; }
+.table-body .col1, .table-body .col2, .table-body .col3, .table-body .col4 { border-top: 0.1cm solid #000; }
+
+
+table.dia_melhor {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	border-collapse: separate;
+	/*width: 100%;*/
+	font-size: 7px;
+	text-transform:uppercase;
+	display: inline;
+	vertical-align: middle;
+	max-height:5mm;
+}
+table.dia_melhor td {
+	border: 1px solid #999;
+	color: #999;
+	vertical-align:middle;
+	text-align: left;
+	padding: 0px 3px;
+}
+table.dia_melhor td.ok {
+	font-weight: bold;
+}
+
+
+
+.nome_surdo {
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 10.4px;
+}
+.faixa_et {
+	font-weight: bold;
+	font-size: 90%;
+	text-align: center;
+	vertical-align: middle;
+}
+.text-center {
+	text-align: center;
+}
+.lin1 { height:3mm; }
+.lin2 { height:3.8mm; }
+.lin3 { height:3.8mm; }
+.lin4 { height:3.8mm; }
+.lin5 { height:3.8mm; }
+
+.man,
+.tar,
+.noi,
+.def {
+	/* CUSTOMIZABLE */
+	vertical-align: middle;
+ }
+.badge-be {
+	background-color: #f8f9fa;
+	color: #dc3545;
+	font-weight:bold;
+}
+
+/*		TABELA QR */
+
+.qr-geral {border: none;}
+	table.qr-geral > tbody > tr > td { width: 50%; border: none;}
+.table-qr {height: 8 cm; width: 9.2cm; border: dotted 2px #000;}
+	.table-qr tbody tr td {padding: 0.2cm; border:none;}
+.qr-title {width: 35%; font-size: 15px; font-weight: bold; padding-bottom: 1cm;}
+.qr-cong {width: 65%; font-size: 10px; font-weight:bold; text-align: right; padding-bottom: 1cm;}
+.qr-img {text-align: center;}
+.margin-qr {margin-left: 0.5cm;}
+
+/*		FIM TABELA QR */
+
+/* 		REGISTRO */
+table.registro {
+	border: 1px dashed #000;
+	width: 180mm;
+	height: 250mm;
+}
+table.registro td {
+	height: 125mm;
+	width: 90mm;
+	padding: 1mm;
+	border: 1px dashed #000;
+}
+table.registro td div.linha {
+	min-height: 3.5mm;
+	border-bottom:1px solid #222;
+	margin: 0;
+	border-left: 0;
+	border-right: 0;
+}
+table.registro td div.bloco-top div.linha .col1 {
+	width: 65%;
+	float:left;
+	height: 3.5mm;
+	padding-left: 2px;
+	padding-top: 2px;
+}
+table.registro td div.bloco-top div.linha .col2 {
+	width: 30%;
+	float:left;
+	height: 3.5mm;
+	padding-left: 2px;
+	padding-top: 2px;
+}
+table.registro td div.bloco-main div.linha .col1 {
+	width: 65%;
+	float:left;
+	height: 5.5mm;
+	text-transform: none;
+	padding-left: 2px;
+}
+table.registro td div.bloco-main div.linha .col2 {
+	border-left: 1px solid #000;
+	width: 30%;
+	float:left;
+	height: 5.5mm;
+	text-transform: none;
+	padding-left: 2px;
+}
+table.registro td div.linha:NTH-LAST-CHILD(1){
+	border: 0;
+}
+table.registro td div.bloco-top {
+	margin-bottom: 5px;
+	max-height: 15mm;
+	border:1px solid #222;
+}
+table.registro td div.bloco-top div.linha {
+	max-height: 5mm;
+}
+table.registro td div.bloco-main {
+	border:1px solid #222;
+	height: 28mm;
+}
+table.registro td div.bloco-main div.linha {
+	height: 5.5mm;
+}
+.linha_amar {
+	/* CUSTOMIZABLE */
+	font-size:inherit;
+}
+/* 		FIM REGISTRO */

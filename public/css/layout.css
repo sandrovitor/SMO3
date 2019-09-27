@@ -1,0 +1,176 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+/*
+ * ######################################## TAGS HTML
+ */
+html {
+    scroll-behavior: smooth;
+}
+
+ /*
+ * ######################################## NAVBAR
+ */
+.navbar {
+    padding: .25rem 2rem;
+}
+.bg-smo {
+    background-color: rgba(0,121,107,1);
+    color: rgb(236, 236, 236);
+}
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(236, 236, 236, 1);
+}
+.navbar-brand {
+    padding: 0;
+}
+.navbar-brand > img {
+    max-height: 40px;
+    height:auto;
+}
+.ml-auto .dropdown-menu {
+    right:0;
+    left:auto;
+}
+.navbar.bg-smo {
+    border-bottom: solid 2px rgb(1, 63, 56);
+}
+
+/*
+ * ################################################# FOOTER
+ */
+footer.bg-smo {
+    background-color: rgb(2, 99, 87);
+    color: rgb(236, 236, 236);
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    height: 35px;
+    padding-top:8px;
+    font-weight: bold;
+    font-size:.875rem;
+    border-top: solid 1px rgb(1, 63, 56);
+}
+/*
+ * ################################################# BODY / GERAL
+ */
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin-top:55px;
+    margin-bottom: 40px;
+}
+.card {
+    margin-bottom: 1rem;
+}
+.form-group label {
+    font-weight:bold;
+}
+form.form-rounded {
+    border-radius: .3125rem;
+    padding: .625rem;
+    border: 1px solid #e2e3e4;
+    background-color: #f8f9fa;
+
+}
+
+.backTop {
+    width: 50px;
+    height: 50px;
+    font-size:15px;
+    padding:12px 5px;
+    color: #13971abd;
+    text-align: left;
+    position:fixed;
+    bottom: 45px;
+    right: -25px;
+    border-radius:50%;
+    cursor:pointer;
+    background-color: rgba(230, 255, 225, 0.829);
+}
+
+.registro-card {
+    padding: 10px;
+    border: 1px solid rgb(226, 226, 226);
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.registro-card .registro-header {
+    margin: -10px -10px 0;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgb(226, 226, 226);
+    background: rgb(245,245,245);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+.registro-card .registro-body {
+    margin: -5px -10px;
+    padding: 15px;
+}
+.registro-card .registro-footer {
+    margin: 0 -10px -10px;
+    padding: 10px 15px;
+    border-top: 1px solid rgb(226, 226, 226);
+    background: rgb(211, 211, 211);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.registro-card .registro-texto {
+    border-left: 5px solid #ddd;
+    padding: 5px 0 5px 10px;
+    font-style: italic;
+}
+
+.registro-card .registro-badges {
+    margin-top: 15px;
+    padding-top: 5px;
+    border-top: 1px solid rgba(226,226,226);
+}
+
+#mapsAPI {
+    box-shadow: 0px 0px 6px rgb(177, 177, 177);
+    width: 100%;
+    height: 400px;
+}
+.bg-desativado {
+    background-color: #f5c6cb !important;
+}
+.bg-oculto {
+    background-color: #bee5eb !important;
+}
+
+/*
+ * ################################################# INDEX
+ */
+.index_item {
+    box-sizing: border-box;
+    border: 5px solid #00796b;
+    background: rgb(255, 255, 255);
+    color: #00796b;
+    text-align: center;
+    width: 150px;
+    position: relative;
+    margin: 7px auto;
+    height: 150px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 50%;
+    transition-duration: 0.5s;
+    cursor: pointer;
+}
+    .index_item:hover {
+        border-color: #fff;
+        background: rgb(0, 121, 107);
+        color: #fff;
+    }
+.index_item_caption {
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+} 
+    .index_item_caption .glyphicon, .index_item_caption .fa {
+        font-size: 150%;
+    }
+
+

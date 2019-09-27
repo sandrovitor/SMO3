@@ -1,0 +1,278 @@
+<?php $_shouldextend[1]=1; ?>
+
+<?php 
+ $mensagemDeRetorno = '';
+ if($smoMSG != false) {
+ foreach($smoMSG as $s) {
+ $mensagemDeRetorno .= '<div class="alert alert-'.$s['tipo'].'"><strong>'. $s['titulo']. '</strong> '. $s['texto'].'</div>';
+ }
+	}
+
+ 
+ ?>
+
+<?php $this->startSection('paginaCorrente', 'Administração'); ?>
+
+<?php $this->startSection('breadcrumb'); ?>
+	<li class="breadcrumb-item"><a href="<?php echo static::e($router->generate('admIndex')); ?>">Administração</a></li>
+ <li class="breadcrumb-item"><a href="<?php echo static::e($router->generate('admSurdo')); ?>">Surdos</a></li>
+ <li class="breadcrumb-item active">Pendências</li>
+<?php $this->stopSection(); ?>
+
+<?php $this->startSection('mensagemDeRetorno', $mensagemDeRetorno); ?>
+
+<?php $this->startSection('conteudo'); ?>
+ <div class="row">
+ <div class="col-12 col-lg-4">
+ <div class="card">
+ <div class="card-header py-2"><a href="#" data-toggle="collapse" data-target="#pendencias-lista">Pendências</a></div>
+ <div class="card-body collapse show p-2" id="pendencias-lista" style="overflow-y:auto; max-height: 60vh; height: 100%;">
+ <div class="list-group">
+ <?php if($pendencias == false): ?>
+ <strong>Não há pendências</strong>
+ <?php else: ?>
+ <?php $__currentLoopData = $pendencias; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <?php 
+ if($p->mapa_id == 0) {
+ // NOVO
+ $status = '<span class="badge badge-success">NOVO</span>';
+ } else {
+ // EDITADO
+ $status = '<span class="badge badge-info">EDITADO</span>';
+ }
+ ?>
+ <a href="#" onclick="showPendencia(<?php echo static::e($p->id); ?>);" class="py-1 px-2 list-group-item list-group-item-action"><?php echo $status; ?> <strong><?php echo static::e($p->nome); ?></strong> - <?php echo static::e($p->bairro); ?></i></a>
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ <?php endif; ?>
+ </div>
+ </div>
+ </div>
+ 
+ </div>
+ <div class="col-12 col-lg-8" id="pendencias-dados">
+ <?php $__currentLoopData = $pendencias; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <?php 
+ $cad_data = new DateTime($p->cad_data);
+ $gps = $p->gps;
+
+ if($p->endereco == '') { $p->endereco= '-'; }
+ if($p->p_ref == '') { $p->p_ref = '-'; }
+ if($p->familia == '') { $p->familia = '-'; }
+ if($p->facebook == '') { $p->facebook = '-'; }
+ if($p->whats == '') { $p->whats = '-'; }
+ if($p->tel == '') { $p->tel = '-'; }
+ if($p->idade == '') { $p->idade = '-'; }
+ if($p->obs == '') { $p->obs = '-'; }
+ if($p->gps == '') { $p->gps = '-'; }
+ if($p->turno == '') { $p->turno = '-'; }
+ ?>
+ <?php if($p->mapa_id == 0): ?>
+ <div class="card" style="display:none" id="pendencia-<?php echo static::e($p->id); ?>">
+ <input type="hidden" name="gps" value="<?php echo static::e($gps); ?>" data-gpsdisabled="true">
+ <div class="card-header py-1 px-3 bg-light ">
+ <div class="row">
+ <div class="col-5">
+ <span class="badge badge-success">NOVO</span> <strong><?php echo static::e($p->nome); ?></strong> <br> <span class="badge badge-dark text-white"><?php echo static::e($p->bairro); ?></span>
+ </div>
+ <div class="offset-2 col-5 text-right">
+ <strong>AUTOR(A):</strong> <?php echo static::e($p->autor); ?><br>
+ <kbd><?php echo static::e($cad_data->format('d/m/Y H:i:s')); ?></kbd>
+ </div>
+ </div>
+ </div>
+ <div class="card-body py-2 px-3">
+ <div class="row">
+ <div class="col-7">
+ <div class="row">
+ <div class="col-6">
+ <dl>
+ <dt>Nome:</dt>
+ <dd><?php echo static::e($p->nome); ?></dd>
+
+ <dt>Endereço:</dt>
+ <dd><?php echo static::e($p->endereco); ?></dd>
+
+ <dt>Ponto de Referência:</dt>
+ <dd><?php echo static::e($p->p_ref); ?></dd>
+
+ <dt>GPS:</dt>
+ <dd><?php echo static::e($p->gps); ?></dd>
+
+ <dt>Familia:</dt>
+ <dd><?php echo static::e($p->familia); ?></dd>
+ </dl>
+ </div>
+ <div class="col-6">
+ <dl>
+ <dt>WhatsApp:</dt>
+ <dd><?php echo static::e($p->whats); ?></dd>
+
+ <dt>Telefone:</dt>
+ <dd><?php echo static::e($p->tel); ?></dd>
+
+ <dt>Faixa Etária:</dt>
+ <dd><?php echo static::e($p->idade); ?></dd>
+
+ <dt>Turno:</dt>
+ <dd><?php echo static::e($p->turno); ?></dd>
+
+ <dt>Observação:</dt>
+ <dd><?php echo static::e($p->obs); ?></dd>
+ </dl>
+ </div>
+ </div>
+ </div>
+ <div class="col-5 col-mapa">
+ 
+ </div>
+ </div>
+ <hr>
+ <button type="button" class="btn btn-sm btn-primary" onclick="pendAction( <?php echo static::e($p->id); ?>, true )"><i class="fas fa-check"></i> Confirmar</button>
+ <button type="button" class="btn btn-sm btn-danger" onclick="pendAction( <?php echo static::e($p->id); ?>, false )"><i class="fas fa-times"></i> Recusar</button>
+ </div>
+ </div>
+ <?php else: ?>
+ <?php 
+ $surdo = $surdos[$p->mapa_id];
+ if($surdo->p_ref == '') { $surdo->p_ref = '-'; }
+ if($surdo->endereco == '') { $surdo->endereco = '-'; }
+ if($surdo->gps == '') { $surdo->gps = '-'; }
+ if($surdo->familia == '') { $surdo->familia = '-'; }
+ if($surdo->facebook == '') { $surdo->facebook = '-'; }
+ if($surdo->whats == '') { $surdo->whats = '-'; }
+ if($surdo->tel == '') { $surdo->tel = '-'; }
+ if($surdo->idade == '') { $surdo->idade = '-'; }
+ if($surdo->obs == '') { $surdo->obs = '-'; }
+ if($surdo->turno == '') { $surdo->turno = '-'; }
+
+ if($surdo->nome != $p->nome) { $trbackNome = 'bg-danger text-white';}
+ if($surdo->endereco != $p->endereco) { $trbackEndereco = 'bg-danger text-white';}
+ if($surdo->p_ref != $p->p_ref) { $trbackPref = 'bg-danger text-white';}
+ if($surdo->gps != $p->gps) { $trbackGps = 'bg-danger text-white';}
+ if($surdo->familia != $p->familia) { $trbackFamilia = 'bg-danger text-white';}
+ if($surdo->facebook != $p->facebook) { $trbackFacebook = 'bg-danger text-white';}
+ if($surdo->whats != $p->whats) { $trbackWhats = 'bg-danger text-white';}
+ if($surdo->tel != $p->tel) { $trbackTel = 'bg-danger text-white';}
+ if($surdo->idade != $p->idade) { $trbackIdade = 'bg-danger text-white';}
+ if($surdo->turno != $p->turno) { $trbackTurno = 'bg-danger text-white';}
+ if($surdo->obs != $p->obs) { $trbackObs = 'bg-danger text-white';}
+ if($surdo->bairro != $p->bairro) { $trbackBairro = 'bg-danger text-white';}
+ 
+ ?>
+ <div class="card" style="display:none" id="pendencia-<?php echo static::e($p->id); ?>">
+ <div class="card-header py-1 px-3 bg-light ">
+ <div class="row">
+ <div class="col-5">
+ <span class="badge badge-info">EDITADO</span> <strong><?php echo static::e($p->nome); ?></strong> <br> <span class="badge badge-dark text-white"><?php echo static::e($p->bairro); ?></span>
+ </div>
+ <div class="offset-2 col-5 text-right">
+ <strong>AUTOR(A):</strong> <?php echo static::e($p->autor); ?><br>
+ <kbd><?php echo static::e($cad_data->format('d/m/Y H:i:s')); ?></kbd>
+ </div>
+ </div>
+ </div>
+ <div class="card-body py-2 px-3">
+ <table class="table table-sm table-bordered">
+ <thead>
+ <tr>
+ <th></th>
+ <th>ANTIGO</th>
+ <th>NOVO</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr class="<?php echo static::e(isset($trbackNome) ? $trbackNome : ''); ?>">
+ <th>Nome:</th>
+ <td><?php echo static::e($surdo->nome); ?></td>
+ <td><?php echo static::e($p->nome); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackBairro) ? $trbackBairro : ''); ?>">
+ <th>Bairro:</th>
+ <td><?php echo static::e($surdo->bairro); ?></td>
+ <td><?php echo static::e($p->bairro); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackEndereco) ? $trbackEndereco : ''); ?>">
+ <th>Endereço:</th>
+ <td><?php echo static::e($surdo->endereco); ?></td>
+ <td><?php echo static::e($p->endereco); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackPref) ? $trbackPref : ''); ?>">
+ <th>Ponto de Referência:</th>
+ <td><?php echo static::e($surdo->p_ref); ?></td>
+ <td><?php echo static::e($p->p_ref); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackGps) ? $trbackGps : ''); ?>">
+ <th>GPS:</th>
+ <td><?php echo static::e($surdo->gps); ?></td>
+ <td><?php echo static::e($p->gps); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackFamilia) ? $trbackFamilia : ''); ?>">
+ <th>Família:</th>
+ <td><?php echo static::e($surdo->familia); ?></td>
+ <td><?php echo static::e($p->familia); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackFacebook) ? $trbackFacebook : ''); ?>">
+ <th>Facebook:</th>
+ <td><?php echo static::e($surdo->facebook); ?></td>
+ <td><?php echo static::e($p->facebook); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackWhats) ? $trbackWhats : ''); ?>">
+ <th>WhatsApp:</th>
+ <td><?php echo static::e($surdo->whats); ?></td>
+ <td><?php echo static::e($p->whats); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackTel) ? $trbackTel : ''); ?>">
+ <th>Telefone(s):</th>
+ <td><?php echo static::e($surdo->tel); ?></td>
+ <td><?php echo static::e($p->tel); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackIdade) ? $trbackIdade : ''); ?>">
+ <th>Faixa Etária:</th>
+ <td><?php echo static::e($surdo->idade); ?></td>
+ <td><?php echo static::e($p->idade); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackTurno) ? $trbackTurno : ''); ?>">
+ <th>Turno:</th>
+ <td><?php echo static::e($surdo->turno); ?></td>
+ <td><?php echo static::e($p->turno); ?></td>
+ </tr>
+ <tr class="<?php echo static::e(isset($trbackObs) ? $trbackObs : ''); ?>">
+ <th>Observações:</th>
+ <td><?php echo static::e($surdo->obs); ?></td>
+ <td><?php echo static::e($p->obs); ?></td>
+ </tr>
+ </tbody>
+ </table>
+ <button type="button" class="btn btn-sm btn-primary" onclick="pendAction( <?php echo static::e($p->id); ?>, true )"><i class="fas fa-check"></i> Confirmar</button>
+ <button type="button" class="btn btn-sm btn-danger" onclick="pendAction( <?php echo static::e($p->id); ?>, false )"><i class="fas fa-times"></i> Recusar</button>
+ </div>
+ </div>
+ <?php endif; ?>
+ 
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+ 
+ </div>
+ </div>
+<?php $this->stopSection(); ?>
+
+<?php $this->startSection('script'); ?>
+<script>
+ function showPendencia(id) {
+ $('#pendencias-dados .card').hide(100);
+ setTimeout(function(){$('#pendencia-'+id).show();}, 200);
+
+ if($('#mapsAPI').length > 0) {
+ $('#mapsAPI').remove();
+ }
+
+ if($('#pendencia-'+id+' input[name="gps"]').val() != '' && $('#pendencia-'+id+' input[name="gps"]').length > 0) {
+ $('#pendencia-'+id+' .col-mapa').html('<div id="mapsAPI"></div>');
+ initMapa(false, $('#pendencia-'+id+' input[name="gps"]').val() );
+ } else {
+ $('#pendencia-'+id+' .col-mapa').html('<strong>Sem informação do GPS</strong>');
+ }
+ 
+ }
+</script>
+<?php $this->stopSection(); ?>
+<?php if (@$_shouldextend[1]) { echo $this->runChild('layouts.layoutadmin'); } ?>

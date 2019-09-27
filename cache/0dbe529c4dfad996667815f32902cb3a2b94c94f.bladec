@@ -1,0 +1,13 @@
+<?php $_shouldextend[1]=1; ?>
+
+<?php $this->startSection('paginaCorrente', 'Redes Sociais'); ?>
+
+<?php $this->startSection('breadcrumb'); ?>
+ <li class="breadcrumb-item"><a href="./">Início</a></li>
+ <li class="breadcrumb-item active">Redes Sociais</li>
+<?php $this->stopSection(); ?>
+
+<?php $this->startSection('conteudo'); ?>
+ <kbd>Seção em desenvolvimento...</kbd>
+<?php $this->stopSection(); ?>
+<?php if (@$_shouldextend[1]) { echo $this->runChild('layouts.layoutindex'); } ?>

@@ -1,0 +1,47 @@
+@charset "UTF-8";
+
+.visible-sm,
+.visible-md,
+.visible-lg,
+.visible-xl {
+    display:none
+}
+
+@media (max-width: 575px) { /* SM */
+    .visible-sm {
+        display: initial;
+    }
+    .hidden-sm {
+        display: none;
+    }
+
+
+
+}
+
+@media (min-width: 576px) and (max-width: 767px) { /* MD */
+    .visible-md {
+        display:initial;
+    }
+    .hidden-md {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) { /* LG */
+    .visible-lg {
+        display:initial;
+    }
+    .hidden-lg {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) { /* XL */
+    .visible-xl {
+        display:initial;
+    }
+    .hidden-xl {
+        display: none;
+    }
+}

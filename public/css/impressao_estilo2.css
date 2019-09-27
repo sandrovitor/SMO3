@@ -1,0 +1,49 @@
+/*
+#################### PERSONALIZAÇÃO DE CORES - ESTILO 2
+*/
+
+/* CABEÇALHOS */
+.table-head {
+	background: #011638; /* COR 1 */
+	color: white;
+}
+
+.nome_surdo,
+.faixa_et {
+	background: #586994; /* COR 2 */
+	color:white;
+}
+
+table.dia_melhor td.ok { /* COR 5 */
+	border: #011638 1px solid; 
+	background: #011638;
+	color: #FFF;
+}
+.table-head .col3 { /* DATA DA IMPRESSÃO. PODE SER USADA A COR 5 OU UMA COR DE ALTO CONTRASTE */
+	color: #e8c1c5;
+}
+
+
+/* TURNOS */
+.man {
+	background: #e8c1c5; /* COR 3 */
+	color: black;
+}
+.tar {
+	background: #9055a2; /* COR 4 */
+	color: white;
+}
+.noi { /* COR PRETA POR PADRÃO */
+	background: black;
+	color: white;
+}
+.def {
+	background: #586994; /* COR 2 */
+	color: white;
+ }
+ 
+ /* REGISTRO */
+ .linha_amar {
+	background: #011638; /* COR 1 */
+	color: white;
+}

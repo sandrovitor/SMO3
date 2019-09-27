@@ -1,0 +1,92 @@
+table {
+	border: 1mm solid #000000;
+	border-collapse:collapse;
+	margin-bottom: 1mm;
+	text-transform: uppercase;
+	width: 143mm;
+	font-size: 10px;
+}
+td, th { border: 1px solid #000000; margin:0; vertical-align: top; text-align: left; }
+.table-head {
+	border: 1px solid #000000;
+	width: 143mm;
+	font-size:10px;
+	font-weight:bold;
+}
+.table-head td {
+	padding: 1mm 0;
+}
+.table-head .col1 {
+	padding-left: 2mm;
+	width:63mm;
+	display:inline;
+	text-transform: uppercase; font-size: 10.5px
+}
+.table-head .col2 {
+	width:63mm;
+	display:inline;
+	text-align:center;
+	text-transform: uppercase;
+}
+.table-head .col3 {
+	width:11mm;
+	display:inline;
+	text-align:center;
+	font-style: italic; font-size: 115%; text-transform: lowercase;
+}
+
+.table-body { width: 143mm; height: 76mm; margin-bottom: 20px;}
+.table-body .col1 { width:52mm; }
+.table-body .col2 { width:11mm; }
+.table-body .col3 { width:64mm; font-size:90%; }
+.table-body .col4 { width:11mm; font-weight:bold; }
+.table-body .col1, .table-body .col2, .table-body .col3, .table-body .col4 { border-top: 1mm solid #000000; }
+
+table.dia_melhor {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	border-collapse: separate;
+	font-size: 7px;
+	text-transform:uppercase;
+	display: inline;
+	max-height:5mm;
+}
+table.dia_melhor td {
+	border: 1px solid #999999;
+	color: #999999;
+	vertical-align:middle;
+	text-align: left;
+	padding: 0px 3px;
+}
+table.dia_melhor td.ok {
+	font-weight: bold;
+}
+
+.nome_surdo {
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 10.4px;
+}
+.faixa_et {
+	font-weight: bold;
+	font-size: 90%;
+	text-align: center;
+	vertical-align: middle;
+}
+.text-center {
+	text-align: center;
+}
+
+.lin1 { height:3mm; }
+.lin2 { height:3.8mm; word-wrap:break-word;}
+.lin3 { height:3.8mm; word-wrap:break-word;}
+.lin4 { height:3.8mm; word-wrap:break-word;}
+.lin5 { height:3.8mm; word-wrap:break-word;}
+
+.man,
+.tar,
+.noi,
+.def {
+	vertical-align: middle;
+}

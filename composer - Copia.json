@@ -1,0 +1,7 @@
+{
+	"require": {
+		"altorouter/altorouter": "1.1.0",
+		"zendframework/zend-diactoros": "1.*",
+		"eftec/bladeone": "^3.0"
+	}
+}

@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+
+
+.card-header {
+    padding: .375rem 1rem;
+}
+.card-body {
+    padding: .875rem;
+}
+.form-group {
+    margin-bottom: .5rem;
+    font-size: .875rem;
+}
+.form-group label {
+    margin-bottom: .125rem;
+}
+.row [class|=col] {
+    margin-bottom: .5rem;
+}
+
+#resultado tbody {
+    cursor:pointer;
+}
+

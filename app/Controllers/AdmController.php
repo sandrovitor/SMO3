@@ -70,6 +70,39 @@ class AdmController
                 $config->set('regiao_'.(int)$_POST['regiao_id'], $_POST['regiao_nome']);
                 return json_encode($config->get('regiao'));
                 break;
+
+            case 'setBairroNovo':
+                $bairro = new Bairro();
+                $res = $bairro->novo($_POST['bairro_nome'], $_POST['regiao_id']);
+                if($res === true) {
+                    SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Bairro criado com sucesso.', 'tipo' => 'success'));
+                    return 'OK';
+                } else {
+                    return 'Houve uma falha! '.$res;
+                }
+                break;
+
+            case 'setBairroNome':
+                $bairro = new Bairro();
+                $res = $bairro->edita($_POST['bairro_id'], $_POST['bairro_nome'], $_POST['regiao_id']);
+                if($res === true) {
+                    SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Bairro alterado com sucesso.', 'tipo' => 'success'));
+                    return 'OK';
+                } else {
+                    return 'Houve uma falha! '.$res;
+                }
+                break;
+
+            case 'setBairroDelete':
+                $bairro = new Bairro();
+                $res = $bairro->remove($_POST['bairro_id']);
+                if($res === true) {
+                    SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Bairro foi removido.', 'tipo' => 'success'));
+                    return 'OK';
+                } else {
+                    return 'Houve uma falha! '.$res;
+                }
+                break;
         }
         
     }

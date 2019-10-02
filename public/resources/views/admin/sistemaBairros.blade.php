@@ -67,7 +67,7 @@
                         <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">NOVO BAIRRO</a>
                     </div>
                     <div class="card-body px-3 py-2 collapse ">
-                        <form action="#" method="post" onsubmit="return false;">
+                        <form action="#" method="post" onsubmit="jss12(); return false;">
                             <div class="form-group">
                                 <label>Nome do bairro:</label>
                                 <input type="text" class="form-control form-control-sm" name="bairro_nome">
@@ -96,7 +96,7 @@
                         <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">EDITAR BAIRRO</a>
                     </div>
                     <div class="card-body px-3 py-2 collapse ">
-                        <form action="#" method="post" onsubmit="return false;">
+                        <form action="#" method="post" onsubmit="jss13(); return false;">
                             <div class="form-group">
                                 <label>Escolha o bairro:</label>
                                 <select class="form-control form-control-sm" name="bairro_id" onchange="jss02(this)">
@@ -151,7 +151,7 @@
                         <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">APAGAR BAIRRO</a>
                     </div>
                     <div class="card-body px-3 py-2 collapse ">
-                        <form action="#" method="post" onsubmit="return false;">
+                        <form action="#" method="post" onsubmit="jss14(); return false;">
                             <div class="form-group">
                                 <label>Escolha o bairro:</label>
                                 <select class="form-control form-control-sm" name="bairro_id">
@@ -276,6 +276,86 @@
         }
         return false;
     }
+
+    function jss12() {
+        let x = $(event.target);
+        let bNome = $(x).find('[name="bairro_nome"]').val();
+        if(bNome.trim() != '') {
+            $.post('{{$router->generate("admFunctions")}}',
+            {
+                funcao: 'setBairroNovo',
+                bairro_nome: bNome.trim(),
+                regiao_id: $(x).find('[name="regiao_id"]').find(':selected').val()
+            },function(data){
+                if(data == 'OK') {
+                    location.reload();
+                } else {
+                    alert(data);
+                }
+            });
+        } else {
+            alert('Digite o nome do bairro a ser adicionado.');
+        }
+
+        return false;
+    }
+
+    function jss13() {
+        let x = $(event.target);
+        let bItem = $(x).find('[name="bairro_id"]').find(':selected');
+        let bNome = $(x).find('[name="bairro_nome"]').val().trim();
+        let regiao = $(x).find('[name="regiao_id"]').val();
+
+        if(bNome != '') {
+            if(bItem.text() == bNome && bItem.attr('data-regiao') == regiao) {
+                alert('Nenhuma alteração foi realizada.');
+            } else {
+                $.post('{{$router->generate("admFunctions")}}',
+                {
+                    funcao: 'setBairroNome',
+                    bairro_id: bItem.val(),
+                    bairro_nome: bNome.trim(),
+                    regiao_id: $(x).find('[name="regiao_id"]').find(':selected').val()
+                },function(data){
+                    if(data == 'OK') {
+                        location.reload();
+                    } else {
+                        alert(data);
+                    }
+                });
+            }
+        } else {
+            alert('Digite um novo nome para o bairro (não pode ficar em branco).');
+        }
+
+        return false;
+    }
+
+    function jss14() {
+        let x = $(event.target);
+        let bItem = $(x).find('[name="bairro_id"]').find(':selected');
+        if(bItem.val() != 0) {
+            let resp = confirm('Você tem certeza de que deseja excluir esse bairro?');
+            
+            if(resp == true) {
+                $.post('{{$router->generate("admFunctions")}}',
+                {
+                    funcao: 'setBairroDelete',
+                    bairro_id: bItem.val(),
+                },function(data){
+                    if(data == 'OK') {
+                        location.reload();
+                    } else {
+                        alert(data);
+                    }
+                });
+            }
+        } else {
+            alert('Escolha um bairro para excluir.');
+        }
+
+    }
+
 
     $(document).ready(function(){
         

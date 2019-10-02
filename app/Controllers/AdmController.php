@@ -64,6 +64,12 @@ class AdmController
                 $config->set('print_estilo', $_POST['valor']);
                 return true;
                 break;
+
+            case 'setRegiao':
+                $config = new Config();
+                $config->set('regiao_'.(int)$_POST['regiao_id'], $_POST['regiao_nome']);
+                return json_encode($config->get('regiao'));
+                break;
         }
         
     }

@@ -35,7 +35,7 @@
                         <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">NOVA REGIÃO</a>
                     </div>
                     <div class="card-body px-3 py-2 collapse ">
-                        <form action="#" method="post" onsubmit="return false;">
+                        <form action="#" method="post" onsubmit="jss11(); return false;">
                             <div class="form-group">
                                 <label>Escolha a região:</label>
                                 <select class="form-control form-control-sm" name="regiao_id" onchange="jss01(this)">
@@ -239,6 +239,40 @@
         } else {
             $(x).parents('form').find('[name="bairro_nome"]').val( $(x).find(':selected').text() );
         }
+    }
+
+    function jss11() {
+        let x = $(event.target);
+        if($(x).find('[name="regiao_id"]').find(':selected').val() != 0) {
+            $.post('{{$router->generate("admFunctions")}}',
+            {
+                funcao: 'setRegiao',
+                regiao_id: $(x).find('[name="regiao_id"]').find(':selected').val(),
+                regiao_nome: $(x).find('[name="regiao_nome"]').val()
+            },function(data){
+                if(isJson(data)) {
+                    let res = JSON.parse(data);
+
+                    for(key = 1; key <= Object.keys(res).length; key++) {
+                        let valor = res[key];
+                        let item = $(x).find('[name="regiao_id"]');
+                        item.find('[value="'+key+'"]').attr('data-nome', valor);
+                        if(valor != "") {
+                            item.find('[value="'+key+'"]').text('Região '+key+ ' - '+valor);
+                        } else {
+                            item.find('[value="'+key+'"]').text('Região '+key);
+                        }
+                    }
+                    
+                    
+                } else {
+                    alert('O servidor enviou informações inesperadas.');
+                }
+            });
+        } else {
+            alert('Escolha uma região para continuar...');
+        }
+        return false;
     }
 
     $(document).ready(function(){

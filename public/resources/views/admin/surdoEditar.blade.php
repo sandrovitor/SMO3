@@ -165,8 +165,6 @@
                                 <option value="IDOSO">IDOSO</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-12 col-xl-6">
                         <div class="form-group">
                             <label>Turno</label>
                             <select class="form-control" name="turno">
@@ -176,6 +174,8 @@
                                 <option value="NOIT">NOITE</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="col-12 col-xl-6">
                         <div class="form-group">
                             <label>Telefone(s)</label>
                             <input type="text" class="form-control" name="tel" placeholder="NÚMEROS DE TELEFONE" maxlength="75" value="{{$surdo->tel}}">

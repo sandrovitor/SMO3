@@ -638,6 +638,8 @@ class Mapa extends Model {
             $caddata = date('Y-m-d H:i:s');
             if($obj['ativo'] == 'yes') { $ativo = TRUE; } else { $ativo = FALSE; }
             if($obj['ocultar'] == 'yes') { $ocultar = TRUE; } else { $ocultar = FALSE; }
+            if(!isset($obj['dia_melhor']) || $obj['dia_melhor'] == '') { $dia_melhor = ''; } else { $dia_melhor = implode('|', $obj['dia_melhor']); }
+
 
             if($ativo == TRUE && $ocultar == FALSE) {
                 $motivo = '';
@@ -648,7 +650,7 @@ class Mapa extends Model {
 			try {
                 // Escreve a query com 'pseudo-nomes'.
                 $sql = "INSERT INTO `mapa` (id, nome, surdo_id, mapa, mapa_indice, bairro_id, gps, ativo, ocultar, be, resp_id, encontrado, motivo, endereco, p_ref, familia, whats, tel, facebook, obs, idade, turno, hora_melhor, dia_melhor, cad_autor, cad_data, tp_pub)".
-                    "VALUES (NULL, :nome, '0', '', '0', :bairro, :gps, :ativo, :ocultar, 0, 0, 0, :motivo, :endereco, :pref, :familia, :whats, :tel, :facebook, :obs, :idade, :turno, '', '', :cadautor, :caddata, 0)";
+                    "VALUES (NULL, :nome, '0', '', '0', :bairro, :gps, :ativo, :ocultar, 0, 0, 0, :motivo, :endereco, :pref, :familia, :whats, :tel, :facebook, :obs, :idade, :turno, '', :diam, :cadautor, :caddata, 0)";
                 $abc = $this->pdo->prepare($sql);
 			    
 				
@@ -673,6 +675,7 @@ class Mapa extends Model {
 				$abc->bindValue(":turno", $turno, PDO::PARAM_STR);
 				$abc->bindValue(":cadautor", $_SESSION['id'], PDO::PARAM_INT);
 				$abc->bindValue(":caddata", $caddata, PDO::PARAM_STR);
+                $abc->bindValue(":diam", $dia_melhor, PDO::PARAM_STR);
 				
 				
 				// Executa a query.
@@ -707,7 +710,8 @@ class Mapa extends Model {
 			$facebook = trim($obj['facebook']);
 			if(!isset($obj['idade'])) { $idade = ''; } else { $idade = $obj['idade'];}
 			if(!isset($obj['turno'])) { $turno = ''; } else if($obj['turno'] == 'NOT' || ($obj['turno'] != 'MANHÃ' && $obj['turno'] != 'TARDE' && $obj['turno'] != 'NOITE')) { $turno = '';} else { $turno = $obj['turno'];}
-			$obs = strtoupper($obj['obs']);
+            $obs = strtoupper($obj['obs']);
+            if(!isset($obj['dia_melhor']) || $obj['dia_melhor'] == '') { $dia_melhor = ''; } else { $dia_melhor = implode('|', $obj['dia_melhor']); }
 
 
             // Faz backup para o histórico
@@ -720,7 +724,7 @@ class Mapa extends Model {
 			// Insere registro no DB via PDO.
 			try {
                 // Escreve a query com 'pseudo-nomes'.
-                $sql = "UPDATE `mapa` SET `nome` = :nome, `bairro_id` = :bairro, `gps` = :gps, `endereco` = :endereco, `p_ref` = :pref, `familia` = :familia, `whats` = :whats, `tel` = :tel, `facebook` = :facebook, `obs` = :obs,  `idade` = :idade, `turno` = :turno WHERE `mapa`.`id` = :id";
+                $sql = "UPDATE `mapa` SET `nome` = :nome, `bairro_id` = :bairro, `gps` = :gps, `endereco` = :endereco, `p_ref` = :pref, `familia` = :familia, `whats` = :whats, `tel` = :tel, `facebook` = :facebook, `obs` = :obs,  `idade` = :idade, `turno` = :turno, `dia_melhor` = :diam WHERE `mapa`.`id` = :id";
                 $abc = $this->pdo->prepare($sql);
 			    
 				
@@ -739,7 +743,8 @@ class Mapa extends Model {
 				$abc->bindValue(":facebook", $facebook, PDO::PARAM_STR);
 				$abc->bindValue(":obs", $obs, PDO::PARAM_STR);
 				$abc->bindValue(":idade", $idade, PDO::PARAM_STR);
-				$abc->bindValue(":turno", $turno, PDO::PARAM_STR);
+                $abc->bindValue(":turno", $turno, PDO::PARAM_STR);
+                $abc->bindValue(":diam", $dia_melhor, PDO::PARAM_STR);
 				
 				
 				// Executa a query.

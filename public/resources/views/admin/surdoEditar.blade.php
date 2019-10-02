@@ -22,6 +22,51 @@
     } else {
         $ocultar = 'not';
     }
+    
+    $dmClass = array(0 => '', 1 => '', 2 => '', 3 => '',  4 => '', 5 => '', 6 => '');
+    if($surdo->dia_melhor != '') {
+        $dia_melhor = explode('|', $surdo->dia_melhor);
+        //var_dump($dia_melhor);
+        foreach($dia_melhor as $d) {
+            switch($d) {
+                case '1':
+                    $dmDom = 'checked="checked"';
+                    $dmClass[0] = 'active';
+                    break;
+
+                case '2':
+                    $dmSeg = 'checked="checked"';
+                    $dmClass[1] = 'active';
+                    break;
+
+                case '3':
+                    $dmTer = 'checked="checked"';
+                    $dmClass[2] = 'active';
+                    break;
+
+                case '4':
+                    $dmQua = 'checked="checked"';
+                    $dmClass[3] = 'active';
+                    break;
+
+                case '5':
+                    $dmQui = 'checked="checked"';
+                    $dmClass[4] = 'active';
+                    break;
+
+                case '6':
+                    $dmSex = 'checked="checked"';
+                    $dmClass[5] = 'active';
+                    break;
+
+                case '7':
+                    $dmSab = 'checked="checked"';
+                    $dmClass[6] = 'active';
+                    break;
+            }
+        }
+    }
+    
 @endphp
 
 @section ('paginaCorrente', 'Administração')
@@ -143,6 +188,32 @@
                         <div class="form-group">
                             <label><i class="fab fa-facebook"></i> Facebook</label>
                             <input type="text" class="form-control" name="facebook" placeholder="LINK DO PERFIL" maxlength="90" value="{{$surdo->facebook}}">
+                        </div>
+                        <div class="form-group">
+                            <label>Dia Melhor</label>
+                            <div class="form-check-div">
+                                <div class="form-check {{$dmClass[0]}}">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="1" {!!$dmDom or ''!!}> Domingo
+                                </div>
+                                <div class="form-check {{$dmClass[1]}}">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="2" {!!$dmSeg or ''!!}> Segunda
+                                </div>
+                                <div class="form-check {{$dmClass[2]}}">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="3" {!!$dmTer or ''!!}> Terça
+                                </div>
+                                <div class="form-check {{$dmClass[3]}}">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="4" {!!$dmQua or ''!!}> Quarta
+                                </div>
+                                <div class="form-check {{$dmClass[4]}}">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="5" {!!$dmQui or ''!!}> Quinta
+                                </div>
+                                <div class="form-check {{$dmClass[5]}}">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="6" {!!$dmSex or ''!!}> Sexta
+                                </div>
+                                <div class="form-check {{$dmClass[6]}}">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="7" {!!$dmSab or ''!!}> Sábado
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

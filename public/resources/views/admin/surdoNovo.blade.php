@@ -112,6 +112,32 @@
                             <input type="text" class="form-control" name="facebook" placeholder="LINK DO PERFIL" maxlength="90">
                         </div>
                         <div class="form-group">
+                            <label>Dia Melhor</label>
+                            <div class="form-check-div">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="1"> Domingo
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="2"> Segunda
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="3"> Terça
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="4"> Quarta
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="5"> Quinta
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="6"> Sexta
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="dia_melhor[]" value="7"> Sábado
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label>Cadastro Ativo?</label>
                             <select class="form-control" name="ativo" onchange="motivodivToggle()">
                                 <option value="yes">SIM</option>
@@ -148,4 +174,8 @@
             </div>
         </div>
     </form>
+@endsection
+
+@section('script')
+
 @endsection

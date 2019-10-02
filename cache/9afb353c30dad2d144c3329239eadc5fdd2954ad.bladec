@@ -35,10 +35,10 @@
  <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">NOVA REGIÃO</a>
  </div>
  <div class="card-body px-3 py-2 collapse ">
- <form action="#" method="post" onsubmit="return false;">
+ <form action="#" method="post" onsubmit="jss11(); return false;">
  <div class="form-group">
  <label>Escolha a região:</label>
- <select class="form-control form-control-sm" name="regiao_id" onchange="jss01(this)">
+ <select class="form-control form-control-sm" name="regiao_id_todos" onchange="jss01(this)">
  <option value="0"></option>
  <?php $__currentLoopData = $regiao; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $valor): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
  
@@ -67,7 +67,7 @@
  <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">NOVO BAIRRO</a>
  </div>
  <div class="card-body px-3 py-2 collapse ">
- <form action="#" method="post" onsubmit="return false;">
+ <form action="#" method="post" onsubmit="jss12(); return false;">
  <div class="form-group">
  <label>Nome do bairro:</label>
  <input type="text" class="form-control form-control-sm" name="bairro_nome">
@@ -96,7 +96,7 @@
  <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">EDITAR BAIRRO</a>
  </div>
  <div class="card-body px-3 py-2 collapse ">
- <form action="#" method="post" onsubmit="return false;">
+ <form action="#" method="post" onsubmit="jss13(); return false;">
  <div class="form-group">
  <label>Escolha o bairro:</label>
  <select class="form-control form-control-sm" name="bairro_id" onchange="jss02(this)">
@@ -129,7 +129,7 @@
  </div>
  <div class="form-group">
  <label>Alterar região:</label>
- <select class="form-control form-control-sm" name="região_id">
+ <select class="form-control form-control-sm" name="regiao_id">
  <?php $__currentLoopData = $regiao; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $valor): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
  
  <?php if($valor != ''): ?>
@@ -151,7 +151,7 @@
  <a href="javascript:void(0)" onclick="cardBodyCollapse(this)">APAGAR BAIRRO</a>
  </div>
  <div class="card-body px-3 py-2 collapse ">
- <form action="#" method="post" onsubmit="return false;">
+ <form action="#" method="post" onsubmit="jss14(); return false;">
  <div class="form-group">
  <label>Escolha o bairro:</label>
  <select class="form-control form-control-sm" name="bairro_id">
@@ -230,7 +230,7 @@
  if($(x).find(':selected').val() == 0) {
  $(x).parents('form').find('[name="regiao_nome"]').val('');
  } else {
- $(x).parents('form').find('[name="regiao_nome"]').val( $(x).find(':selected').data('nome') );
+ $(x).parents('form').find('[name="regiao_nome"]').val( $(x).find(':selected').attr('data-nome') );
  }
  }
  function jss02(x) {
@@ -240,6 +240,122 @@
  $(x).parents('form').find('[name="bairro_nome"]').val( $(x).find(':selected').text() );
  }
  }
+
+ function jss11() {
+ let x = $(event.target);
+ if($(x).find('[name="regiao_id_todos"]').find(':selected').val() != 0) {
+ $.post('<?php echo static::e($router->generate("admFunctions")); ?>',
+ {
+ funcao: 'setRegiao',
+ regiao_id: $(x).find('[name="regiao_id_todos"]').find(':selected').val(),
+ regiao_nome: $(x).find('[name="regiao_nome"]').val()
+ },function(data){
+ if(isJson(data)) {
+ let res = JSON.parse(data);
+ $('[name="regiao_id"]').find('option').remove();
+
+ for(key = 1; key <= Object.keys(res).length; key++) {
+ let valor = res[key];
+ let item = $(x).find('[name="regiao_id_todos"]');
+ item.find('[value="'+key+'"]').attr('data-nome', valor);
+ if(valor != "") {
+ item.find('[value="'+key+'"]').text('Região '+key+ ' - '+valor);
+ $('[name="regiao_id"]').append('<option value="'+key+'" data-nome="'+valor+'">Região '+key+ ' - '+valor+'</option>')
+ } else {
+ item.find('[value="'+key+'"]').text('Região '+key);
+ }
+ }
+ 
+ 
+ } else {
+ alert('O servidor enviou informações inesperadas.');
+ }
+ });
+ } else {
+ alert('Escolha uma região para continuar...');
+ }
+ return false;
+ }
+
+ function jss12() {
+ let x = $(event.target);
+ let bNome = $(x).find('[name="bairro_nome"]').val();
+ if(bNome.trim() != '') {
+ $.post('<?php echo static::e($router->generate("admFunctions")); ?>',
+ {
+ funcao: 'setBairroNovo',
+ bairro_nome: bNome.trim(),
+ regiao_id: $(x).find('[name="regiao_id"]').find(':selected').val()
+ },function(data){
+ if(data == 'OK') {
+ location.reload();
+ } else {
+ alert(data);
+ }
+ });
+ } else {
+ alert('Digite o nome do bairro a ser adicionado.');
+ }
+
+ return false;
+ }
+
+ function jss13() {
+ let x = $(event.target);
+ let bItem = $(x).find('[name="bairro_id"]').find(':selected');
+ let bNome = $(x).find('[name="bairro_nome"]').val().trim();
+ let regiao = $(x).find('[name="regiao_id"]').val();
+
+ if(bNome != '') {
+ if(bItem.text() == bNome && bItem.attr('data-regiao') == regiao) {
+ alert('Nenhuma alteração foi realizada.');
+ } else {
+ $.post('<?php echo static::e($router->generate("admFunctions")); ?>',
+ {
+ funcao: 'setBairroNome',
+ bairro_id: bItem.val(),
+ bairro_nome: bNome.trim(),
+ regiao_id: $(x).find('[name="regiao_id"]').find(':selected').val()
+ },function(data){
+ if(data == 'OK') {
+ location.reload();
+ } else {
+ alert(data);
+ }
+ });
+ }
+ } else {
+ alert('Digite um novo nome para o bairro (não pode ficar em branco).');
+ }
+
+ return false;
+ }
+
+ function jss14() {
+ let x = $(event.target);
+ let bItem = $(x).find('[name="bairro_id"]').find(':selected');
+ if(bItem.val() != 0) {
+ let resp = confirm('Você tem certeza de que deseja excluir esse bairro?');
+ 
+ if(resp == true) {
+ $.post('<?php echo static::e($router->generate("admFunctions")); ?>',
+ {
+ funcao: 'setBairroDelete',
+ bairro_id: bItem.val(),
+ },function(data){
+ if(data == 'OK') {
+ location.reload();
+ } else {
+ alert(data);
+ }
+ });
+ }
+ } else {
+ alert('Escolha um bairro para excluir.');
+ }
+
+ }
+
 
  $(document).ready(function(){
  

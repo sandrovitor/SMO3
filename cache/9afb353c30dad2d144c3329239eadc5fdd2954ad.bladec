@@ -38,7 +38,7 @@
  <form action="#" method="post" onsubmit="jss11(); return false;">
  <div class="form-group">
  <label>Escolha a região:</label>
- <select class="form-control form-control-sm" name="regiao_id" onchange="jss01(this)">
+ <select class="form-control form-control-sm" name="regiao_id_todos" onchange="jss01(this)">
  <option value="0"></option>
  <?php $__currentLoopData = $regiao; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $valor): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
  
@@ -129,7 +129,7 @@
  </div>
  <div class="form-group">
  <label>Alterar região:</label>
- <select class="form-control form-control-sm" name="região_id">
+ <select class="form-control form-control-sm" name="regiao_id">
  <?php $__currentLoopData = $regiao; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $valor): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
  
  <?php if($valor != ''): ?>
@@ -230,7 +230,7 @@
  if($(x).find(':selected').val() == 0) {
  $(x).parents('form').find('[name="regiao_nome"]').val('');
  } else {
- $(x).parents('form').find('[name="regiao_nome"]').val( $(x).find(':selected').data('nome') );
+ $(x).parents('form').find('[name="regiao_nome"]').val( $(x).find(':selected').attr('data-nome') );
  }
  }
  function jss02(x) {
@@ -243,22 +243,24 @@
 
  function jss11() {
  let x = $(event.target);
- if($(x).find('[name="regiao_id"]').find(':selected').val() != 0) {
+ if($(x).find('[name="regiao_id_todos"]').find(':selected').val() != 0) {
  $.post('<?php echo static::e($router->generate("admFunctions")); ?>',
  {
  funcao: 'setRegiao',
- regiao_id: $(x).find('[name="regiao_id"]').find(':selected').val(),
+ regiao_id: $(x).find('[name="regiao_id_todos"]').find(':selected').val(),
  regiao_nome: $(x).find('[name="regiao_nome"]').val()
  },function(data){
  if(isJson(data)) {
  let res = JSON.parse(data);
+ $('[name="regiao_id"]').find('option').remove();
 
  for(key = 1; key <= Object.keys(res).length; key++) {
  let valor = res[key];
- let item = $(x).find('[name="regiao_id"]');
+ let item = $(x).find('[name="regiao_id_todos"]');
  item.find('[value="'+key+'"]').attr('data-nome', valor);
  if(valor != "") {
  item.find('[value="'+key+'"]').text('Região '+key+ ' - '+valor);
+ $('[name="regiao_id"]').append('<option value="'+key+'" data-nome="'+valor+'">Região '+key+ ' - '+valor+'</option>')
  } else {
  item.find('[value="'+key+'"]').text('Região '+key);
  }

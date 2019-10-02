@@ -107,6 +107,7 @@ class Config extends Model {
             $abc->bindValue(':op', $nomeVariavel, PDO::PARAM_STR);
             $abc->execute();
             
+            $this->__construct();
             return true;
         } else {
             return false;

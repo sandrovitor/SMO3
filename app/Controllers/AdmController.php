@@ -103,6 +103,68 @@ class AdmController
                     return 'Houve uma falha! '.$res;
                 }
                 break;
+
+            case 'setConfigGeral':
+                $config = new Config();
+                $res = $config->setConfigGeral($_POST['ult_visita'], $_POST['prox_visita'], $_POST['versao'], $_POST['versao_data']);
+                if($res === true) {
+                    SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Configurações salvas.', 'tipo' => 'success'));
+                    return 'OK';
+                } else {
+                    return 'Houve uma falha! '.$res;
+                }
+                break;
+
+            case 'setSocial':
+                $config = new Config();
+                $sAtiva = $_POST['social_ativa'];
+                $sData = $_POST['social_data'];
+                $sDuracao = $_POST['social_duracao'];
+                if($sAtiva !== 'yes') {
+                    $sAtiva = 'not';
+                }
+                $sData = str_replace('T', ' ', $sData);
+
+                $res = $config->set('social_ativa', $sAtiva);
+                if($res !== true) { return 'Houve uma falha ao ativar o evento! '; }
+                $res = $config->set('social_data', $sData);
+                if($res !== true) { return 'Houve uma falha ao configurar data e hora do evento! '; }
+                $res = $config->set('social_duracao', $sDuracao);
+                if($res === true) {
+                    SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Configurações do evento <i>Redes Sociais</i> salvas.', 'tipo' => 'success'));
+                    return 'OK';
+                } else {
+                    return 'Houve uma falha ao definir a duração do evento! ';
+                }
+                break;
+
+            case 'setCampanha':
+                $config = new Config();
+                $cAtiva = $_POST['ativa'];
+                $cNome = $_POST['nome'];
+                $cInicio = $_POST['inicio'];
+                $cFim = $_POST['fim'];
+                if($cAtiva !== 'yes') {
+                    $cAtiva = 'not';
+                }
+
+                $d = new DateTime($cInicio);
+                $cNome .= ' '.$d->format('Y');
+
+                $res = $config->set('campanha_ativa', $cAtiva);
+                if($res !== true) { return 'Houve uma falha ao ativar a campanha!'; }
+                $res = $config->set('campanha_inicio', $cInicio);
+                if($res !== true) { return 'Houve uma falha ao configurar data de inicio do evento! '; }
+                $res = $config->set('campanha_fim', $cFim);
+                if($res !== true) { return 'Houve uma falha ao configurar data final do evento!'; }
+                $res = $config->set('campanha_nome', $cNome);
+                if($res === true) {
+                    SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Configurações da campanha <i>'.$cNome.'</i> foram salvas.', 'tipo' => 'success'));
+                    return 'OK';
+                } else {
+                    return 'Houve uma falha ao definir a duração do evento! ';
+                }
+                break;
         }
         
     }

@@ -24,11 +24,11 @@ class Config extends Model {
         foreach ($resultado as $r) {
             switch($r->opcao) {
                 case 'data_visita_prox':
-                    $this->periodoIni = $r->valor;
+                    $this->periodoFim = $r->valor;
                     break;
 
                 case 'data_visita_ult':
-                    $this->periodoFim = $r->valor;
+                    $this->periodoIni = $r->valor;
                     break;
 
                 case 'versao':
@@ -39,15 +39,15 @@ class Config extends Model {
                     $this->versaoData = $r->valor;
                     break;
 
-                case 'conferencia_ativa':
+                case 'social_ativa':
                     $this->social['ativo'] = $r->valor;
                     break;
 
-                case 'conferencia_data':
+                case 'social_data':
                     $this->social['data'] = $r->valor;
                     break;
 
-                case 'conferencia_duracao':
+                case 'social_duracao':
                     $this->social['duracao'] = $r->valor;
                     break;
 
@@ -111,6 +111,24 @@ class Config extends Model {
             return true;
         } else {
             return false;
+        }
+    }
+
+    function setConfigGeral(string $uVisita, string $pVisita, string $versao, string $versaoData) {
+        $abc = $this->pdo->prepare('UPDATE config SET `valor` = :uVisita WHERE `opcao` = "data_visita_ult"; '.
+        'UPDATE config SET `valor` = :pVisita WHERE `opcao` = "data_visita_prox"; '.
+        'UPDATE config SET `valor` = :versao WHERE `opcao` = "versao"; '.
+        'UPDATE config SET `valor` = :versaoData WHERE `opcao` = "versao_data"; ');
+        try {
+            $abc->bindValue(':uVisita', $uVisita, PDO::PARAM_STR);
+            $abc->bindValue(':pVisita', $pVisita, PDO::PARAM_STR);
+            $abc->bindValue(':versao', $versao, PDO::PARAM_STR);
+            $abc->bindValue(':versaoData', $versaoData, PDO::PARAM_STR);
+
+            $abc->execute();
+            return true;
+        } catch(PDOException $e) {
+            return $e->getMessage();
         }
     }
 

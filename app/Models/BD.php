@@ -67,6 +67,7 @@ class BD extends Model {
         $res = unlink($this->backupFolder.'/'. $nome);
         if($res === TRUE) {
             SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Arquivo <i>'.$nome.'</i> removido com sucesso.', 'tipo' => 'success'));
+            $log->novo(LOG::TIPO_REMOVE, 'Arquivo de backup <i>'.$nome.'</i> removido.');
             return 'OK';
         } else {
             return 'A remoção do arquivo falhou...';
@@ -183,8 +184,10 @@ INSERT INTO `'.$x.'` (';
 
         if($this->automatico === TRUE) {
             $nome = 'AUTOMATIC-'.$this->banco;
+            $logStr = 'backup automático realizado.';
         } else {
             $nome = $this->banco;
+            $logStr = 'backup manual realizado.';
         }
         $arqNome = $nome .'--'. $data_sql->format('Y-m-d_H-i').'.sql';
 
@@ -197,6 +200,7 @@ INSERT INTO `'.$x.'` (';
          * REGISTRA EVENTO NO LOG.
          */
 
+        $log->novo(LOG::TIPO_SISTEMA, $logStr);
         
     }
 
@@ -305,6 +309,7 @@ INSERT INTO `'.$x.'` (';
         }
 
         SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Backup do banco de dados restaurado com sucesso.', 'tipo' => 'success'));
+        $log->novo(LOG::TIPO_SISTEMA, 'Backup do banco de dados restaurado com sucesso.');
         return 'OK';
     }
 

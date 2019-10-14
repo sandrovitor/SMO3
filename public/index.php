@@ -1,4 +1,8 @@
 <?php
+if($_SERVER['REQUEST_SCHEME'] === 'http') {
+    header('Location: https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+    exit();
+}
 // Kernel do SMO
 //require_once('../config/smo.php');
 
@@ -13,6 +17,8 @@
 @require_once('../app/Models/Config.php');
 @require_once('../app/Models/Bairro.php');
 @require_once('../app/Models/LOG.php');
+@require_once('../app/Models/BD.php');
+@require_once('../app/Models/MA.php');
 
 // Autoload do Composer
 require_once('../vendor/autoload.php');

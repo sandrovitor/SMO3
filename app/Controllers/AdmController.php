@@ -165,6 +165,37 @@ class AdmController
                     return 'Houve uma falha ao definir a duração do evento! ';
                 }
                 break;
+
+            case 'setBackupManual':
+                $bd = new BD();
+                $bd->backup();
+                return $bd->getUltimoBackup();
+                break;
+
+            case 'setBackupDelete':
+                $bd = new BD();
+                return $bd->deleteFile($_POST['nome']);
+                break;
+
+            case 'setRestauraBackup':
+                $bd = new BD();
+                return $bd->restaura($_POST['nome']);
+                break;
+
+            case 'getHistoricoLista':
+                $mapa = new Mapa();
+                return $mapa->historicoLista($_POST['id']);
+                break;
+
+            case 'deleteHistorico':
+                $mapa = new Mapa();
+                return $mapa->historicoApaga($_POST['id']);
+                break;
+                
+            case 'setHistoricoRecupera':
+                $mapa = new Mapa();
+                return $mapa->historicoRecupera($_POST['id']);
+                break;
         }
         
     }
@@ -1054,10 +1085,12 @@ class AdmController
         $mapa = new Mapa();
         $pend = $mapa->pendLista();
         $surdos = array();
-        foreach($pend as $p) {
-            if($p->mapa_id != 0) {
-                $s = $mapa->surdoId($p->mapa_id);
-                $surdos[$p->mapa_id] = json_decode($s);
+        if($pend !== false) {
+            foreach($pend as $p) {
+                if($p->mapa_id != 0) {
+                    $s = $mapa->surdoId($p->mapa_id);
+                    $surdos[$p->mapa_id] = json_decode($s);
+                }
             }
         }
         
@@ -1089,6 +1122,35 @@ class AdmController
             $x = $mapa->pendAction($pendId, false);
             return $x;
         }
+    }
+
+    function surdoHistorico()
+    {
+        AdmController::authorized(4);
+        $mapa = new Mapa();
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.surdoHistorico",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'mapa' => new Mapa(),
+        ));
+    }
+
+    function surdoHistoricoVer(array $p)
+    {
+
+        $mapa = new Mapa();
+        return $mapa->historicoVer($p['id']);
+    }
+
+    function surdoHistoricoCompara(array $p)
+    {
+
+        $mapa = new Mapa();
+        return $mapa->historicoCompara($p['id']);
     }
 
     function sisConfig()
@@ -1186,6 +1248,53 @@ class AdmController
             'anoCorrente' => date('Y'),
             'bairros' => $bairro->listaBairro(),
             'mapas' => $mapa->listaMapas()
+        ));
+    }
+
+    function bdDownload($obj)
+    {
+        // Procurar arquivo
+        $bd = new BD();
+        $folder = $bd->get('backupFolder');
+        $arquivo = $folder.'/'.$obj['fname'].'.sql';
+        if(file_exists($arquivo)) {
+            // Arquivo encontrado
+            // Força download do arquivo.
+            header('Content-Type: application/octet-stream');
+            header("Content-Transfer-Encoding: Binary"); 
+            header("Content-disposition: attachment; filename=\"" . basename($arquivo) . "\""); 
+            readfile($arquivo);
+        } else {
+            http_response_code(404);
+        }
+    }
+
+    function bdBackup()
+    {
+        AdmController::authorized(5);
+        
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.bdBackup",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'bd' => new BD(),
+        ));
+    }
+
+    function bdSQL()
+    {
+        AdmController::authorized(5);
+        
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.bdSQL",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
         ));
     }
 

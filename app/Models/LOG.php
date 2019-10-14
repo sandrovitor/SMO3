@@ -4,6 +4,13 @@ include_once('Model.php');
 class LOG extends Model {
     protected $tabela = 'log';
     protected $pdo;
+    const TIPO_CADASTRO = 1;
+    const TIPO_ATUALIZA = 2;
+    const TIPO_REMOVE = 3;
+    const TIPO_CONSULTA = 4;
+    const TIPO_ERRO = 5;
+    const TIPO_SISTEMA = 6;
+    const TIPO_MOBILE = 7;
 
 
     function __construct()
@@ -11,10 +18,14 @@ class LOG extends Model {
         parent::__construct();
     }
     
-    public function novo(int $tipo, $evento, $usuid)
+    public function novo(int $tipo, $evento, $usuid = '')
     {
 
-        //11021994 (CONCLUIR E TESTAR)
+        if($usuid == '') {
+            @session_start();
+            $usuid = $_SESSION['id'];
+        }
+        
         $abc=$this->pdo->prepare('INSERT INTO `log` (evento, tipo, pub_id) VALUES (:evento, :tipo, :usuario)');
         $abc->bindValue(':tipo', $tipo, PDO::PARAM_INT);
         $abc->bindValue(':evento', addslashes($evento), PDO::PARAM_STR);
@@ -148,7 +159,7 @@ class LOG extends Model {
                 if($r->pub_id == 0) {
                     $r->nome = 'SISTEMA';
                 }
-                $html.= '<tr> <td>'.$op.'</td> <td><strong>'.$r->nome.'<strong></td> <td>'.$r->evento.'</td> <td>'.$data.'</td> </tr>';
+                $html.= '<tr> <td>'.$op.'</td> <td><strong>'.$r->nome.'<strong></td> <td>'.stripslashes($r->evento).'</td> <td>'.$data.'</td> </tr>';
             }
 
 

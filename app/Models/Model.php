@@ -3,6 +3,7 @@ include('../app/SessionMessage.php');
 
 class Model
 {
+    private $caracteres = 'abcdefghijlkmnopqrstuvxyzwABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
     protected $driver = "mysql";
     protected $host = "localhost";
     protected $banco = "smo";
@@ -25,5 +26,19 @@ class Model
             die();
         }
         //var_dump($this->pdo);
+    }
+
+    function randChar(int $tamanhoString = 16, bool $somenteLetras = FALSE) {
+        $t = '';
+
+        for($i=0; $i < $tamanhoString; $i++) {
+            if($somenteLetras === FALSE) { // LETRAS E NÚMEROS
+                $t .= $this->caracteres[mt_rand(0, 61)];
+            } else { // SOMENTE LETRAS
+                $t .= $this->caracteres[mt_rand(0, 51)];
+            }
+        }
+
+        return $t;
     }
 }

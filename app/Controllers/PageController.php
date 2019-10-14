@@ -33,6 +33,353 @@ class PageController
         return $router;
     }
 
+    function functions()
+    {
+        if(!isset($_POST['funcao']) || $_POST['funcao'] == '') {
+            http_response_code(403);
+            return false;
+        }
+
+        switch($_POST['funcao']) {
+            case 'removeEstudo':
+                $mapa = new Mapa();
+                $res = $mapa->removeBE((int)$_POST['id']);
+                if($res === true) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+
+            case 'desMA':
+                $user = new User();
+                $res = $user->desMA($_POST['id'], FALSE);
+                if($res === true) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+
+            case 'desApagaMA':
+                $user = new User();
+                $res = $user->desMA($_POST['id'], TRUE);
+                if($res === true) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+
+            case 'ativaMA':
+                $user = new User();
+                $res = $user->ativaMA($_POST['id']);
+                if($res === true) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+        }
+    }
+
+    function maFunc()
+    {
+        if(!isset($_POST['funcao']) || $_POST['funcao'] == '') {
+            http_response_code(403);
+            return false;
+        }
+
+        @session_start();
+        $ma = new MA((int)$_SESSION['id']);
+
+        switch($_POST['funcao']) {
+            case 'setHora':
+                $res = $ma->setHora($_POST);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+            
+            case 'getHoras':
+                $res = $ma->getHoras((int)$_POST['quantidade']);
+                return $res;
+                break;
+
+            case 'getRelatorioAno':
+                $res = $ma->getRelatorioAno((int)$_POST['ano']);
+                return $res;
+                break;
+
+
+        }
+    }
+
+    function maRelatorio($p)
+    {
+        if((int)$p['mes'] < 10) {
+            $p['mes'] = '0'.(int)$p['mes'];
+        }
+
+        $ano = (int)$p['ano'];
+        $mes = (int)$p['mes'];
+        $mesesArr = array('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro');
+        $data = new DateTime($p['ano'].'-'.$p['mes'].'-01');
+
+        @session_start();
+        $ma = new MA((int)$_SESSION['id']);
+        $res = $ma->getHoraMes($data);
+
+        $hora = 0;
+        $horaldc = 0;
+        $pub = 0;
+        $videos = 0;
+        $revisitas = 0;
+
+        if($res === false) {
+            $hora = '00:00';
+            $horaldc = '00:00';
+        } else {
+            foreach($res as $r) {
+                $hora += $r->hora;
+                $horaldc += $r->horaldc;
+                $pub += $r->publicacao;
+                $videos += $r->videos;
+                $revisitas += $r->revisitas;
+            }
+
+            $x = $hora%60;
+            $y = ($hora - $x)/60;
+            if($y < 10) {
+                $hora = '0'.$y.':';
+            } else {
+                $hora = $y.':';
+            }
+            
+            if($x < 10) {
+                $hora .= '0'.$x;
+            } else {
+                $hora .= $x;
+            }
+
+            $x = $horaldc%60;
+            $y = ($horaldc - $x)/60;
+            if($y < 10) {
+                $horaldc = '0'.$y.':';
+            } else {
+                $horaldc = $y.':';
+            }
+            
+            if($x < 10) {
+                $horaldc .= '0'.$x;
+            } else {
+                $horaldc .= $x;
+            }
+        }
+
+        $html = '
+                    <table id="tabRelatorio'.$ano.$mes.'" class="table table-sm" smo-mes="'.$mes.'" smo-ano="'.$ano.'">
+                        <thead>
+                            <tr>
+                                <th colspan="2" class="text-center">'.$mesesArr[$mes-1].'/'.$ano.'</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <th>Horas</th>
+                            <td>'.$hora.'</td>
+                        </tr>
+                        <tr>
+                            <th>Horas na LDC</th>
+                            <td>'.$horaldc.'</td>
+                        </tr>
+                        <tr>
+                            <th>Publicações</th>
+                            <td>'.$pub.'</td>
+                        </tr>
+                        <tr>
+                            <th>Vídeos Mostrados</th>
+                            <td>'.$videos.'</td>
+                        </tr>
+                        <tr>
+                            <th>Revisitas</th>
+                            <td>'.$revisitas.'</td>
+                        </tr>
+                    </table>
+        ';
+
+        return $html;
+    }
+
+    function maRelatorioRange($p)
+    {
+        if((int)$p['mes1'] < 10) {
+            $p['mes1'] = '0'.(int)$p['mes1'];
+        }
+
+        if((int)$p['mes2'] < 10) {
+            $p['mes2'] = '0'.(int)$p['mes2'];
+        }
+
+        $ano1 = (int)$p['ano1'];
+        $mes1 = (int)$p['mes1'];
+        $ano2 = (int)$p['ano2'];
+        $mes2 = (int)$p['mes2'];
+
+        $mesesArr = array('Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro');
+
+        $crescente = false;
+        // Define se o intervalo é do antigo pro novo ou vice-versa
+        if($ano1 > $ano2) { // Ex.: 2019 > 2018. Ordem decrescente.
+            $crescente = false;
+        } else if($ano1 < $ano2) { // Ex.: 2018 < 2019. Ordem crescente.
+            $crescente = true;
+        } else { // Anos iguais. Define ordem pelos meses
+            if($mes1 > $mes2) { // Ex.: Dezembro > Maio. Ordem decrescente.
+                $crescente = false;
+            } else { // Exc.: Maio < Dezembro. Ordem Crescente.
+                $crescente = true;
+            }
+        }
+
+        $lista = array();
+        if($crescente === false) {
+            // DECRESCENTE
+            while($ano1 != $ano2 || $mes1 != $mes2) {
+                // Decrementa as variáveis 1 até chegar em 2
+                $data = new DateTime();
+                $data->setDate($ano1, $mes1, 1);
+                array_push($lista, $data->format('Y-m-d'));
+                
+                $mes1--;
+                if($mes1 == 0) {
+                    $mes1 = 12;
+                    $ano1--;
+                }
+
+            }
+            
+        } else {
+            // CRESCENTE
+            while($ano1 != $ano2 || $mes1 != $mes2) {
+                // Incrementa as variáveis 1 até chegar em 2
+                $data = new DateTime();
+                $data->setDate($ano1, $mes1, 1);
+                array_push($lista, $data->format('Y-m-d'));
+                
+                $mes1++;
+                if($mes1 == 13) {
+                    $mes1 = 1;
+                    $ano1++;
+                }
+
+            }
+        }
+        
+
+        //return var_dump($lista);
+
+        @session_start();
+        $ma = new MA((int)$_SESSION['id']);
+        $html = '';
+
+        
+
+        for($i = 0; $i < count($lista); $i++) {
+            $data = new DateTime($lista[$i]);
+            $res = $ma->getHoraMes($data);
+
+            $res = $ma->getHoraMes($data);
+            $ano = $data->format('Y');
+            $mes = $data->format('n');
+            //return var_dump($lista[$i]);
+            
+
+            $hora = 0;
+            $horaldc = 0;
+            $pub = 0;
+            $videos = 0;
+            $revisitas = 0;
+
+            if($res === false) {
+                $hora = '00:00';
+                $horaldc = '00:00';
+            } else {
+                foreach($res as $r) {
+                    $hora += $r->hora;
+                    $horaldc += $r->horaldc;
+                    $pub += $r->publicacao;
+                    $videos += $r->videos;
+                    $revisitas += $r->revisitas;
+                }
+
+                $x = $hora%60;
+                $y = ($hora - $x)/60;
+                if($y < 10) {
+                    $hora = '0'.$y.':';
+                } else {
+                    $hora = $y.':';
+                }
+                
+                if($x < 10) {
+                    $hora .= '0'.$x;
+                } else {
+                    $hora .= $x;
+                }
+
+                $x = $horaldc%60;
+                $y = ($horaldc - $x)/60;
+                if($y < 10) {
+                    $horaldc = '0'.$y.':';
+                } else {
+                    $horaldc = $y.':';
+                }
+                
+                if($x < 10) {
+                    $horaldc .= '0'.$x;
+                } else {
+                    $horaldc .= $x;
+                }
+            }
+
+            $html .= '
+                        <table id="tabRelatorio'.$ano.$mes.'" class="table table-sm" smo-mes="'.$mes.'" smo-ano="'.$ano.'">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" class="text-center">'.$mesesArr[$mes-1].'/'.$ano.'</th>
+                                </tr>
+                            </thead>
+                            <tr>
+                                <th>Horas</th>
+                                <td>'.$hora.'</td>
+                            </tr>
+                            <tr>
+                                <th>Horas na LDC</th>
+                                <td>'.$horaldc.'</td>
+                            </tr>
+                            <tr>
+                                <th>Publicações</th>
+                                <td>'.$pub.'</td>
+                            </tr>
+                            <tr>
+                                <th>Vídeos Mostrados</th>
+                                <td>'.$videos.'</td>
+                            </tr>
+                            <tr>
+                                <th>Revisitas</th>
+                                <td>'.$revisitas.'</td>
+                            </tr>
+                        </table>
+            ';
+            
+            
+        }
+        
+
+        return $html;
+    }
+
     function pendencias()
     {
         // Dá um retorno das pendências
@@ -474,13 +821,67 @@ class PageController
     {
         // Checa se está autenticado
         PageController::authorized();
+        $user = new User();
 
 
         $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
         return $blade->run("perfil",array(
+            'smoMSG' => SessionMessage::ler(),
             'router' => PageController::router(),
             'uNome'=> $_SESSION['nome'],
             'anoCorrente' => date('Y'),
+            'user' => $user->getInfo($_SESSION['id']),
+        ));
+    }
+
+    function perfilSalvaDados(array $obj)
+    {
+        $user = new User($obj['id']);
+        //var_dump($user);
+        if($user->nome !== $obj['nome']) {
+            $res = $user->setNome((int)$obj['id'], $obj['nome']);
+            if($res !== true) {
+                return $res;
+            }
+        }
+
+        if($user->sobrenome !== $obj['sobrenome']) {
+            $res = $user->setSobrenome((int)$obj['id'], $obj['sobrenome']);
+            if($res !== true) {
+                return $res;
+            }
+        }
+        return true;
+
+    }
+
+    function perfilTrocaSenha(array $obj)
+    {
+        $user = new User();
+        return $user->setSenha($obj['id'], $obj['senha_atual'], $obj['senha_nova'], $obj['senha_confirma']);
+    }
+
+    function ma()
+    {
+        // Checa se está autenticado
+        PageController::authorized();
+
+        // Verifica se está autorizado a visualizar esta página
+        if($_SESSION['ma'] === FALSE) {
+            http_response_code(404);
+            exit();
+        }
+
+        $user = new User();
+
+
+        $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("ma",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => PageController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'user' => $user->getInfo($_SESSION['id']),
         ));
     }
 

@@ -59,7 +59,10 @@
 		<li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="nav-drop2" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{$uNome}}</a>
 				<div class="dropdown-menu">
-					<a class="dropdown-item" href="{{$router->generate('perfil')}}"><i class="fa fa-address-card-o"></i> Meu Perfil</a>
+					<a class="dropdown-item" href="{{$router->generate('perfil')}}"><i class="fas fa-address-book"></i> Meu Perfil</a>
+					@if(isset($_SESSION['ma']) && $_SESSION['ma'] === TRUE)
+					<a class="dropdown-item" href="{{$router->generate('ma')}}"><i class="fas fa-chalkboard-teacher"></i> Assistente</a>
+					@endif
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="{{$router->generate('logout')}}"><span class="glyphicon glyphicon-log-out"></span> Sair</a>
 				</div>

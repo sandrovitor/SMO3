@@ -31,26 +31,3 @@
     border-top:1px solid rgba(0,0,0, .15);
 }
 
-.form-check-div {
-    display: flex;
-    flex-wrap: wrap;
-}
-.form-check-div .form-check-input {
-    display:none;
-}
-.form-check-div .form-check {
-    padding-left:0;
-    max-width: 100px;
-    padding: 5px 10px;
-    margin-right:5px;
-    margin-bottom: 5px;
-    border: 1px solid #000000;
-    border-radius:5px;
-    cursor:pointer;
-}
-
-.form-check-div .form-check.active {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #ffffff;
-}

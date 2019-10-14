@@ -26,6 +26,8 @@ $router->map('GET',
 // CONSULTA > ID DO SURDO
 $router->map('GET', '/consulta/id/[i:id]', 'PageController#consultaId');
 
+// FUNÇÕES GERAIS via POST
+$router->map('POST', '/functions/', 'PageController#functions', 'functionsGeral');
 
 
 // REGISTROS
@@ -61,7 +63,7 @@ $router->map('GET', '/cadastro', 'PageController#cadastro', 'cadastro');
     $router->map('POST', '/cadastro/novo', function(){
         $mapa = new Mapa();
         $x = $mapa->preCadastroNovo($_POST);
-        if($x == true) {
+        if($x === true) {
             SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Surdo salvo no sistema.', 'tipo' => 'success'));
             header('Location: /cadastro');
         } else {
@@ -92,8 +94,34 @@ $router->map('GET', '/social', 'PageController#social', 'social');
 // CAMPANHA
 $router->map('GET', '/campanha', 'PageController#campanha', 'campanha');
 
+// MINISTRY ASSISTANT (Assistente de Ministério)
+$router->map('GET', '/ma', 'PageController#ma', 'ma');
+$router->map('POST', '/ma-func/', 'PageController#maFunc', 'maFunc');
+$router->map('POST', '/ma/relatorio/[i:ano]/[i:mes]/', 'PageController#maRelatorio');
+$router->map('POST', '/ma/relatorio/[i:ano1]/[i:mes1]/[i:ano2]/[i:mes2]/', 'PageController#maRelatorioRange');
+
 // PERFIL
 $router->map('GET', '/perfil', 'PageController#perfil', 'perfil');
+$router->map('POST', '/perfil/meus-dados', function(){
+    $res = PageController::perfilSalvaDados($_POST);
+    if($res === true) {
+        SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Dados atualizados.', 'tipo' => 'success'));
+        header('Location: /perfil');
+    } else {
+        SessionMessage::novo(array('titulo' => 'Ops!', 'texto' => 'Houve uma falha:<br>'.$res, 'tipo' => 'warning'));
+        header('Location: /perfil');
+    }
+}, 'perfilMeusDadosPOST');
+$router->map('POST', '/perfil/troca-senha', function(){
+    $res = PageController::perfilTrocaSenha($_POST);
+    if($res === true) {
+        SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Senha atualizada. Já poderá usá-la no próximo login.', 'tipo' => 'success'));
+        header('Location: /perfil');
+    } else {
+        SessionMessage::novo(array('titulo' => 'Ops!', 'texto' => $res, 'tipo' => 'warning'));
+        header('Location: /perfil');
+    }
+},'perfilTrocaSenhaPOST');
 
 /*
  *  ADMINISTRAÇÃO
@@ -115,7 +143,7 @@ $router->map('GET', '/admin', 'AdmController#index', 'admIndex');
 
             $mapa = new Mapa();
             $x = $mapa->surdoNovo($_POST);
-            if($x == true) {
+            if($x === true) {
                 SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Surdo salvo no sistema.', 'tipo' => 'success'));
                 header('Location: /admin/surdo/novo');
             } else {
@@ -130,7 +158,7 @@ $router->map('GET', '/admin', 'AdmController#index', 'admIndex');
 
             $mapa = new Mapa();
             $x = $mapa->surdoEditar($_POST);
-            if($x == true) {
+            if($x === true) {
                 SessionMessage::novo(array('titulo' => 'Sucesso', 'texto' => 'Surdo salvo no sistema.', 'tipo' => 'success'));
                 header('Location: /admin/surdo/editar/'.$_POST['id']);
             } else {
@@ -142,6 +170,9 @@ $router->map('GET', '/admin', 'AdmController#index', 'admIndex');
         $router->map('POST', '/admin/surdo/pendencias', function(){
             return AdmController::surdoPendAction($_POST);
         }, 'admSurdoPendAction');
+        $router->map('GET', '/admin/surdo/historico', 'AdmController#surdoHistorico', 'admSurdoHistorico');
+        $router->map('POST', '/admin/surdo/historico/ver/[i:id]', 'AdmController#surdoHistoricoVer', 'admSurdoHistoricoVer');
+        $router->map('POST', '/admin/surdo/historico/compara/[i:id]', 'AdmController#surdoHistoricoCompara', 'surdoHistoricoCompara');
 
         /**
          * ADM PUBLICADORES
@@ -158,6 +189,14 @@ $router->map('GET', '/admin', 'AdmController#index', 'admIndex');
         $router->map('GET', '/admin/sistema/editarmapas', 'AdmController#sisEditarMapas', 'admSisEditarMapas');
         $router->map('GET', '/admin/sistema/impressao', 'AdmController#sisImpressao', 'admSisImpressao');
         $router->map('GET', '/admin/sistema/log', 'AdmController#sisLOG', 'admSisLOG');
+
+        /**
+         * ADM BANCO DE DADOS
+         */
+
+        $router->map('GET', '/admin/bd/backup', 'AdmController#bdBackup', 'admBdBackup');
+        $router->map('GET', '/admin/bd/download/[*:fname]', 'AdmController#bdDownload', 'admBdDownload');
+        $router->map('GET', '/admin/bd/sql', 'AdmController#bdSQL', 'admBdSQL');
 
 
 /*

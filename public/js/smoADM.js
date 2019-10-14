@@ -121,6 +121,9 @@ function pendAction( pendId, confPend )
     });
 }
 
+function cardBodyCollapse(x) {
+	$(x).parents('.card').children('.card-body.collapse').collapse('toggle');
+}
 
 $(document).ready(function(){
     if($('#mapsAPI').length > 0 && $('[name="gps"]').data('gpsdisabled') !== true) {

@@ -72,8 +72,6 @@ class Registros extends Model {
         }
         
         
-        
-
         // Valida variáveis no PDO
         //$abc = $this->pdo->prepare($sql);
         $mod = new Model();
@@ -89,12 +87,28 @@ class Registros extends Model {
         try {
             $abc->execute();
             SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Registro adicionado.', 'tipo' => 'success'));
-            return true;
         } catch(PDOException $e) {
             SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro no BD. '.$e->getMessage().'. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
             return false;
 
         }
+
+        if(isset($params['be'])) {
+            // Define surdo como BE
+            $abc = $mod->pdo->prepare('UPDATE `mapa` SET `be` = TRUE, `resp_id` = :resp WHERE `id` = :id');
+            $abc->bindValue(':resp', $publicador, PDO::PARAM_INT);
+            $abc->bindValue(':id', $surdo, PDO::PARAM_INT);
+            try {
+                $abc->execute();
+                SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Surdo adicionado à sua lista de estudantes.', 'tipo' => 'success'));
+            } catch(PDOException $e) {
+                SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro no BD ao definir o surdo como estudante. '.$e->getMessage().'. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
+                return false;
+    
+            }
+
+        }
+        return true;
     }
 
     function busca($params)

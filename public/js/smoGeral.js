@@ -704,4 +704,19 @@ $(document).ready(function(){
     if($('#pend-card').length > 0) {
         checaPendencias();
     }
+
+    $(document).on('click', '.form-check-div .form-check', function(){
+		$(event.target).find('.form-check-input').trigger('click');
+	});
+	$(document).on('click', '.form-check-div .form-check-input', function(){
+		for(a = 0; a < $('.form-check-div .form-check-input').length; a++) {
+			let i = $('.form-check-div .form-check-input').eq(a);
+			if($(i).prop('checked') == true) {
+				$(i).parents('.form-check').addClass('active');
+			} else {
+				$(i).parents('.form-check').removeClass('active');
+			}
+		}
+		
+	});
 });

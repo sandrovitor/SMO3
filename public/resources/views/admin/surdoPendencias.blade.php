@@ -50,6 +50,7 @@
             
         </div>
         <div class="col-12 col-lg-8" id="pendencias-dados">
+        @if($pendencias !== false)
             @foreach($pendencias as $p)
             @php
                 $cad_data = new DateTime($p->cad_data);
@@ -250,6 +251,7 @@
             @endif
             
             @endforeach
+        @endif
             
         </div>
     </div>

@@ -173,4 +173,40 @@ form.form-rounded {
         font-size: 150%;
     }
 
+.form-check-div {
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-check-div .form-check-input {
+    display:none;
+}
+.form-check-div .form-check {
+    padding-left:0;
+    max-width: 100px;
+    padding: 5px 10px;
+    margin-right:5px;
+    margin-bottom: 5px;
+    border: 1px solid #000000;
+    border-radius:5px;
+    cursor:pointer;
+}
 
+.form-check-div .form-check.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #ffffff;
+}
+
+.imagem-usuario {
+    height:100px;
+    width: 100px;
+    margin:0 auto;
+}
+.imagem-usuario img {
+    width: inherit;
+    height:inherit;
+    /*border: 1px solid #dee2e6;*/
+    border: 3px solid #ffffff;
+    box-shadow: 0px 0px 3px 2px #dee2e6;
+    border-radius:50%;
+}

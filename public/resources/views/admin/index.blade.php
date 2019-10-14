@@ -65,7 +65,7 @@
 						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admSurdoNovo')}}">Novo</a></li>
 						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admSurdoVer')}}">Listar</a></li>
 						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admSurdoPendencias')}}">Pendências</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Histórico</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admSurdoHistorico')}}">Histórico</a></li>
 					</ul>
 				</div>
 				<div class="tab-pane container {{$publicadorPill or 'fade'}}" id="pill-publicadores">
@@ -89,8 +89,8 @@
 				</div>
 				<div class="tab-pane container {{$bdPill or 'fade'}}" id="pill-bd">
 					<ul class="nav nav-pills">
-						<li class="nav-item"><a class="nav-link" href="#">Backup</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Restauração</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admBdBackup')}}">Backup e Restauração</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admBdSQL')}}">SQL</a></li>
 					</ul>
 				</div>
 			</div>

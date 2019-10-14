@@ -16,6 +16,68 @@ class User extends Model {
         }
     }
 
+    function setNome(int $usuarioId, $valor)
+    {
+        $abc = $this->pdo->prepare('UPDATE login SET nome = :nome WHERE id = :id');
+        $abc->bindValue(':nome', $valor, PDO::PARAM_STR);
+        $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
+        try {
+            $abc->execute();
+            return true;
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function setSobrenome(int $usuarioId, $valor)
+    {
+        $abc = $this->pdo->prepare('UPDATE login SET sobrenome = :snome WHERE id = :id');
+        $abc->bindValue(':snome', $valor, PDO::PARAM_STR);
+        $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
+        try {
+            $abc->execute();
+            return true;
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function setSenha(int $usuarioId, $senhaAntiga, $senha1, $senha2)
+    {
+        if($senha1 !== $senha2) {
+            return 'Confirmação de senha é diferente da nova senha.';
+        }
+
+        $abc = $this->pdo->prepare('SELECT pass FROM login WHERE id = :id');
+        $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
+        try {
+            $abc->execute();
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+
+        if($abc->rowCount() > 0) {
+            $reg = $abc->fetch(PDO::FETCH_OBJ);
+
+            if($reg->pass === hash('sha256', $senhaAntiga)) {
+                // Atualiza
+                $abc = $this->pdo->prepare('UPDATE login SET pass = :senha WHERE :id = :id');
+                $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
+                $abc->bindValue(':senha', hash('sha256', $senha1), PDO::PARAM_INT);
+                try {
+                    $abc->execute();
+                    return true;
+                } catch(PDOException $e) {
+                    return $e->getMessage();
+                }
+            } else {
+                return 'Senha atual incorreta.';
+            }
+        } else {
+            return 'Usuário não encontrado. Nnehuma alteração realizada.';
+        }
+    }
+
     public function auth($username, $password)
     {
         // Procura no banco de dados usuário e senha.
@@ -59,6 +121,93 @@ class User extends Model {
 
         return false;
         
+    }
+
+    public function desMA(int $id, bool $apagaTudo = FALSE)
+    {
+        $abc = $this->pdo->prepare('SELECT * FROM login WHERE id = :id');
+        $abc->bindValue(':id', $id, PDO::PARAM_INT);
+        try {
+            $abc->execute();
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+
+        if($abc->rowCount() == 0) {
+            return 'Usuário não encontrado.';
+        }
+
+
+        $abc = $this->pdo->prepare('UPDATE login SET ma = FALSE WHERE id = :id');
+        $abc->bindValue(':id', $id, PDO::PARAM_INT);
+        try {
+            $abc->execute();
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+
+        if($apagaTudo == TRUE) {
+            // Remove tabela do banco
+            try{
+                $abc = $this->pdo->query('DROP TABLE `ma_'.(int)$id.'`');
+            } catch(PDOException $e) {
+                return $e->getMessage();
+            }
+
+            // Remove todas as entradas do usuário da tabela "ma_geral"
+            $abc = $this->pdo->query('DELETE FROM `ma_geral` WHERE usuario = '.(int)$id);
+        }
+
+        // Atualiza SESSION
+        @session_start();
+        $_SESSION['ma'] = FALSE;
+
+        return true;
+    }
+
+    public function ativaMA(int $id)
+    {
+        $abc = $this->pdo->prepare('SELECT * FROM login WHERE id = :id');
+        $abc->bindValue(':id', $id, PDO::PARAM_INT);
+        try {
+            $abc->execute();
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+
+        $reg = $abc->fetch(PDO::FETCH_OBJ);
+        if($reg->ma != TRUE) {
+            // Define MA como ativado
+            $abc = $this->pdo->query('UPDATE login SET ma = TRUE WHERE id = '.$reg->id);
+        }
+
+        // Verifica a existência da tabela
+        $abc = $this->pdo->query('SHOW TABLES');
+        $tabelas = $abc->fetchAll(PDO::FETCH_NUM);
+        $encontrado = FALSE;
+        foreach($tabelas as $t) {
+            if($t[0] === 'ma_'.$reg->id) {
+                $encontrado = TRUE;
+            }
+        }
+
+        if($encontrado === FALSE) {
+            // Cria a tabela
+            $abc = $this->pdo->query('CREATE TABLE ma_'.$reg->id.' (
+                `data` date NOT NULL,
+                `hora` smallint(6) NOT NULL,
+                `horaldc` smallint(6) NOT NULL,
+                `publicacao` smallint(6) NOT NULL,
+                `videos` smallint(6) NOT NULL,
+                `revisitas` int(11) NOT NULL,
+                `comentario` varchar(200) NOT NULL
+               ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4');
+        }
+
+        // Atualiza SESSION
+        @session_start();
+        $_SESSION['ma'] = TRUE;
+        return true;
     }
 
     public function listaUsuarios(bool $apenasAtivo = TRUE)

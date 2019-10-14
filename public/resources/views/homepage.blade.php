@@ -81,10 +81,11 @@
             <div class="card" id="pend-card">
                 <div class="card-header py-1" data-toggle="collapse" data-target="#pend-body" style="cursor:pointer;"><strong>PENDÊNCIAS</strong></div>
                 <div class="card-body p-2 collapse fade" id="pend-body">
-                    <a href="#"><div class="alert alert-info py-2 px-3"><strong>Titulo</strong> Conteúdo....... </div></a>
+                    <!--<a href="#"><div class="alert alert-info py-2 px-3"><strong>Titulo</strong> Conteúdo....... </div></a>-->
                 </div>
             </div>
 
+            
         </div>
     </div>
 @endsection

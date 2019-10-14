@@ -102,7 +102,8 @@ class Auth
 			$_SESSION['login_time'] = date('Y-m-d H:i:s');
 			$_SESSION['change_pass'] = $aut->change_pass;
 			$_SESSION['acessos'] = $aut->qtd_login+1;
-			$_SESSION['modo_facil'] = (bool)$aut->modo_facil;
+            $_SESSION['modo_facil'] = (bool)$aut->modo_facil;
+            $_SESSION['ma'] = (bool)$aut->ma;
 			if($aut->beta == TRUE) {
 				$_SESSION['beta'] = TRUE;
 			} else {

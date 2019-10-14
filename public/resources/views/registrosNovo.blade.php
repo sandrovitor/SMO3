@@ -153,3 +153,21 @@
         </div>
     </div>
 @endsection
+
+@section('script')
+<script>
+$(document).ready(function(){
+    $(document).on('change', '#surdo, #publicador',function(){
+        let surdo = $('#surdo').find(':selected');
+        let publicador = $('#publicador').find(':selected');
+        if(surdo.attr('data-be') == '1' && surdo.attr('data-resp-id') == publicador.val()) {
+            $('#be').prop('checked', true).prop('disabled', false);
+        } else if(surdo.attr('data-be') == '1' && surdo.attr('data-resp-id') == publicador.val()) {
+            $('#be').prop('checked', false).prop('disabled', true);
+        } else {
+            $('#be').prop('checked', false).prop('disabled', false);
+        }
+    });
+});
+</script>
+@endsection

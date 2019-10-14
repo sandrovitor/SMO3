@@ -38,6 +38,8 @@ class Bairro extends Model {
                 $abc->bindValue(':b', $nome, PDO::PARAM_STR);
                 $abc->bindValue(':r', $regiao, PDO::PARAM_INT);
                 $abc->execute();
+
+                $log->novo(LOG::TIPO_CADASTRO, 'criou o bairro <i>'.$nome.'</i> na região '.$regiao.'.');
                 
                 return true;
             } catch(PDOException $e) {
@@ -55,6 +57,7 @@ class Bairro extends Model {
         $abc->execute();
 
         if($abc->rowCount() > 0) {
+            $b = $abc->fetch(PDO::FETCH_OBJ);
             try {
                 // Faz a atualização
                 $abc = $this->pdo->prepare('UPDATE `ter` SET `bairro` = :b, `regiao` = :r WHERE `id` = :id');
@@ -62,6 +65,9 @@ class Bairro extends Model {
                 $abc->bindValue(':r', $regiao, PDO::PARAM_INT);
                 $abc->bindValue(':id', $bairroId, PDO::PARAM_INT);
                 $abc->execute();
+
+                
+                $log->novo(LOG::TIPO_ATUALIZA, 'alterou <i>'.$b->bairro.' [Região '.$b->regiao.']</i> para: <strong><i>'.$b->bairro.' [Região '.$b->regiao.']</i></strong>.');
 
                 return true;
             } catch(PDOException $e) {
@@ -82,11 +88,14 @@ class Bairro extends Model {
         $abc->execute();
 
         if($abc->rowCount() > 0) {
+            $b = $abc->fetch(PDO::FETCH_OBJ);
             try {
                 // REMOVE o bairro
                 $abc = $this->pdo->prepare('DELETE FROM `ter` WHERE `id` = :id');
                 $abc->bindValue(':id', $bairroId, PDO::PARAM_INT);
                 $abc->execute();
+                
+                $log->novo(LOG::TIPO_REMOVE, 'removeu <i>'.$b->bairro.' [Região '.$b->regiao.']</i>.');
 
                 return true;
             } catch(PDOException $e) {

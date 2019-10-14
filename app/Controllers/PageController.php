@@ -438,6 +438,13 @@ class PageController
         setcookie('smoAut', $_SESSION['nivel'], time()+(60*60*24*30), '/','',TRUE);
 
         
+        /**
+         * LOG DE ATIVIDADES
+         */
+        $log = new LOG();
+        $log->novo(LOG::TIPO_SISTEMA, 'ficou online.');
+
+        
         // Verifica se há um URL para redirecionar
         if($_SESSION['url'] != '') {
             $url = $_SESSION['url'];

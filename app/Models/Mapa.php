@@ -136,6 +136,7 @@ class Mapa extends Model {
         try {
             $abc->execute();
             $s = json_decode($this->surdoId((int) $id));
+            $log = new LOG();
             $log->novo(LOG::TIPO_ATUALIZA, 'definiu o surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a> como Bíblia Não Estuda.');
             return true;
         }catch(PDOException $e) {
@@ -173,6 +174,7 @@ class Mapa extends Model {
             $xyz = $this->pdo->query($sql);
 
             // LOG
+            $log = new LOG();
             if(count($alt[0]) > 0) { $log->novo(LOG::TIPO_ATUALIZA, 'realocou os surdos para os mapas: '.implode(', ', $alt[0])); }
             if(count($alt[1]) > 0) { $log->novo(LOG::TIPO_ATUALIZA, 'removeu estes surdos de seus mapas: '.implode(', ', $alt[1])); }
             
@@ -510,6 +512,7 @@ class Mapa extends Model {
             if($executa) {
                 
                 $s = json_decode($this->surdoId((int) $id));
+                $log = new LOG();
                 $log->novo(LOG::TIPO_SISTEMA, 'fez uma cópia dos dados do surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a> para o histórico.');
                 return true;
             } else {
@@ -982,6 +985,7 @@ class Mapa extends Model {
             $abc->execute();
 
             $s = json_decode($this->surdoId((int) $id));
+            $log = new LOG();
             $log->novo(LOG::TIPO_ATUALIZA, 'recuperou dados do surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a> do histórico.');
             SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Histórico de <i>'.$s->nome.'<i> recuperado com sucesso.', 'tipo' => 'success'));
             return 'OK';
@@ -999,6 +1003,7 @@ class Mapa extends Model {
         try {
             $abc->execute();
             $s = json_decode($this->surdoId((int) $id));
+            $log = new LOG();
             $log->novo(LOG::TIPO_REMOVE, 'removeu uma entrada no histórico de dados do surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
             return 'OK';
         } catch(PDOException $e) {
@@ -1095,6 +1100,8 @@ class Mapa extends Model {
             // Recusa a pendência.
             $abc = $this->pdo->query('UPDATE pre_cadastro SET pendente = FALSE, aprovado = FALSE, data_aprovacao = "'.date('Y-m-d H:i:s').'" WHERE id = '.$pre->id);
 
+            
+            $log = new LOG();
             $log->novo(LOG::TIPO_REMOVE, 'recusou a pendência ID: '.$pre->id.'.');
             return true;
         }
@@ -1126,6 +1133,7 @@ class Mapa extends Model {
 
                 $abc->execute();
 
+                $log = new LOG();
                 $log->novo(LOG::TIPO_CADASTRO, 'aprovou a pendência ID: '.$pre->id.' de cadastro de novo surdo.');
             } catch(PDOException $e) {
                 return 'Erro na base de dados: '.$e->getMessage();
@@ -1167,6 +1175,7 @@ class Mapa extends Model {
                     $abc->execute();
                     
                     $s = json_decode($this->surdoId((int) $pre->id));
+                    $log = new LOG();
                     $log->novo(LOG::TIPO_ATUALIZA, 'recuperou o histórico de dados do surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
                 } catch(PDOException $e) {
                     return 'Erro na base de dados: '.$e->getMessage();
@@ -1255,6 +1264,7 @@ class Mapa extends Model {
                 $executa = $abc->execute();
                 
                 
+                $log = new LOG();
                 $log->novo(LOG::TIPO_CADASTRO, 'adicionou o surdo <i>'.$nome.'</i> ao sistema.');
 				
 				return true;
@@ -1411,6 +1421,7 @@ class Mapa extends Model {
                     $executa = $abc->execute();
                     
                     
+                    $log = new LOG();
                     $log->novo(LOG::TIPO_CADASTRO, 'adicionou o surdo '.$nome.' ao pré-cadastro.');
                     
                     return true;
@@ -1496,6 +1507,7 @@ class Mapa extends Model {
 
                     
                     $s = json_decode($this->surdoId((int) $id));
+                    $log = new LOG();
                     $log->novo(LOG::TIPO_CADASTRO, 'pediu alteração do surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
                     
                     return true;

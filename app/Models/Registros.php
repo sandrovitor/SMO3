@@ -136,6 +136,12 @@ class Registros extends Model {
             } else {
                 echo '{0}';
             }
+
+            /**
+             * LOG DE ATIVIDADES
+             */
+            $log = new LOG();
+            $log->novo(LOG::TIPO_CONSULTA, 'buscou o registro '.$params['regid'].'.');
         } else if(isset($params['querystr'])) { 
             // ##################################################################### VARIOS + QUERY STR
             // Captura o QUERY STRING
@@ -157,20 +163,31 @@ class Registros extends Model {
             }
 
             $querystr = $q;
+            $logStr = array();
+            $mapa = new Mapa();
+            $user = new User();
 
             // Verifica se há SURDOID e PUBID
-            $where = array();;
-            if($params['surdoid'] != 0) {
+            $where = array();
+            if($params['surdoid'] != 0) { // SURDOID
                 array_push($where, 'registro.mapa_id = :surdoid');
+                $s = $mapa->surdoId($params['surdoid']);
+                array_push($logStr, 'do(a) surdo(a) '.$s->nome.' ['.$s->bairro.']');
             }
 
-            if($params['pubid'] != 0) {
+            if($params['pubid'] != 0) { // PUBID
                 array_push($where, 'registro.pub_id = :pubid');
+                $u = $user->getInfo($params['pubid']);
+                array_push($logStr, 'do(a) publicador(a) '. $u->nome);
             }
 
+
+            $logStr = implode(', ', $logStr);
             $where = implode(' AND ', $where);
             if($where == '') {
                 $where = '1';
+                $logStr = 'de qualquer surdo(a) e publicador(a)';
+
             }
 
             $abc = $this->pdo->prepare('SELECT mapa.nome, registro.*, (SELECT ter.bairro FROM ter WHERE ter.id = mapa.bairro_id) as bairro, (SELECT login.nome FROM login WHERE login.id = registro.pub_id) as publicador FROM registro LEFT JOIN mapa ON registro.mapa_id = mapa.id WHERE '.$where.' ORDER BY registro.data_visita DESC '.$querystr['limit']);
@@ -184,22 +201,40 @@ class Registros extends Model {
             } else {
                 echo '{0}';
             }
+
+            /**
+             * LOG DE ATIVIDADES
+             */
+            $log = new LOG();
+            $log->novo(LOG::TIPO_CONSULTA, 'buscou registros '.$logStr.'.');
             
         } else { 
             // ##################################################################### VÁRIOS S/ QUERY STR
+            $logStr = array();
+            $mapa = new Mapa();
+            $user = new User();
+
             // Verifica se há SURDOID e PUBID
-            $where = array();;
-            if($params['surdoid'] != 0) {
+            $where = array();
+            if($params['surdoid'] != 0) { // SURDOID
                 array_push($where, 'registro.mapa_id = :surdoid');
+                $s = $mapa->surdoId($params['surdoid']);
+                array_push($logStr, 'do(a) surdo(a) '.$s->nome.' ['.$s->bairro.']');
             }
 
-            if($params['pubid'] != 0) {
+            if($params['pubid'] != 0) { // PUBID
                 array_push($where, 'registro.pub_id = :pubid');
+                $u = $user->getInfo($params['pubid']);
+                array_push($logStr, 'do(a) publicador(a) '. $u->nome);
             }
 
+
+            $logStr = implode(', ', $logStr);
             $where = implode(' AND ', $where);
             if($where == '') {
                 $where = '1';
+                $logStr = 'de qualquer surdo(a) e publicador(a)';
+
             }
 
             $abc = $this->pdo->prepare('SELECT mapa.nome, registro.*, (SELECT ter.bairro FROM ter WHERE ter.id = mapa.bairro_id) as bairro, (SELECT login.nome FROM login WHERE login.id = registro.pub_id) as publicador FROM registro LEFT JOIN mapa ON registro.mapa_id = mapa.id WHERE '.$where.' ORDER BY registro.data_visita DESC LIMIT 0, 10 ');
@@ -213,6 +248,12 @@ class Registros extends Model {
             } else {
                 echo '{0}';
             }
+
+            /**
+             * LOG DE ATIVIDADES
+             */
+            $log = new LOG();
+            $log->novo(LOG::TIPO_CONSULTA, 'buscou registros '.$logStr.'.');
         }
     }
 
@@ -235,11 +276,20 @@ class Registros extends Model {
         $abc->execute();
 
         if($abc->rowCount() > 0) {
+            $reg = $abc->fetch(PDO::FETCH_OBJ);
             // Existe!
             $abc = $this->pdo->prepare('DELETE FROM registro WHERE id = :regid');
             $abc->bindValue(':regid', $regid, PDO::PARAM_INT);
             try {
                 $abc->execute();
+
+                /**
+                 * LOG DE ATIVIDADES
+                 */
+                $log = new LOG();
+                $mapa = new Mapa();
+                $s = $mapa->surdoId($reg->mapa_id);
+                $log->novo(LOG::TIPO_REMOVE, 'apagou registro [ID: '.$regid.'] do surdo <i>'.$s->nome.' ['.$s->bairro.']</i>.');
                 echo true;
             } catch(PDOException $e) {
                 echo 'Falha no BD: '.$e->getMessage();
@@ -253,7 +303,7 @@ class Registros extends Model {
         
     }
 
-    function salva() {
+    function salva() { // EDITAR REGISTRO
 
     }
     

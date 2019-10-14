@@ -108,6 +108,9 @@ class Config extends Model {
             $abc->execute();
             
             $this->__construct();
+            
+            $log = new LOG();
+            $log->novo(LOG::TIPO_SISTEMA, 'alterou valor da configuração <i>'.$nomeVariavel.'</i> para: <kbd>'.$valor.'</kbd>.');
             return true;
         } else {
             return false;
@@ -126,6 +129,9 @@ class Config extends Model {
             $abc->bindValue(':versaoData', $versaoData, PDO::PARAM_STR);
 
             $abc->execute();
+            
+            $log = new LOG();
+            $log->novo(LOG::TIPO_SISTEMA, 'atualizou as configurações gerais do sistema. Última Visita: <pre>'.$uVisita.'</pre>; Próxima Visita: <pre>'.$pVisita.'</pre>; Versão: <pre>'.$versão.'</pre>.');
             return true;
         } catch(PDOException $e) {
             return $e->getMessage();

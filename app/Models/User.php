@@ -18,11 +18,18 @@ class User extends Model {
 
     function setNome(int $usuarioId, $valor)
     {
+        $u = $this->getInfo($usuarioId);
+
         $abc = $this->pdo->prepare('UPDATE login SET nome = :nome WHERE id = :id');
         $abc->bindValue(':nome', $valor, PDO::PARAM_STR);
         $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
         try {
             $abc->execute();
+            /**
+             * LOG DE ATIVIDADES
+             */
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'alterou nome de <i>'.$u->nome.'</i> para <i>'.$valor.'</i>.');
             return true;
         } catch(PDOException $e) {
             return $e->getMessage();
@@ -31,11 +38,18 @@ class User extends Model {
 
     function setSobrenome(int $usuarioId, $valor)
     {
+        $u = $this->getInfo($usuarioId);
+
         $abc = $this->pdo->prepare('UPDATE login SET sobrenome = :snome WHERE id = :id');
         $abc->bindValue(':snome', $valor, PDO::PARAM_STR);
         $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
         try {
             $abc->execute();
+            /**
+             * LOG DE ATIVIDADES
+             */
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'alterou sobrenome de <i>'.$u->sobrenome.'</i> para <i>'.$valor.'</i>.');
             return true;
         } catch(PDOException $e) {
             return $e->getMessage();
@@ -66,6 +80,11 @@ class User extends Model {
                 $abc->bindValue(':senha', hash('sha256', $senha1), PDO::PARAM_INT);
                 try {
                     $abc->execute();
+                    /**
+                     * LOG DE ATIVIDADES
+                     */
+                    $log = new LOG();
+                    $log->novo(LOG::TIPO_ATUALIZA, 'alterou senha.');
                     return true;
                 } catch(PDOException $e) {
                     return $e->getMessage();
@@ -145,6 +164,8 @@ class User extends Model {
         } catch(PDOException $e) {
             return $e->getMessage();
         }
+        
+        $logStr = '';
 
         if($apagaTudo == TRUE) {
             // Remove tabela do banco
@@ -156,11 +177,18 @@ class User extends Model {
 
             // Remove todas as entradas do usuário da tabela "ma_geral"
             $abc = $this->pdo->query('DELETE FROM `ma_geral` WHERE usuario = '.(int)$id);
+            $logStr = ' Todos os dados foram removidos.';
         }
 
         // Atualiza SESSION
         @session_start();
         $_SESSION['ma'] = FALSE;
+        
+        /**
+         * LOG DE ATIVIDADES
+         */
+        $log = new LOG();
+        $log->novo(LOG::TIPO_SISTEMA, 'desativou o Assistente de Ministério.'.$logStr);
 
         return true;
     }
@@ -207,6 +235,12 @@ class User extends Model {
         // Atualiza SESSION
         @session_start();
         $_SESSION['ma'] = TRUE;
+
+        /**
+         * LOG DE ATIVIDADES
+         */
+        $log = new LOG();
+        $log->novo(LOG::TIPO_SISTEMA, 'ativou o Assistente de Ministério.');
         return true;
     }
 

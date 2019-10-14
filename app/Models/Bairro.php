@@ -39,6 +39,7 @@ class Bairro extends Model {
                 $abc->bindValue(':r', $regiao, PDO::PARAM_INT);
                 $abc->execute();
 
+                $log = new LOG();
                 $log->novo(LOG::TIPO_CADASTRO, 'criou o bairro <i>'.$nome.'</i> na região '.$regiao.'.');
                 
                 return true;
@@ -67,6 +68,7 @@ class Bairro extends Model {
                 $abc->execute();
 
                 
+                $log = new LOG();
                 $log->novo(LOG::TIPO_ATUALIZA, 'alterou <i>'.$b->bairro.' [Região '.$b->regiao.']</i> para: <strong><i>'.$b->bairro.' [Região '.$b->regiao.']</i></strong>.');
 
                 return true;
@@ -95,6 +97,7 @@ class Bairro extends Model {
                 $abc->bindValue(':id', $bairroId, PDO::PARAM_INT);
                 $abc->execute();
                 
+                $log = new LOG();
                 $log->novo(LOG::TIPO_REMOVE, 'removeu <i>'.$b->bairro.' [Região '.$b->regiao.']</i>.');
 
                 return true;

@@ -196,6 +196,97 @@ class AdmController
                 $mapa = new Mapa();
                 return $mapa->historicoRecupera($_POST['id']);
                 break;
+
+            case 'setPubBloquear':
+                $user = new User();
+                $res = $user->bloquear($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return 'Falha desconhecida';
+                }
+                break;
+
+            case 'setPubDesbloquear':
+                $user = new User();
+                $res = $user->desbloquear($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return 'Falha desconhecida';
+                }
+                break;
+
+            case 'setBETAAtiva':
+                $user = new User();
+                $res = $user->ativaBETA($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return 'Falha desconhecida';
+                }
+                break;
+
+            case 'setBETADesativa':
+                $user = new User();
+                $res = $user->desativaBETA($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return 'Falha desconhecida';
+                }
+                break;
+
+            case 'setPubSenhaReset':
+                $user = new User();
+                $res = $user->resetaSenha($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return 'Falha desconhecida';
+                }
+                break;
+
+            case 'setModoFacilAtiva':
+                $user = new User();
+                $res = $user->ativaMFacil($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return 'Falha desconhecida';
+                }
+                break;
+
+                
+            case 'setModoFacilDesativa':
+                $user = new User();
+                $res = $user->desativaMFacil($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return 'Falha desconhecida';
+                }
+                break;
+
+            case 'deleteUsuario':
+                $user = new User();
+                $res = $user->delete($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return 'Falha desconhecida';
+                }
+                break;
+
+            case 'setTP':
+                $mapa = new Mapa();
+                $res = $mapa->setTP(explode(',', $_POST['atualiza']['sub']), explode(',', $_POST['atualiza']['add']), (int)$_POST['pubid']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
         }
         
     }
@@ -1151,6 +1242,121 @@ class AdmController
 
         $mapa = new Mapa();
         return $mapa->historicoCompara($p['id']);
+    }
+
+    function pubNovo()
+    {
+        AdmController::authorized(4);
+        
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.pubNovo",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'config' => new Config(),
+        ));
+    }
+
+    function pubNovoPOST()
+    {
+        $user = new User();
+        $res = $user->novo($_POST);
+        if($res === true) {
+            SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Usuário '.$_POST['nome'].' '.$_POST['sobrenome'].' cadastrado com sucesso.', 'tipo' => 'success'));
+        } else {
+            SessionMessage::novo(array('titulo' => 'Falha!', 'texto' => $res, 'tipo' => 'warning'));
+        }
+        header('Location: /admin/publicadores/novo');
+    }
+
+    function pubVer()
+    {
+        AdmController::authorized(4);
+        $user = new User();
+        
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.pubVer",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'config' => new Config(),
+            'usuarios' => $user->listaUsuarios(FALSE),
+        ));
+    }
+
+    function pubEditar($p)
+    {
+        AdmController::authorized(4);
+        
+        $user = new User();
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.pubEditar",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'config' => new Config(),
+            'u' => $user->getInfo($p['pubid']),
+        ));
+    }
+
+    function pubEditarPOST($p)
+    {
+        //var_dump($_POST, $p);
+        if($p['pubid'] != $_POST['id']) {
+            SessionMessage::novo(array('tipo' => 'warning', 'titulo' => 'Ops!', 'texto' => 'houve uma divergência na transmissão dos dados. A página foi atualizada. Tente novamente.'));
+            header('Location: /admin/publicadores/editar/'.$p['pubid']);
+            return false;
+        }
+
+        $user = new User();
+        $res = $user->salva($_POST['id'], $_POST['nome'], $_POST['sobrenome'], $_POST['usuario'], $_POST['email'], $_POST['expira']);
+        if($res !== TRUE && $res !== FALSE) {
+            SessionMessage::novo(array('tipo' => 'warning', 'titulo' => 'Mensagem do servidor:', 'texto' => $res));
+        }
+        
+        header('Location: /admin/publicadores/editar/'.$p['pubid']);
+    }
+
+    function pubTpessoal()
+    {
+        AdmController::authorized(4);
+        $mapa = new Mapa();
+        
+
+        
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.pubTpessoal",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'config' => new Config(),
+            'tp' => $mapa->listaTP(),
+            'surdos' => $mapa->listaSurdosSemTP(),
+            'surdosJSON' => json_encode($mapa->listaSurdos(FALSE)),
+        ));
+    }
+
+    function pubEstudos()
+    {
+        AdmController::authorized(4);
+        
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.pubEstudos",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'config' => new Config(),
+        ));
     }
 
     function sisConfig()

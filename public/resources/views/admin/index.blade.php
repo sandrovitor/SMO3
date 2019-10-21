@@ -70,10 +70,10 @@
 				</div>
 				<div class="tab-pane container {{$publicadorPill or 'fade'}}" id="pill-publicadores">
 					<ul class="nav nav-pills">
-						<li class="nav-item"><a class="nav-link" href="#">Novo</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Editar</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Território Pessoal</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Estudos</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admPubNovo')}}">Novo</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admPubVer')}}">Listar</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admPubTpessoal')}}">Território Pessoal</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admPubEstudos')}}">Estudos</a></li>
 					</ul>
 				</div>
 				<div class="tab-pane container {{$sistemaPill or 'fade'}}" id="pill-sistema">

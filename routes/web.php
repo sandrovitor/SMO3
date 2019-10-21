@@ -178,6 +178,14 @@ $router->map('GET', '/admin', 'AdmController#index', 'admIndex');
          * ADM PUBLICADORES
          */
 
+        $router->map('GET', '/admin/publicadores/novo', 'AdmController#pubNovo', 'admPubNovo');
+        $router->map('POST', '/admin/publicadores/novo', 'AdmController#pubNovoPOST', 'admPubNovoPOST');
+        $router->map('GET', '/admin/publicadores/ver', 'AdmController#pubVer', 'admPubVer');
+        $router->map('GET', '/admin/publicadores/editar/[i:pubid]', 'AdmController#pubEditar', 'admPubEditar');
+        $router->map('POST', '/admin/publicadores/editar/[i:pubid]', 'AdmController#pubEditarPOST', 'admPubEditarPOST');
+        $router->map('GET', '/admin/publicadores/tpessoal', 'AdmController#pubTpessoal', 'admPubTpessoal');
+        $router->map('GET', '/admin/publicadores/estudos', 'AdmController#pubEstudos', 'admPubEstudos');
+
 
         /**
          * ADM SISTEMA

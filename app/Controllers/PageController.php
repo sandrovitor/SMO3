@@ -426,33 +426,39 @@ class PageController
     {
         // Chama autenticação de usuário
         $auth = new Auth();
-        $auth->authenticate($_POST['usuario'], $_POST['senha']);
+        $retorno = $auth->authenticate($_POST['usuario'], $_POST['senha']);
+        
         // Escreve cookie
-        if(isset($_POST['save_user']) && $_POST['save_user'] == 'yes') {
-            $x = setcookie('user', $_SESSION['user'], time()+(60*60*24*30), '/','',TRUE);
+        if($retorno === true) {
+            if(isset($_POST['save_user']) && $_POST['save_user'] == 'yes') {
+                $x = setcookie('user', $_SESSION['user'], time()+(60*60*24*30), '/','',TRUE);
+            } else {
+                $x = setcookie('user', '', time()-3600, '/','',TRUE);
+            }
+            // Seta cookie de ID e nível.
+            setcookie('smoCod', $_SESSION['id'], time()+(60*60*24*30), '/','',TRUE);
+            setcookie('smoAut', $_SESSION['nivel'], time()+(60*60*24*30), '/','',TRUE);
+    
+            
+            /**
+             * LOG DE ATIVIDADES
+             */
+            $log = new LOG();
+            $log->novo(LOG::TIPO_SISTEMA, 'ficou online.');
+    
+            
+            // Verifica se há um URL para redirecionar
+            if($_SESSION['url'] != '') {
+                $url = $_SESSION['url'];
+                unset($_SESSION['url']);
+                header('Location: '.$url);
+            } else {
+                header('Location: /');
+            }
         } else {
-            $x = setcookie('user', '', time()-3600, '/','',TRUE);
+            header('Location: /login');
         }
-        // Seta cookie de ID e nível.
-        setcookie('smoCod', $_SESSION['id'], time()+(60*60*24*30), '/','',TRUE);
-        setcookie('smoAut', $_SESSION['nivel'], time()+(60*60*24*30), '/','',TRUE);
-
         
-        /**
-         * LOG DE ATIVIDADES
-         */
-        $log = new LOG();
-        $log->novo(LOG::TIPO_SISTEMA, 'ficou online.');
-
-        
-        // Verifica se há um URL para redirecionar
-        if($_SESSION['url'] != '') {
-            $url = $_SESSION['url'];
-            unset($_SESSION['url']);
-            header('Location: '.$url);
-        } else {
-            header('Location: /');
-        }
         
     }
 

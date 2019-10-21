@@ -227,7 +227,7 @@ class Mapa extends Model {
 
         // Retorna informações completas ou não.
         if($infoCompleta == FALSE) {
-            $sql = 'SELECT `mapa`.`id`, `mapa`.`nome`, `ter`.`bairro`, `mapa`.`ativo`, `mapa`.`ocultar`, `mapa`.`be`, `mapa`.`resp_id`, (SELECT `login`.`nome` FROM `login` WHERE `login`.`id` = `mapa`.`resp_id`) as `resp` FROM `mapa` LEFT JOIN `ter` ON `mapa`.`bairro_id` = `ter`.`id` WHERE '.$parametro.' ORDER BY `ter`.`bairro` ASC, `mapa`.`nome` ASC';
+            $sql = 'SELECT `mapa`.`id`, `mapa`.`nome`, `ter`.`bairro`, `mapa`.`ativo`, `mapa`.`mapa`, `mapa`.`ocultar`, `mapa`.`be`, `mapa`.`resp_id`, `mapa`.`tp_pub`, (SELECT `login`.`nome` FROM `login` WHERE `login`.`id` = `mapa`.`resp_id`) as `resp` FROM `mapa` LEFT JOIN `ter` ON `mapa`.`bairro_id` = `ter`.`id` WHERE '.$parametro.' ORDER BY `ter`.`bairro` ASC, `mapa`.`nome` ASC';
         } else {
             $sql = 'SELECT `mapa`.*, `ter`.`bairro`, (SELECT `login`.`nome` FROM `login` WHERE `login`.`id` = `mapa`.`resp_id`) as `resp` FROM `mapa` LEFT JOIN `ter` ON `mapa`.`bairro_id` = `ter`.`id` WHERE '.$parametro.' ORDER BY `ter`.`bairro` ASC, `mapa`.`nome` ASC';
         }
@@ -422,6 +422,65 @@ class Mapa extends Model {
         }
 
         return $surdos;
+    }
+
+    function listaTP() // Lista todos os territórios pessoais no SMO
+    {
+        $abc = $this->pdo->query('SELECT login.id, login.nome, login.sobrenome, login.user, (SELECT COUNT(*) FROM mapa WHERE mapa.tp_pub = login.id) as surdosTP FROM `login` WHERE 1 ORDER BY login.nome ASC, login.sobrenome ASC');
+
+        if($abc->rowCount() == 0) {
+            return false;
+        } else {
+            $reg = $abc->fetchAll(PDO::FETCH_OBJ);
+            return $reg;
+        }
+    }
+
+    function listaSurdosSemTP()
+    {
+        $abc = $this->pdo->query('SELECT mapa.id, mapa.nome, mapa.mapa, ter.bairro FROM `mapa` LEFT JOIN ter ON mapa.bairro_id = ter.id WHERE tp_pub = 0 AND mapa.ativo = TRUE AND mapa.ocultar = FALSE ORDER BY ter.regiao ASC, ter.bairro ASC, mapa.nome ASC');
+
+        if($abc->rowCount() == 0) {
+            return false;
+        } else {
+            $reg = $abc->fetchAll(PDO::FETCH_OBJ);
+            return $reg;
+        }
+    }
+
+    function setTP(array $remover = array(), array $adicionar = array(), int $publicador) // Define surdos em Território Pessoal
+    {
+        //var_dump($remover, $adicionar, $publicador);
+
+        if(count($remover) > 0) {
+            // Remove os surdos do TP
+            $sql = '';
+            foreach($remover as $s) {
+                $sql .= 'UPDATE mapa SET tp_pub = 0 WHERE id = '.(int)$s.';';
+            }
+
+            try {
+                $abc = $this->pdo->query($sql);
+            } catch(PDOException $e) {
+                return 'Erro ao remover: '.$e->getMessage();
+            }
+        }
+
+        if(count($adicionar) > 0) {
+            // Adiciona os surdos ao TP
+            $sql = '';
+            foreach($adicionar as $s) {
+                $sql .= 'UPDATE mapa SET tp_pub = '.(int)$publicador.' WHERE id = '.(int)$s.';';
+            }
+
+            try {
+                $abc = $this->pdo->query($sql);
+            } catch(PDOException $e) {
+                return 'Erro ao adicionar surdos ao TP: '.$e->getMessage();
+            }
+        }
+
+        return true;
     }
 
     function surdoId(int $id)

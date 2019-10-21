@@ -247,9 +247,9 @@ class User extends Model {
     public function listaUsuarios(bool $apenasAtivo = TRUE)
     {
         if($apenasAtivo == TRUE) { // Só puxa os logins ativos no sistema
-            $abc = $this->pdo->query('SELECT `id`, `nome`, `sobrenome`, `nivel` FROM `login` WHERE `bloqueado` = 0 AND `expira` > "'.date('Y-m-d').'" ORDER BY nome ASC, sobrenome ASC');
+            $abc = $this->pdo->query('SELECT `id`, `nome`, `sobrenome`, `nivel`, `user`, `email`, `expira`, `bloqueado`, `tentativas` FROM `login` WHERE `bloqueado` = 0 AND `expira` > "'.date('Y-m-d').'" ORDER BY nome ASC, sobrenome ASC');
         } else { // Puxa todos os logins
-            $abc = $this->pdo->query('SELECT `id`, `nome`, `sobrenome`, `nivel` FROM `login` WHERE 1 ORDER BY nome ASC, sobrenome ASC');
+            $abc = $this->pdo->query('SELECT `id`, `nome`, `sobrenome`, `nivel`, `user`, `email`, `expira`, `bloqueado`, `tentativas` FROM `login` WHERE 1 ORDER BY nome ASC, sobrenome ASC');
         }
         
         if($abc->rowCount() == 0) {
@@ -257,5 +257,180 @@ class User extends Model {
         }
 
         return $abc->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function novo(array $u)
+    {
+        $sql = 'INSERT INTO login (id, nome, sobrenome, user, email, pass, nivel, criado, atualizado, expira, change_pass, token, beta, tentativas, bloqueado, qtd_login, modo_facil, copyright_accept, ma) VALUES
+        ("", :nome, :sobrenome, :user, :email, :pass, :nivel, :criado, :atualizado, :expira, :change_pass, "", 0, 0, 0, 0, 0, 0, 0)';
+
+        if($u['senha1'] === $u['senha2']) {
+            $pass = hash('sha256',$u['senha1']);
+        } else {
+            return 'Senhas diferentes.';
+        }
+
+        // Converte array em objeto
+        $u = (object)$u;
+
+        $hoje = date('Y-m-d H:i:s');
+        $expira = new DateTime($hoje);
+        $expira->add(new DateInterval('P1Y'));
+        try {
+            $abc = $this->pdo->prepare($sql);
+
+            $abc->bindValue(':nome', $u->nome, PDO::PARAM_STR);
+            $abc->bindValue(':sobrenome', $u->sobrenome, PDO::PARAM_STR);
+            $abc->bindValue(':user', $u->usuario, PDO::PARAM_STR);
+            $abc->bindValue(':email', $u->email, PDO::PARAM_STR);
+            $abc->bindValue(':pass', $pass, PDO::PARAM_STR);
+            $abc->bindValue(':nivel', (int)$u->nivel, PDO::PARAM_INT);
+            $abc->bindValue(':criado', $hoje, PDO::PARAM_STR);
+            $abc->bindValue(':atualizado', $hoje, PDO::PARAM_STR);
+            $abc->bindValue(':expira', $expira->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+            $abc->bindValue(':change_pass', 'n', PDO::PARAM_BOOL);
+
+            $abc->execute();
+            return true;
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function salva($id, $nome, $sobrenome, $usuario, $email, $expira)
+    {
+        $reg = $this->getInfo($id);
+        $log = new LOG();
+        if($reg === FALSE) {
+            $log->novo(LOG::TIPO_ERRO, 'não foi possível salvar usuário [ID: '.$id.'], pois ele não existe.');
+            SessionMessage::novo(array('tipo' => 'warning', 'titulo' => 'Falha!', 'texto' => 'Não foi possível salvar usuário [ID: '.$id.'], pois ele não existe.'));
+            return false;
+        }
+
+        $d = new DateTime($expira);
+        $sql = 'UPDATE login SET nome = :nome, sobrenome = :sobrenome, user = :usuario, email = :email, expira = :expira WHERE id = :id';
+        $abc = $this->pdo->prepare($sql);
+
+        try {
+            $abc->bindValue(':nome', $nome, PDO::PARAM_STR);
+            $abc->bindValue(':sobrenome', $sobrenome, PDO::PARAM_STR);
+            $abc->bindValue(':usuario', $usuario, PDO::PARAM_STR);
+            $abc->bindValue(':email', $email, PDO::PARAM_STR);
+            $abc->bindValue(':expira', $d->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+            $abc->bindValue(':id', $id, PDO::PARAM_INT);
+
+            $abc->execute();
+            $log->novo(LOG::TIPO_ATUALIZA, 'editou usuário '.$nome.' [ID: '.$id.'].');
+            SessionMessage::novo(array('tipo' => 'success', 'titulo' => 'Sucesso!', 'texto' => 'Dados do usuário foram salvos.'));
+            return true;
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function bloquear($id)
+    {
+        // Bloquear usuário
+        $reg = $this->getInfo($id);
+
+        $abc = $this->pdo->query('UPDATE login SET bloqueado = TRUE WHERE id = '.$reg->id);
+        return true;
+    }
+
+    public function desbloquear($id)
+    {
+        // Identifica a causa do bloqueio e desfaz.
+        $reg = $this->getInfo($id);
+        $sql = '';
+
+        if((bool)$reg->bloqueado === TRUE) {
+            // Remove bloqueio manual
+            $sql.= 'UPDATE login SET bloqueado = FALSE WHERE id = '.$reg->id.';';
+        }
+
+        if($reg->tentativas >= 3) {
+            // Remove excesso de tentativas
+            $sql.= 'UPDATE login SET tentativas = 0 WHERE id = '.$reg->id.';';
+        }
+
+        $hoje = new DateTime();
+        $expira = new DateTime($reg->expira);
+        if($hoje >= $expira) {
+            // Adiciona um ano à validade do perfil
+            $expira = new DateTime();
+            $expira->add(new DateInterval('P1Y'));
+            $sql.= 'UPDATE login SET expira = "'.$expira->format('Y-m-d H:i:s').'" WHERE id = '.$reg->id.';';
+            
+        }
+
+        // Executa a atualização
+        $abc = $this->pdo->query($sql);
+
+        return true;
+
+    }
+
+    public function ativaBETA($id)
+    {
+        $u = $this->getInfo($id);
+
+        if((bool)$u->beta == TRUE) {
+            return true;
+        } else {
+            $abc = $this->pdo->query('UPDATE login SET beta = TRUE WHERE id = '.$u->id);
+            return true;
+        }
+    }
+
+    public function desativaBETA($id)
+    {
+        $u = $this->getInfo($id);
+
+        if((bool)$u->beta == FALSE) {
+            return true;
+        } else {
+            $abc = $this->pdo->query('UPDATE login SET beta = FALSE WHERE id = '.$u->id);
+            return true;
+        }
+    }
+
+    public function resetaSenha($id)
+    {
+        $u = $this->getInfo($id);
+
+        $abc = $this->pdo->query('UPDATE login SET pass = "'.hash('sha256', '12345678').'" WHERE id = '.$u->id);
+        return true;
+    }
+
+    public function ativaMFacil($id)
+    {
+        $u = $this->getInfo($id);
+
+        if((bool)$u->modo_facil == FALSE) {
+            $abc = $this->pdo->query('UPDATE login SET modo_facil = TRUE WHERE id = '.$u->id);
+        }
+
+        return true;
+    }
+
+    public function desativaMFacil($id)
+    {
+        $u = $this->getInfo($id);
+
+        if((bool)$u->modo_facil == TRUE) {
+            $abc = $this->pdo->query('UPDATE login SET modo_facil = FALSE WHERE id = '.$u->id);
+        }
+
+        return true;
+    }
+
+    public function delete($id)
+    {
+        $u = $this->getInfo($id);
+
+        $abc = $this->pdo->query('DELETE FROM login WHERE id = '.$u->id);
+
+        SessionMessage::novo(array('titulo' => 'Sucesso!', 'tipo' => 'success', 'texto' => 'Usuário '.$u->nome.' '.$u->sobrenome.' [ID: '.$u->id.'] foi removido com sucesso.'));
+        return true;
     }
 }

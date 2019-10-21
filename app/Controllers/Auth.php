@@ -61,7 +61,7 @@ class Auth
         $aut = $user->auth($username, $password);
         if($aut == false) {
             SessionMessage::novo(array('titulo' => 'NEGADO!', 'texto' => 'Usuário e/ou senha está incorreto.', 'tipo' => 'danger'));
-            echo 'Não encontrado!';
+            return 'Não encontrado!';
             return false;
         } else {
             // Verifica se existem restrições no login
@@ -69,19 +69,19 @@ class Auth
             if($aut->bloqueado == true) {
                 // Bloqueado
                 SessionMessage::novo(array('titulo' => 'NEGADO!', 'texto' => 'Usuário bloqueado.', 'tipo' => 'warning'));
-                echo 'Bloqueado';
+                return 'Bloqueado';
                 return false;
             }
             if($aut->tentativas >= 3) {
                 // Excedeu número de tentativas
                 SessionMessage::novo(array('titulo' => 'Falha!', 'texto' => 'Usuário bloqueado por número de tentativas.', 'tipo' => 'warning'));
-                echo 'Tentativas';
+                return 'Tentativas';
                 return false;
             }
             if($expira < new DateTime()) {
                 // Perfil expirado.
                 SessionMessage::novo(array('titulo' => 'Falha!', 'texto' => 'Validade do perfil expirou.', 'tipo' => 'warning'));
-                echo 'Perfil expirado';
+                return 'Perfil expirado';
                 return false;
             }
 

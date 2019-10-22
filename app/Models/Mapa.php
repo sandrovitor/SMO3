@@ -1282,7 +1282,7 @@ class Mapa extends Model {
             $hist = $this->historicoNovo($pre->mapa_id);
             if($hist == true) {
                 // Altera as informações no MAPA.
-                $sql = 'UPDATE mapa SET nome = :nome, bairro = :bairro, endereco = :end, p_ref = :pref, gps = :gps, familia = :familia, facebook = :face, whats = :whats, tel = :tel, idade = :idade, turno = :turno, obs = :obs WHERE id = :id';
+                $sql = 'UPDATE mapa SET nome = :nome, bairro = :bairro, endereco = :endereco, p_ref = :pref, gps = :gps, familia = :familia, facebook = :facebook, whats = :whats, tel = :tel, idade = :idade, turno = :turno, obs = :obs WHERE id = :id';
 
                 try {
                     $abc = $this->pdo->prepare($sql);
@@ -1298,8 +1298,8 @@ class Mapa extends Model {
                     $abc->bindValue(":obs", $pre->obs, PDO::PARAM_STR);
                     $abc->bindValue(":idade", $pre->idade, PDO::PARAM_STR);
                     $abc->bindValue(":turno", $pre->turno, PDO::PARAM_STR);
-                    $abc->bindValue(":cadautor", $pre->cad_autor, PDO::PARAM_INT);
-                    $abc->bindValue(":caddata", $pre->cad_data, PDO::PARAM_STR);
+                    //$abc->bindValue(":cadautor", $pre->cad_autor, PDO::PARAM_INT);
+                    //$abc->bindValue(":caddata", $pre->cad_data, PDO::PARAM_STR);
 
                     
                     $abc->bindValue(":id", $pre->id, PDO::PARAM_INT);

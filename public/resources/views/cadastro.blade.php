@@ -31,7 +31,7 @@
                     <div class="col-12 col-xl-6">
                         <div class="form-group">
                             <label>Nome do surdo</label>
-                            <input type="text" class="form-control" name="nome" required placeholder="Nome do surdo" title="Somente letras, hífen e parênteses. Máximo 25 caracteres." pattern="[a-zA-Z- ()]{3,25}">
+                            <input type="text" class="form-control" name="nome" required placeholder="Nome do surdo" title="Somente letras, hífen e parênteses. Máximo 25 caracteres." pattern="[a-zA-ZÀ-ú- ()]{3,25}">
                         </div>
                         <div class="form-group">
                             <label>Bairro</label>
@@ -57,19 +57,19 @@
                         </div>
                         <div class="form-group">
                             <label>Endereço</label>
-                            <input type="text" class="form-control" name="endereco" placeholder="RUA, Nº, COMPLEMENTO" maxlength="75">
+                            <input type="text" class="form-control text-uppercase" name="endereco" placeholder="RUA, Nº, COMPLEMENTO" maxlength="75">
                         </div>
                         <div class="form-group">
                             <label>Ponto de referência</label>
-                            <input type="text" class="form-control" name="pref" placeholder="PONTOS DE REFERÊNCIA" maxlength="90">
+                            <input type="text" class="form-control text-uppercase" name="pref" placeholder="PONTOS DE REFERÊNCIA" maxlength="90">
                         </div>
                         <div class="form-group">
                             <label>Parentes/Família</label>
-                            <input type="text" class="form-control" name="familia" placeholder="PARENTES/FAMÍLIA" maxlength="75">
+                            <input type="text" class="form-control text-uppercase" name="familia" placeholder="PARENTES/FAMÍLIA" maxlength="75">
                         </div>
                         <div class="form-group">
                             <label>Observações</label>
-                            <textarea class="form-control" name="obs" placeholder="INFORMAÇÕES RELEVANTES. MÁXIMO DE 75 LETRAS" rows="4" maxlength="75"></textarea>
+                            <textarea class="form-control text-uppercase" name="obs" placeholder="INFORMAÇÕES RELEVANTES. MÁXIMO DE 75 LETRAS" rows="4" maxlength="75"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Localização GPS</label>
@@ -100,7 +100,7 @@
                         </div>
                         <div class="form-group">
                             <label>Telefone(s)</label>
-                            <input type="text" class="form-control" name="tel" placeholder="NÚMEROS DE TELEFONE" maxlength="75">
+                            <input type="text" class="form-control text-uppercase" name="tel" placeholder="NÚMEROS DE TELEFONE" maxlength="75">
                             <small class="form-text text-muted">Ex.: "98888-1234 (MÃE); 99999-1234 (SURDO)"</small>
                         </div>
                         <div class="form-group">

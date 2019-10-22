@@ -1,4 +1,13 @@
 Pendências para correção ou implementação:
-
+############### TESTES ALPHA
+001:
 - Endereço, ponto de referência, observações e etc, devem ser todos UPPERCASE direto no input. [ CORRIGIDO ]
 - Adicionar botão para EXCLUIR/DELETAR surdo. [ CORRIGIDO ]
+
+
+002:
+- Registros > Buscar não funciona.
+- Correção das telas de Cadastro e Cadastro Editar: campos em UPPERCASE e aceitando acentos.
+- Tela de informações do surdo não exibe últimos registros.
+- Ao criar novo usuário uma verificação do nome de usuário deve ser realizado.
+- BD: Tabela login, coluna "user" deve ser modificada para tipo "Único", para não aceitar duplicações.

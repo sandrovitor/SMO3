@@ -1,11 +1,4 @@
--- MODELS
-	- Mapa
-	- Usu�rio
-	- 
+Pendências para correção ou implementação:
 
--- CONTROLLERS
-
-
-
-
-___________________________________________________________________________
+- Endereço, ponto de referência, observações e etc, devem ser todos UPPERCASE direto no input.
+- Adicionar botão para EXCLUIR/DELETAR surdo.

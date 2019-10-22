@@ -501,6 +501,7 @@ class PageController
         $bairros = $mapa->listaBairro();
         //var_dump($bairros);
         $x = ''; $group = '';
+        
         foreach($bairros as $b) {
             if($group == '') {
                 $x .= '<optgroup label="Região '.$b->regiao_nome.'"> ';

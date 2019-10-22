@@ -252,6 +252,7 @@ class User extends Model {
             $abc = $this->pdo->query('SELECT `id`, `nome`, `sobrenome`, `nivel`, `user`, `email`, `expira`, `bloqueado`, `tentativas` FROM `login` WHERE 1 ORDER BY nome ASC, sobrenome ASC');
         }
         
+        
         if($abc->rowCount() == 0) {
             return false;
         }

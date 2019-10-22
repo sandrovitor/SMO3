@@ -131,7 +131,7 @@ class Config extends Model {
             $abc->execute();
             
             $log = new LOG();
-            $log->novo(LOG::TIPO_SISTEMA, 'atualizou as configurações gerais do sistema. Última Visita: <pre>'.$uVisita.'</pre>; Próxima Visita: <pre>'.$pVisita.'</pre>; Versão: <pre>'.$versão.'</pre>.');
+            $log->novo(LOG::TIPO_SISTEMA, 'atualizou as configurações gerais do sistema. Última Visita: <pre>'.$uVisita.'</pre>; Próxima Visita: <pre>'.$pVisita.'</pre>; Versão: <pre>'.$versao.'</pre>.');
             return true;
         } catch(PDOException $e) {
             return $e->getMessage();

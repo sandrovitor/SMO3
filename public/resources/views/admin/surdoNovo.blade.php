@@ -31,7 +31,7 @@
                     <div class="col-12 col-xl-6">
                         <div class="form-group">
                             <label>Nome do surdo</label>
-                            <input type="text" class="form-control" name="nome" required placeholder="Nome do surdo" title="Somente letras, hífen e parênteses. Máximo 25 caracteres." pattern="[a-zA-Z- ()]{3,25}">
+                            <input type="text" class="form-control" name="nome" required placeholder="Nome do surdo" title="Somente letras, hífen e parênteses. Máximo 25 caracteres." pattern="[a-zA-ZÀ-ú- ()]{3,25}">
                         </div>
                         <div class="form-group">
                             <label>Bairro</label>

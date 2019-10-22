@@ -50,9 +50,13 @@ class Mapa extends Model {
     function getMapas()
     {
         $abc = $this->pdo->query('SELECT mapa.*, ter.bairro, ter.regiao FROM mapa LEFT JOIN ter ON mapa.bairro_id = ter.id WHERE mapa.ativo = 1 AND mapa.ocultar = 0 ORDER BY ter.regiao ASC, mapa.mapa ASC, mapa.mapa_indice ASC, mapa.nome ASC');
+        
+        //var_dump($abc->rowCount(), $abc->fetchAll(PDO::FETCH_OBJ));return false;
+
         if($abc->rowCount() == 0) {
             return false;
         }
+        
         return $abc->fetchAll(PDO::FETCH_OBJ);
     }
 
@@ -272,27 +276,10 @@ class Mapa extends Model {
             return json_encode($resultado);
         }
 
-        // Retorna lista de surdos atualizada (formato JSON)
-        $mapas = $this->getMapas();
-        $surdoJSON = array();
-        foreach($mapas as $m) {
-            array_push($surdoJSON, array(
-                'id' => $m->id,
-                'nome' => $m->nome,
-                'mapa' => $m->mapa,
-                'mapa_indice' => $m->mapa_indice,
-                'bairro' => $m->bairro,
-                'bairro_id' => $m->bairro_id,
-                'gps' => $m->gps,
-                'regiao' => $m->regiao,
-            ));
-        }
-
-        $surdoJSON = json_encode($surdoJSON);
-
+        
         $resultado['sucesso'] = true;
         $resultado['mensagem'] = null;
-        $resultado['dados'] = $surdoJSON;
+        $resultado['dados'] = null;
 
         return json_encode($resultado);
     }

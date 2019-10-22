@@ -9,20 +9,23 @@
 	}
 
     $surdoJSON = array();
-    foreach($mapas as $m) {
-        array_push($surdoJSON, array(
-            'id' => $m->id,
-            'nome' => $m->nome,
-            'mapa' => $m->mapa,
-            'mapa_indice' => $m->mapa_indice,
-            'bairro' => $m->bairro,
-            'bairro_id' => $m->bairro_id,
-            'gps' => $m->gps,
-            'regiao' => $m->regiao,
-        ));
-    }
+    if(!empty($mapas)){
+        foreach($mapas as $m) {
+            array_push($surdoJSON, array(
+                'id' => $m->id,
+                'nome' => $m->nome,
+                'mapa' => $m->mapa,
+                'mapa_indice' => $m->mapa_indice,
+                'bairro' => $m->bairro,
+                'bairro_id' => $m->bairro_id,
+                'gps' => $m->gps,
+                'regiao' => $m->regiao,
+            ));
+        }
+    
 
-    $surdoJSON = json_encode($surdoJSON);
+        $surdoJSON = json_encode($surdoJSON);
+    }
     
     
 @endphp
@@ -310,6 +313,7 @@
         // Limpa área
         var area = $('#div_mapas');
         var html = '';
+        let surdosTotal = 0;
         area.html('');
 
         // Varre array
@@ -371,19 +375,23 @@
                     '</tr>';
 
                 surdosCont++;
+                surdosTotal++;
             }
 
         });
 
         // Finaliza.
-        // Antes de fechar o mapa, preenche com espaços vazios onde não houver surdo.
-        while(surdosCont < 4) {
-            html += '<tr> <td>-</td> <td>-</td> <td>-</td> </tr>';
-            surdosCont++;
-        }
+        if(surdosTotal > 0) {
+            // Antes de fechar o mapa, preenche com espaços vazios onde não houver surdo.
+            while(surdosCont < 4) {
+                html += '<tr> <td>-</td> <td>-</td> <td><button type="button" class="btn btn-sm btn-success btnAdd" data-toggle="tooltip" title="Adicionar surdo ao mapa"><i class="fas fa-plus"></i></button></td> </tr>';
+                surdosCont++;
+            }
 
-        // Fecha o mapa, coluna e linha
-        html += '</tbody></table> </div> </div>';
+            // Fecha o mapa, coluna e linha
+            html += '</tbody></table> </div> </div>';
+        }
+        
 
         area.append(html);
 
@@ -636,6 +644,7 @@
                 funcao: 'salvaEditarMapas',
                 dados: JSON.stringify(aMudancas)
             },function(data){
+                console.log(data);
                 if(isJson(data)) {
                     let res = JSON.parse(data);
                     let r = JSON.parse(res.dados);
@@ -643,11 +652,10 @@
                         alert('Falha: '+res.mensagem);
                         return false;
                     } else {
-                        surdosJSON = r;
                         alert('Alterações salvas!');
-                        console.log(r);
-                        setTimeout(function(){emGetMapas();}, 500);
-                        $('#botaoSalvar').prop('disabled', true);
+                        location.reload();
+                        //setTimeout(function(){emGetMapas();}, 500);
+                        //$('#botaoSalvar').prop('disabled', true);
                         return true;
                     }
                 } else {

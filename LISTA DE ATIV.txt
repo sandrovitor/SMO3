@@ -18,4 +18,4 @@ Pendências para correção ou implementação:
 - Administração > Publicadores > Editar: deve ter a opção de troca de nível. [ CORRIGIDO ]
 - Administração > Publicadores > Editar: configurar botão de "Notificar senha". [ CORRIGIDO ]
 - Administração > Publicadores > Território Pessoal: o modal de adicionar surdos deve possuir informações de como adicionar surdos ou remover. [ CORRIGIDO ]
-- Administração > Sistema > Editar Mapas: há algum erro na tela, pois não aparece nenhum surdo.
+- Administração > Sistema > Editar Mapas: há algum erro na tela, pois não aparece nenhum surdo. [ CORRIGIDO ]

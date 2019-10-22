@@ -110,7 +110,12 @@
 							<h5><strong>Publicador(a): </strong><span class="pubnome"></span> <small>[ID: <span class="pubid"></span>]</small></h5>
 						</div>
 					</div><hr>
-
+					
+					<div class="row">
+						<div class="col-12">
+							<div class="alert alert-info"><strong>INSTRUÇÕES:</strong> Para adicionar ou remover um surdo, dê dois cliques.</div>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-6">
 							<div class="border p-2 shadow-sm">

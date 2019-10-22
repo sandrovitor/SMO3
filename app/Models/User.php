@@ -155,6 +155,24 @@ class User extends Model {
         }
     }
 
+    public function notificaSenha(bool $notifica, int $id)
+    {
+        $abc = $this->pdo->prepare('UPDATE login SET change_pass = :notifica WHERE id = :id');
+        if($notifica == TRUE) {
+            $t = 'y';
+        } else {
+            $t = 'n';
+        }
+        try {
+            $abc->bindValue(':notifica', $t, PDO::PARAM_BOOL);
+            $abc->bindValue(':id', $id, PDO::PARAM_INT);
+            $abc->execute();
+            return true;
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
     public function desMA(int $id, bool $apagaTudo = FALSE)
     {
         $abc = $this->pdo->prepare('SELECT * FROM login WHERE id = :id');
@@ -321,7 +339,7 @@ class User extends Model {
         }
     }
 
-    public function salva($id, $nome, $sobrenome, $usuario, $email, $expira)
+    public function salva($id, $nome, $sobrenome, $usuario, $email, $expira, $nivel)
     {
         $reg = $this->getInfo($id);
         $log = new LOG();
@@ -332,7 +350,7 @@ class User extends Model {
         }
 
         $d = new DateTime($expira);
-        $sql = 'UPDATE login SET nome = :nome, sobrenome = :sobrenome, user = :usuario, email = :email, expira = :expira WHERE id = :id';
+        $sql = 'UPDATE login SET nome = :nome, sobrenome = :sobrenome, user = :usuario, email = :email, expira = :expira, nivel = :nivel WHERE id = :id';
         $abc = $this->pdo->prepare($sql);
 
         try {
@@ -341,6 +359,7 @@ class User extends Model {
             $abc->bindValue(':usuario', $usuario, PDO::PARAM_STR);
             $abc->bindValue(':email', $email, PDO::PARAM_STR);
             $abc->bindValue(':expira', $d->format('Y-m-d H:i:s'), PDO::PARAM_STR);
+            $abc->bindValue(':nivel', $nivel, PDO::PARAM_INT);
             $abc->bindValue(':id', $id, PDO::PARAM_INT);
 
             $abc->execute();

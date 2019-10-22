@@ -15,6 +15,16 @@
 
 	//var_dump($u);
 
+	$n0 = $n1 = $n2 = $n3 = $n4 = $n5 = '';
+	switch((int)$u->nivel) {
+		case 0: $n0 = 'selected="selected"'; break;
+		case 1: $n1 = 'selected="selected"'; break;
+		case 2: $n2 = 'selected="selected"'; break;
+		case 3: $n3 = 'selected="selected"'; break;
+		case 4: $n4 = 'selected="selected"'; break;
+		case 5: $n5 = 'selected="selected"'; break;
+	}
+
 	$criado = new DateTime($u->criado);
 	$atualizado = new DateTime($u->atualizado);
 	$hoje = new DateTime();
@@ -114,6 +124,17 @@
 				<label>Criado em:</label>
 				<input type="date" class="form-control form-control-sm" value="{{$criado->format('Y-m-d')}}" disabled>
 			</div>
+			<div class="form-group">
+				<label>Nível de acesso</label>
+				<select class="form-control form-control-sm" name="nivel">
+					<option value="0" {{$n0}}>Nível 0 - Sem acesso</option>
+					<option value="1" {{$n1}}>Nível 1 - Visitante</option>
+					<option value="2" {{$n2}}>Nível 2 - Publicador</option>
+					<option value="3" {{$n3}}>Nível 3 - Pioneiro Regular</option>
+					<option value="4" {{$n4}}>Nível 4 - Ancião</option>
+					<option value="5" {{$n5}}>Nível 5 - Administrador</option>
+				</select>
+			</div>
 		</div>
 		<div class="col-12 col-lg-4">
 			<div class="border shadow-sm p-3 mb-2">
@@ -185,9 +206,9 @@
 					</div>
 					<div class="col-6">
 						@if($u->change_pass == 'n')
-						<button type="button" class="btn btn-block btn-warning" style="font-size: .8rem;">Notificar senha</button>
+						<button type="button" class="btn btn-block btn-warning" style="font-size: .8rem;" onclick="notificaSenha()">Notificar senha</button>
 						@else
-						<button type="button" class="btn btn-block btn-warning" style="font-size: .8rem;">Não notificar</button>
+						<button type="button" class="btn btn-block btn-info" style="font-size: .8rem;" onclick="desnotificaSenha()">Não notificar</button>
 						@endif
 					</div>
 				</div>
@@ -340,6 +361,42 @@
 		if(id != undefined) {
 			$.post('{{$router->generate("admFunctions")}}', {
 				funcao: 'setModoFacilDesativa',
+				id: id
+			}, function(data) {
+				if(data == 'OK') {
+					location.reload();
+				} else {
+					alert(data);
+				}
+			});
+		} else {
+			alert('ID local do usuário é inválido.');
+		}
+	}
+
+	function notificaSenha() {
+		let id = $('[type="hidden"][name="id"]').val();
+		if(id != undefined) {
+			$.post('{{$router->generate("admFunctions")}}', {
+				funcao: 'setNotificaSenha',
+				id: id
+			}, function(data) {
+				if(data == 'OK') {
+					location.reload();
+				} else {
+					alert(data);
+				}
+			});
+		} else {
+			alert('ID local do usuário é inválido.');
+		}
+	}
+
+	function desnotificaSenha() {
+		let id = $('[type="hidden"][name="id"]').val();
+		if(id != undefined) {
+			$.post('{{$router->generate("admFunctions")}}', {
+				funcao: 'setDesnotificaSenha',
 				id: id
 			}, function(data) {
 				if(data == 'OK') {

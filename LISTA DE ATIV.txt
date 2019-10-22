@@ -11,3 +11,11 @@ Pendências para correção ou implementação:
 - Tela de informações do surdo não exibe últimos registros. [ CORRIGIDO ]
 - Ao criar novo usuário uma verificação do nome de usuário deve ser realizado. [ CORRIGIDO ]
 - BD: Tabela login, coluna "user" deve ser modificada para tipo "Único", para não aceitar duplicações. [ CORRIGIDO ]
+
+003:
+- Pendências (na tela inicial) só devem aparecer para usuários nivel 5. [ CORRIGIDO ]
+- Usuários nível 0 não podem fazer login. [ CORRIGIDO ]
+- Administração > Publicadores > Editar: deve ter a opção de troca de nível. [ CORRIGIDO ]
+- Administração > Publicadores > Editar: configurar botão de "Notificar senha". [ CORRIGIDO ]
+- Administração > Publicadores > Território Pessoal: o modal de adicionar surdos deve possuir informações de como adicionar surdos ou remover. [ CORRIGIDO ]
+- Administração > Sistema > Editar Mapas: há algum erro na tela, pois não aparece nenhum surdo.

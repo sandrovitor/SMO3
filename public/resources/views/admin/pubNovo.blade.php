@@ -40,7 +40,7 @@
 				</div>
 				<div class="form-group">
 					<label>Endereço de e-mail</label>
-					<input type="text" name="email" class="form-control form-control-sm" maxlength="16">
+					<input type="text" name="email" class="form-control form-control-sm" maxlength="40">
 					<small class="text-muted">Alguns contatos do SMO serão realizados por e-mail.</small>
 				</div>
 				<div class="form-group">

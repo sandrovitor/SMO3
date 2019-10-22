@@ -75,7 +75,9 @@
             </a>
         </div>
     </div>
-    <br><hr>
+    <br>
+    @if($_SESSION['nivel'] >= 5)
+    <hr>
     <div class="row">
         <div class="col-12 col-sm-12">
             <div class="card" id="pend-card">
@@ -88,4 +90,5 @@
             
         </div>
     </div>
+    @endif
 @endsection

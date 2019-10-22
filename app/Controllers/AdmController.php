@@ -268,6 +268,27 @@ class AdmController
                 }
                 break;
 
+            case 'setNotificaSenha':
+                $u = new User();
+                $res = $u->notificaSenha(TRUE, $_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+    
+            case 'setDesnotificaSenha':
+                $u = new User();
+                $res = $u->notificaSenha(FALSE, $_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+                break;
+
             case 'deleteUsuario':
                 $user = new User();
                 $res = $user->delete($_POST['id']);
@@ -1374,7 +1395,7 @@ class AdmController
         }
 
         $user = new User();
-        $res = $user->salva($_POST['id'], $_POST['nome'], $_POST['sobrenome'], $_POST['usuario'], $_POST['email'], $_POST['expira']);
+        $res = $user->salva($_POST['id'], $_POST['nome'], $_POST['sobrenome'], $_POST['usuario'], $_POST['email'], $_POST['expira'], $_POST['nivel']);
         if($res !== TRUE && $res !== FALSE) {
             SessionMessage::novo(array('tipo' => 'warning', 'titulo' => 'Mensagem do servidor:', 'texto' => $res));
         }

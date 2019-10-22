@@ -84,6 +84,12 @@ class Auth
                 return 'Perfil expirado';
                 return false;
             }
+            if((int)$aut->nivel === 0) {
+                // Nivel 0 = Sem acesso
+                SessionMessage::novo(array('titulo' => 'Falha!', 'texto' => 'Esse perfil está sem acesso. Nível 0..', 'tipo' => 'warning'));
+                return 'Nível 0';
+                return false;
+            }
 
             // Esgotadas todas as verificações acima....
             // Cria sessão e autoriza o acesso

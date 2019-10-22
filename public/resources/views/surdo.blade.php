@@ -6,87 +6,95 @@
 
 @php
     //var_dump($surdo);
-    if($surdo->p_ref == '') { $surdo->p_ref = '-'; }
-    if($surdo->familia == '') { $surdo->familia = '-'; }
-    if($surdo->facebook == '') { $surdo->facebook = '-'; }
-    if($surdo->whats == '') { $surdo->whats = '-'; }
-    if($surdo->tel == '') { $surdo->tel = '-'; }
-    if($surdo->idade == '') { $surdo->idade = '-'; }
-    if($surdo->obs == '') { $surdo->obs = '-'; }
-    if($surdo->turno == '') { $surdo->turno = '-'; }
-    if($surdo->hora_melhor == '') { $surdo->hora_melhor = '-'; }
 
-    if($surdo->dia_melhor != '') {
-        $x = explode('|', $surdo->dia_melhor);
-        $cDias = '';
-        
-        foreach($x as $y) {
-            switch($y) {
-                case "1":
-                    $cDias .= 'Domingo; ';
-                    break;
-                
-                case '2':
-                    $cDias .= 'Segunda; ';
-                    break;
+    if($surdo != null) {
+        // Se a variável não for nula
+
+        if($surdo->p_ref == '') { $surdo->p_ref = '-'; }
+        if($surdo->familia == '') { $surdo->familia = '-'; }
+        if($surdo->facebook == '') { $surdo->facebook = '-'; }
+        if($surdo->whats == '') { $surdo->whats = '-'; }
+        if($surdo->tel == '') { $surdo->tel = '-'; }
+        if($surdo->idade == '') { $surdo->idade = '-'; }
+        if($surdo->obs == '') { $surdo->obs = '-'; }
+        if($surdo->turno == '') { $surdo->turno = '-'; }
+        if($surdo->hora_melhor == '') { $surdo->hora_melhor = '-'; }
+
+        if($surdo->dia_melhor != '') {
+            $x = explode('|', $surdo->dia_melhor);
+            $cDias = '';
             
-                case '3':
-                    $cDias .= 'Terça; ';
-                    break;
+            foreach($x as $y) {
+                switch($y) {
+                    case "1":
+                        $cDias .= 'Domingo; ';
+                        break;
                     
-                case '4':
-                    $cDias .= 'Quarta; ';
-                    break;
-                    
-                case '5':
-                    $cDias .= 'Quinta; ';
-                    break;
-                    
-                case '6':
-                    $cDias .= 'Sexta; ';
-                    break;
+                    case '2':
+                        $cDias .= 'Segunda; ';
+                        break;
+                
+                    case '3':
+                        $cDias .= 'Terça; ';
+                        break;
+                        
+                    case '4':
+                        $cDias .= 'Quarta; ';
+                        break;
+                        
+                    case '5':
+                        $cDias .= 'Quinta; ';
+                        break;
+                        
+                    case '6':
+                        $cDias .= 'Sexta; ';
+                        break;
 
-                case '7':
-                    $cDias .= 'Sábado; ';
-                    break;
+                    case '7':
+                        $cDias .= 'Sábado; ';
+                        break;
+                }
             }
+
+            $cDias = substr($cDias, 0, -2);
+        } else {
+            $cDias = '-';
+        }
+        
+        if((bool)$surdo->be == TRUE && $surdo->resp_id != '') {
+            $cBE = '<span class="badge badge-success" style="font-size: 1rem"><i class="fas fa-heart"></i> &nbsp; '.$surdo->resp.'</span>';
+        } else {
+            $cBE = '<span class="badge badge-secondary" style="font-size: 1rem"><i class="far fa-heart"></i> &nbsp; NÃO</span>';
         }
 
-        $cDias = substr($cDias, 0, -2);
+        // BADGES
+
+        if(($surdo->ativo == "1" || $surdo->ativo == true) && ($surdo->ocultar == "0" || $surdo->ocultar == false)) { // ATIVO e VISÍVEL
+            $bAtivo = '<span class="badge badge-success" data-toggle="tooltip" title="ATIVO!"><i class="fas fa-star"></i> ATIVO</span>';
+        } else if(($surdo->ativo == "1" || $surdo->ativo == true) && ($surdo->ocultar == "1" || $surdo->ocultar == true)) { // ATIVO e OCULTO
+            $bAtivo = '<span class="badge badge-info" data-toggle="tooltip" title="Oculto"><i class="far fa-star-half"></i> OCULTO</span>';
+        } else { // DESATIVADO
+            $bAtivo = '<span class="badge badge-danger" data-toggle="tooltip" title="Desativado"><i class="far fa-star"></i> DESATIVADO</span>';
+        }
+        
+        if($surdo->be == "1") { // BIBLIA ESTUDA
+            $bBE = ' <span class="badge badge-light text-danger" data-toggle="tooltip" title="Bíblia Estuda!"><i class="fas fa-heart"></i> BÍBLIA ESTUDA</span>';
+            $bEncontrado = ' <span class="badge badge-light text-primary" data-toggle="tooltip" title="ENCONTRADO!"><i class="fas fa-check-double"></i> ENCONTRADO</span>';
+        } else if($surdo->be == "0" && $surdo->encontrado == "1") { // ENCONTRADO
+            $bBE = ' <span class="badge badge-light text-muted" data-toggle="tooltip" title="Não estuda Bíblia"><i class="far fa-heart"></i> NÃO ESTUDA</span>';
+            $bEncontrado = ' <span class="badge badge-light text-primary" data-toggle="tooltip" title="ENCONTRADO!"><i class="fas fa-check-double"></i> ENCONTRADO</span>';
+        } else { // NÃO ENCONTRADO
+            $bBE = ' <span class="badge badge-light text-muted" data-toggle="tooltip" title="Não estuda Bíblia"><i class="far fa-heart"></i> NÃO ESTUDA</span>';
+            $bEncontrado = ' <span class="badge badge-light text-muted" data-toggle="tooltip" title="Não encontrado"><i class="fas fa-check"></i> NÃO ENCONTRADO</span>';
+        }
+
+        $nome = $surdo->nome;
     } else {
-        $cDias = '-';
+        $nome = '';
     }
-    
-    if((bool)$surdo->be == TRUE && $surdo->resp_id != '') {
-        $cBE = '<span class="badge badge-success" style="font-size: 1rem"><i class="fas fa-heart"></i> &nbsp; '.$surdo->resp.'</span>';
-    } else {
-        $cBE = '<span class="badge badge-secondary" style="font-size: 1rem"><i class="far fa-heart"></i> &nbsp; NÃO</span>';
-    }
-
-    // BADGES
-
-    if(($surdo->ativo == "1" || $surdo->ativo == true) && ($surdo->ocultar == "0" || $surdo->ocultar == false)) { // ATIVO e VISÍVEL
-        $bAtivo = '<span class="badge badge-success" data-toggle="tooltip" title="ATIVO!"><i class="fas fa-star"></i> ATIVO</span>';
-    } else if(($surdo->ativo == "1" || $surdo->ativo == true) && ($surdo->ocultar == "1" || $surdo->ocultar == true)) { // ATIVO e OCULTO
-        $bAtivo = '<span class="badge badge-info" data-toggle="tooltip" title="Oculto"><i class="far fa-star-half"></i> OCULTO</span>';
-    } else { // DESATIVADO
-        $bAtivo = '<span class="badge badge-danger" data-toggle="tooltip" title="Desativado"><i class="far fa-star"></i> DESATIVADO</span>';
-    }
-    
-    if($surdo->be == "1") { // BIBLIA ESTUDA
-        $bBE = ' <span class="badge badge-light text-danger" data-toggle="tooltip" title="Bíblia Estuda!"><i class="fas fa-heart"></i> BÍBLIA ESTUDA</span>';
-        $bEncontrado = ' <span class="badge badge-light text-primary" data-toggle="tooltip" title="ENCONTRADO!"><i class="fas fa-check-double"></i> ENCONTRADO</span>';
-    } else if($surdo->be == "0" && $surdo->encontrado == "1") { // ENCONTRADO
-        $bBE = ' <span class="badge badge-light text-muted" data-toggle="tooltip" title="Não estuda Bíblia"><i class="far fa-heart"></i> NÃO ESTUDA</span>';
-        $bEncontrado = ' <span class="badge badge-light text-primary" data-toggle="tooltip" title="ENCONTRADO!"><i class="fas fa-check-double"></i> ENCONTRADO</span>';
-    } else { // NÃO ENCONTRADO
-        $bBE = ' <span class="badge badge-light text-muted" data-toggle="tooltip" title="Não estuda Bíblia"><i class="far fa-heart"></i> NÃO ESTUDA</span>';
-        $bEncontrado = ' <span class="badge badge-light text-muted" data-toggle="tooltip" title="Não encontrado"><i class="fas fa-check"></i> NÃO ENCONTRADO</span>';
-    }
-
 @endphp
 
-@section ('paginaCorrente', 'Surdo '.$surdo->nome)
+@section ('paginaCorrente', 'Surdo '.$nome)
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Início</a></li>
@@ -95,6 +103,13 @@
 @endsection
 
 @section('conteudo')
+    @if($surdo == null)
+    <div class="row">
+        <div class="col-12">
+            <h4 class="text-center"><i class="fas fa-times text-danger"></i> &nbsp; Surdo não encontrado</h4>
+        </div>
+    </div>
+    @else
     <div class="row">
         <div class="col-12 col-lg-6">
             <h3><strong>{{$surdo->nome}}</strong> <small style="font-size: .875rem">[ID: {{$surdo->id}}]</small><br>
@@ -146,6 +161,7 @@
         </div>
     </div>
     <div class="backTop"><span class="glyphicon glyphicon-chevron-up"></span></div>
+    @endif
 @endsection
 
 @section('script')

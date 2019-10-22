@@ -287,6 +287,56 @@ class AdmController
                     return $res;
                 }
                 break;
+
+            case 'setSurdoAtivar':
+                $mapa = new Mapa();
+                $res = $mapa->ativar($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+
+            case 'setSurdoDesativar':
+                $mapa = new Mapa();
+                $res = $mapa->desativar($_POST['id'], $_POST['motivo']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+
+            case 'setSurdoOcultar':
+                $mapa = new Mapa();
+                $res = $mapa->ocultar($_POST['id'], $_POST['motivo']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+
+            case 'setSurdoDesocultar':
+                $mapa = new Mapa();
+                $res = $mapa->desocultar($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
+
+            case 'setSurdoExcluir':
+                $mapa = new Mapa();
+                $res = $mapa->excluir($_POST['id']);
+                if($res === TRUE) {
+                    return 'OK';
+                } else {
+                    return $res;
+                }
+                break;
         }
         
     }

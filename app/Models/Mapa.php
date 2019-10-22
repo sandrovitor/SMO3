@@ -144,6 +144,92 @@ class Mapa extends Model {
         }
     }
 
+    function ativar(int $surdoId)
+    {
+        $s = json_decode($this->surdoId((int) $surdoId));
+        $abc = $this->pdo->prepare('UPDATE mapa SET ativo = TRUE, motivo = "" WHERE id = :id');
+        try{
+            $abc->bindValue(':id', $surdoId, PDO::PARAM_INT);
+
+            $abc->execute();
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'ativou o surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
+            return TRUE;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    function desativar(int $surdoId, $motivo)
+    {
+        $s = json_decode($this->surdoId((int) $surdoId));
+        $abc = $this->pdo->prepare('UPDATE mapa SET ativo = FALSE, motivo = :motivo WHERE id = :id');
+        try{
+            $abc->bindValue(':motivo', $motivo, PDO::PARAM_STR);
+            $abc->bindValue(':id', $surdoId, PDO::PARAM_INT);
+
+            $abc->execute();
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'desativou o surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
+            return TRUE;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+
+    }
+
+    function ocultar(int $surdoId, $motivo)
+    {
+        $s = json_decode($this->surdoId((int) $surdoId));
+        $abc = $this->pdo->prepare('UPDATE mapa SET ocultar = TRUE, motivo = :motivo WHERE id = :id');
+        try{
+            $abc->bindValue(':motivo', $motivo, PDO::PARAM_STR);
+            $abc->bindValue(':id', $surdoId, PDO::PARAM_INT);
+
+            $abc->execute();
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'ocultou o surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
+            return TRUE;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    function desocultar(int $surdoId)
+    {
+        $s = json_decode($this->surdoId((int) $surdoId));
+        $abc = $this->pdo->prepare('UPDATE mapa SET ocultar = FALSE, motivo = "" WHERE id = :id');
+        try{
+            $abc->bindValue(':id', $surdoId, PDO::PARAM_INT);
+
+            $abc->execute();
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 're-exibiu o surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
+            return TRUE;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    function excluir(int $surdoId)
+    {
+        $s = json_decode($this->surdoId((int) $surdoId));
+        $abc = $this->pdo->prepare('DELETE FROM mapa WHERE id = :id1; DELETE FROM registro WHERE mapa_id = :id2; DELETE FROM historico_mapa WHERE mapa_id = :id3;');
+        try{
+            $abc->bindValue(':id1', $surdoId, PDO::PARAM_INT);
+            $abc->bindValue(':id2', $surdoId, PDO::PARAM_INT);
+            $abc->bindValue(':id3', $surdoId, PDO::PARAM_INT);
+
+            $abc->execute();
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'excluiu o surdo <i>'.$s->nome.' ['.$s->bairro.']</i> do sistema.');
+            SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Surdo <i>'.$s->nome.' ['.$s->bairro.']</i> excluído.', 'tipo' => 'success'));
+            return TRUE;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
     function salvaEditarMapas($m)
     {
         $mOBJ = json_decode($m);

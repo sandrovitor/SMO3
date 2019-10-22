@@ -57,19 +57,19 @@
                         </div>
                         <div class="form-group">
                             <label>Endereço</label>
-                            <input type="text" class="form-control" name="endereco" placeholder="RUA, Nº, COMPLEMENTO" maxlength="75">
+                            <input type="text" class="form-control text-uppercase" name="endereco" placeholder="RUA, Nº, COMPLEMENTO" maxlength="75">
                         </div>
                         <div class="form-group">
                             <label>Ponto de referência</label>
-                            <input type="text" class="form-control" name="pref" placeholder="PONTOS DE REFERÊNCIA" maxlength="90">
+                            <input type="text" class="form-control text-uppercase" name="pref" placeholder="PONTOS DE REFERÊNCIA" maxlength="90">
                         </div>
                         <div class="form-group">
                             <label>Parentes/Família</label>
-                            <input type="text" class="form-control" name="familia" placeholder="PARENTES/FAMÍLIA" maxlength="75">
+                            <input type="text" class="form-control text-uppercase" name="familia" placeholder="PARENTES/FAMÍLIA" maxlength="75">
                         </div>
                         <div class="form-group">
                             <label>Observações</label>
-                            <textarea class="form-control" name="obs" placeholder="INFORMAÇÕES RELEVANTES. MÁXIMO DE 75 LETRAS" rows="4" maxlength="75"></textarea>
+                            <textarea class="form-control" name="obs text-uppercase" placeholder="INFORMAÇÕES RELEVANTES. MÁXIMO DE 75 LETRAS" rows="4" maxlength="75"></textarea>
                         </div>
                         <div class="form-group">
                             <label>Localização GPS</label>
@@ -100,7 +100,7 @@
                     <div class="col-12 col-xl-6">
                         <div class="form-group">
                             <label>Telefone(s)</label>
-                            <input type="text" class="form-control" name="tel" placeholder="NÚMEROS DE TELEFONE" maxlength="75">
+                            <input type="text" class="form-control text-uppercase" name="tel" placeholder="NÚMEROS DE TELEFONE" maxlength="75">
                             <small class="form-text text-muted">Ex.: "98888-1234 (MÃE); 99999-1234 (SURDO)"</small>
                         </div>
                         <div class="form-group">
@@ -153,7 +153,7 @@
                         </div>
                         <div class="form-group" id="motivo-div" style="display:none;">
                             <label>Motivo</label>
-                            <textarea class="form-control" rows="4" name="motivo" maxlength="240" placeholder="JUSTIFIQUE A DESATIVAÇÃO (OU OCULTAMENTO) COM ATÉ 240 LETRAS."></textarea>
+                            <textarea class="form-control text-uppercase" rows="4" name="motivo" maxlength="240" placeholder="JUSTIFIQUE A DESATIVAÇÃO (OU OCULTAMENTO) COM ATÉ 240 LETRAS."></textarea>
                         </div>
                     </div>
                 </div>
@@ -177,5 +177,7 @@
 @endsection
 
 @section('script')
+<style>
 
+</style>
 @endsection

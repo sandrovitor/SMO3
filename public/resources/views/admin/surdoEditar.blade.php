@@ -84,16 +84,25 @@
         <div class="col-12 mb-2">
             <div class="bg-light p-2 d-flex justify-content-center">
                 @if($surdo->ativo == '1' && $surdo->ocultar == '0')
-                <button type="button" class="btn btn-danger"><i class="far fa-star"></i> Desativar</button> &nbsp;
-                <button type="button" class="btn btn-info"><i class="far fa-star-half"></i> Ocultar</button>
+                <button type="button" class="btn btn-warning" onclick="desativar()"><i class="far fa-star"></i> Desativar</button> &nbsp;
+                <button type="button" class="btn btn-info" onclick="ocultar()"><i class="far fa-star-half"></i> Ocultar</button> &nbsp;
                 @elseif($surdo->ativo == '1' && $surdo->ocultar == '1')
-                <button type="button" class="btn btn-danger"><i class="far fa-star"></i> Desativar</button> &nbsp;
-                <button type="button" class="btn btn-dark"><i class="fas fa-star"></i> Re-exibir</button> 
+                <button type="button" class="btn btn-warning" onclick="desativar()"><i class="far fa-star"></i> Desativar</button> &nbsp;
+                <button type="button" class="btn btn-dark" onclick="desocultar()"><i class="fas fa-star"></i> Re-exibir</button> &nbsp;
                 @else
-                <button type="button" class="btn btn-success"><i class="fas fa-star"></i> Ativar</button> &nbsp;
+                <button type="button" class="btn btn-success" onclick="ativar()"><i class="fas fa-star"></i> Ativar</button> &nbsp;
                 @endif
-                
+                <button type="button" class="btn btn-danger" onclick="excluir()"><i class="fas fa-eraser"></i> Excluir</button>
             </div>
+            @if($surdo->ativo == '0' )
+            <div class="mt-2 rounded-sm bg-danger text-white p-2 d-flex justify-content-center">
+                <strong>MOTIVO:</strong> &nbsp; <i>"{{$surdo->motivo}}"</i>
+            </div>
+            @elseif($surdo->ocultar == '1')
+            <div class="mt-2 rounded-sm bg-info text-white p-2 d-flex justify-content-center">
+                <strong>MOTIVO:</strong> &nbsp; <i>"{{$surdo->motivo}}"</i>
+            </div>
+            @endif
         </div>
     </div>
     <form method="post" action="{{$router->generate('admSurdoSalva')}}">
@@ -135,19 +144,19 @@
                         </div>
                         <div class="form-group">
                             <label>Endereço</label>
-                            <input type="text" class="form-control" name="endereco" placeholder="RUA, Nº, COMPLEMENTO" maxlength="75" value="{{$surdo->endereco}}">
+                            <input type="text" class="form-control text-uppercase" name="endereco" placeholder="RUA, Nº, COMPLEMENTO" maxlength="75" value="{{$surdo->endereco}}">
                         </div>
                         <div class="form-group">
                             <label>Ponto de referência</label>
-                            <input type="text" class="form-control" name="pref" placeholder="PONTOS DE REFERÊNCIA" maxlength="90" value="{{$surdo->p_ref}}">
+                            <input type="text" class="form-control text-uppercase" name="pref" placeholder="PONTOS DE REFERÊNCIA" maxlength="90" value="{{$surdo->p_ref}}">
                         </div>
                         <div class="form-group">
                             <label>Parentes/Família</label>
-                            <input type="text" class="form-control" name="familia" placeholder="PARENTES/FAMÍLIA" maxlength="75" value="{{$surdo->familia}}">
+                            <input type="text" class="form-control text-uppercase" name="familia" placeholder="PARENTES/FAMÍLIA" maxlength="75" value="{{$surdo->familia}}">
                         </div>
                         <div class="form-group">
                             <label>Observações</label>
-                            <textarea class="form-control" name="obs" placeholder="INFORMAÇÕES RELEVANTES. MÁXIMO DE 75 LETRAS" rows="4" maxlength="75">{{$surdo->obs}}</textarea>
+                            <textarea class="form-control text-uppercase" name="obs" placeholder="INFORMAÇÕES RELEVANTES. MÁXIMO DE 75 LETRAS" rows="4" maxlength="75">{{$surdo->obs}}</textarea>
                         </div>
                         <div class="form-group">
                             <label>Localização GPS</label>
@@ -178,7 +187,7 @@
                     <div class="col-12 col-xl-6">
                         <div class="form-group">
                             <label>Telefone(s)</label>
-                            <input type="text" class="form-control" name="tel" placeholder="NÚMEROS DE TELEFONE" maxlength="75" value="{{$surdo->tel}}">
+                            <input type="text" class="form-control text-uppercase" name="tel" placeholder="NÚMEROS DE TELEFONE" maxlength="75" value="{{$surdo->tel}}">
                             <small class="form-text text-muted">Ex.: "98888-1234 (MÃE); 99999-1234 (SURDO)"</small>
                         </div>
                         <div class="form-group">
@@ -237,18 +246,111 @@
 @endsection
 
 @section('script')
-    <script>
-        $(document).ready(function(){
-            $('[name="idade"]').find('[value^="{{substr($surdo->idade, 0, 4)}}"]').prop('selected',true);
-            $('[name="turno"]').find('[value^="{{substr($surdo->turno, 0, 3)}}"]').prop('selected',true);
-            $('[name="ativo"]').find('[value="{{$ativo}}"]').prop('selected',true);
-            $('[name="ocultar"]').find('[value="{{$ocultar}}"]').prop('selected',true);
+<script>
+    function desativar()
+    {
+        let motivo = prompt("Por que desativar esse surdo?");
 
-            initMap(true, $('[name="gpsval"]').val());
+        if(motivo != null) {
+            $.post('{{$router->generate("admFunctions")}}',{
+                funcao: 'setSurdoDesativar',
+                id: {{$surdo->id}},
+                motivo: motivo
+            },function(data){
+                if(data == 'OK') {
+                    location.reload();
+                } else {
+                    alert(data);
+                }
+            });
+        } else {
+            alert('Motivo inválido.');
+        }
+        
+    }
 
-            if('{{$ativo}}' == 'not' || '{{$ocultar}}' == 'yes') {
-                $('#motivo-div').slideDown();
+    function ativar()
+    {
+        $.post('{{$router->generate("admFunctions")}}',{
+            funcao: 'setSurdoAtivar',
+            id: {{$surdo->id}}
+        },function(data){
+            if(data == 'OK') {
+                location.reload();
+            } else {
+                alert(data);
             }
         });
-    </script>
+    }
+
+    function ocultar()
+    {
+        let motivo = prompt("Por que ocultar esse surdo?");
+
+        if(motivo != null) {
+            $.post('{{$router->generate("admFunctions")}}',{
+                funcao: 'setSurdoOcultar',
+                id: {{$surdo->id}},
+                motivo: motivo
+            },function(data){
+                if(data == 'OK') {
+                    location.reload();
+                } else {
+                    alert(data);
+                }
+            });
+        } else {
+            alert('Motivo inválido.');
+        }
+        
+    }
+
+    function desocultar()
+    {
+        $.post('{{$router->generate("admFunctions")}}',{
+            funcao: 'setSurdoDesocultar',
+            id: {{$surdo->id}}
+        },function(data){
+            if(data == 'OK') {
+                location.reload();
+            } else {
+                alert(data);
+            }
+        });
+    }
+
+    function excluir()
+    {
+        let motivo = confirm("Você realmente quer excluir esse surdo??\nEssa operação não pode ser desfeita.\n\n"+
+        "OBS.: Os registros de visita e histórico de endereços do surdo também serão excluidos.");
+
+        if(motivo == true) {
+            $.post('{{$router->generate("admFunctions")}}',{
+                funcao: 'setSurdoExcluir',
+                id: {{$surdo->id}}
+            },function(data){
+                if(data == 'OK') {
+                    location.href = '{{$router->generate("admSurdoVer")}}';
+                } else {
+                    alert(data);
+                }
+            });
+        } else {
+            alert('Ufa! Exclusão cancelada.');
+        }
+    }
+
+    $(document).ready(function(){
+        $('[name="idade"]').find('[value^="{{substr($surdo->idade, 0, 4)}}"]').prop('selected',true);
+        $('[name="turno"]').find('[value^="{{substr($surdo->turno, 0, 3)}}"]').prop('selected',true);
+        $('[name="ativo"]').find('[value="{{$ativo}}"]').prop('selected',true);
+        $('[name="ocultar"]').find('[value="{{$ocultar}}"]').prop('selected',true);
+
+        initMap(true, $('[name="gpsval"]').val());
+
+        if('{{$ativo}}' == 'not' || '{{$ocultar}}' == 'yes') {
+            $('#motivo-div').slideDown();
+        }
+    });
+</script>
 @endsection

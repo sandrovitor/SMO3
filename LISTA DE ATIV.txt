@@ -1,4 +1,4 @@
 Pendências para correção ou implementação:
 
-- Endereço, ponto de referência, observações e etc, devem ser todos UPPERCASE direto no input.
-- Adicionar botão para EXCLUIR/DELETAR surdo.
+- Endereço, ponto de referência, observações e etc, devem ser todos UPPERCASE direto no input. [ CORRIGIDO ]
+- Adicionar botão para EXCLUIR/DELETAR surdo. [ CORRIGIDO ]

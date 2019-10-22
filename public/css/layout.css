@@ -103,6 +103,14 @@ form.form-rounded {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
+    .registro-card .registro-header.enc {
+        border-bottom: 1px solid rgb(226, 226, 226);
+        background: rgb(168, 250, 121);
+    }
+    .registro-card .registro-header.nenc {
+        border-bottom: 1px solid rgb(226, 226, 226);
+        background: rgb(245,245,245);
+    }
 .registro-card .registro-body {
     margin: -5px -10px;
     padding: 15px;

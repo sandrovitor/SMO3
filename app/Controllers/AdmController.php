@@ -337,6 +337,15 @@ class AdmController
                     return $res;
                 }
                 break;
+
+            case 'checaUsername':
+                $u = new User();
+                if($u->checaUsernameLivre($_POST['user']) === true) {
+                    return 'OK';
+                } else {
+                    return 'Nome de usuário já está em uso.';
+                }
+                break;
         }
         
     }

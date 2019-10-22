@@ -142,6 +142,19 @@ class User extends Model {
         
     }
 
+    public function checaUsernameLivre(string $user)
+    {
+        $abc = $this->pdo->prepare('SELECT * FROM login WHERE user = :user');
+        $abc->bindValue(':user', $user, PDO::PARAM_STR);
+        $abc->execute();
+
+        if($abc->rowCount() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function desMA(int $id, bool $apagaTudo = FALSE)
     {
         $abc = $this->pdo->prepare('SELECT * FROM login WHERE id = :id');
@@ -292,7 +305,17 @@ class User extends Model {
             $abc->bindValue(':change_pass', 'n', PDO::PARAM_BOOL);
 
             $abc->execute();
-            return true;
+            // Verifica se o usuário foi criado
+
+            $abc = $this->pdo->prepare('SELECT * FROM login WHERE user = :user');
+            $abc->bindValue(':user', $u->usuario, PDO::PARAM_STR);
+            $abc->execute();
+
+            if($abc->rowCount() == 1){
+                return true;
+            } else {
+                return 'Usuário não foi criado. Consulte desenvolvedor.';
+            }
         } catch(PDOException $e) {
             return $e->getMessage();
         }

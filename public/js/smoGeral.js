@@ -335,9 +335,11 @@ function getRegistroFormatado(registroId, surdoId, surdoNome, bairroNome, dataVi
     if(encontrado == '1') {
         // Encontrado
         encString = '<span class="badge badge-light text-primary" data-toggle="tooltip" title="" data-original-title="ENCONTRADO!"><i class="fas fa-check-double"></i> ENCONTRADO</span>';
+        encHeaderClass = 'enc';
     } else {
         // Não encontrado
         encString = '<span class="badge badge-light text-muted" data-toggle="tooltip" title="" data-original-title="Não encontrado"><i class="fas fa-check"></i> NÃO ENCONTRADO</span>';
+        encHeaderClass = 'nenc';
     }
 
     // verifica se é o Publicador que criou o registro ou se é um usuário nível 5
@@ -352,7 +354,7 @@ function getRegistroFormatado(registroId, surdoId, surdoNome, bairroNome, dataVi
     
 
     retorno = '<div class="registro-card">'+
-    '<div class="registro-header d-flex flex-md-row flex-column flex-wrap">'+
+    '<div class="registro-header '+encHeaderClass+' d-flex flex-md-row flex-column flex-wrap">'+
         '<span class="flex-fill"><strong>'+surdoNome+'</strong> '+ encString +
         ' <br><small><strong>Bairro: '+bairroNome+'</strong></small></span>'+
         '<span class="flex-fill text-md-right"> <strong>Data:</strong> '+dataVisita+' <br> <strong>Publicador(a):</strong> '+pubNome+' </span>'+
@@ -388,7 +390,7 @@ function registroBusca()
         statusCode: codigoDeStatus, // Retorno do código de cabeçalho HTTP
         cache: false, // Não usar dados em cache
         success: function(data) {
-            //console.log(data);
+            console.log(data);
             if(data == '{0}') {
                 $('#resultadobusca').html('<strong>Nada encontrado</strong>');
             } else if(isJson(data)) {
@@ -409,6 +411,8 @@ function registroBusca()
                 if(resultado.length == 10) {
                     $('#resultadobusca').append('<div class="loadmore text-center"><hr><button type="button" class="btn btn-outline-primary" onclick="registroLoadMore(10);">&nbsp; <i class="fas fa-plus"></i> Carregar mais... &nbsp;</button></div>');
                 }
+            } else {
+                $('#resultadobusca').html('<strong>Resultado inesperado</strong><br>'+data);
             }
             
         }, // Em caso de sucesso

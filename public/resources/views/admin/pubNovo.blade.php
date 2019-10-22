@@ -22,7 +22,7 @@
 @section ('mensagemDeRetorno', $mensagemDeRetorno)
 	
 @section('conteudo')
-	<form action="" method="post" onsubmit="return valida();">
+	<form action="" method="post" onsubmit="return valida(); return false;">
 		<div class="row">
 			<div class="col-12 col-md-6 col-lg-4">
 				<div class="form-group">
@@ -99,9 +99,18 @@
 @endsection
 
 @section('script')
-	<script>
+<style>
+.valid {
+	border-color: #00b300!important;
+}
+.invalid {
+	border-color: #b30000!important;
+}
+</style>
+<script>
 	function valida()
 	{
+		
 		if($('[name="senhapadrao"]').prop('checked') == true) {
 			$('[name="senha1"], [name="senha2"]').val('12345678');
 		} else {
@@ -111,8 +120,40 @@
 			}
 		}
 
+		if($('.invalid').length > 0) {
+			$('.invalid').eq(0).focus();
+			return false;
+		}
 		return true;
 	}
+
+	function checaUsername()
+	{
+		let item = $(event.target);
+		let usuario = $(event.target).val();
+
+		if(usuario == '' || usuario == undefined) {
+			item.removeClass('valid').addClass('invalid');
+			return false;
+		} else {
+			$.post('{{$router->generate("admFunctions")}}',{
+				funcao: 'checaUsername',
+				user: usuario
+			},function(data){
+				console.log(data);
+				if(data == 'OK') {
+					item.removeClass('invalid').addClass('valid');
+					return true;
+				} else {
+					alert('Nome de usuário já está sendo usado. Por favor, escolha outro.');
+					item.removeClass('valid').addClass('invalid');
+					return false;
+				}
+				
+			});
+		}
+	}
+
 	$(document).ready(function(){
 		$(document).on('click', '[name="senhapadrao"]', function(){
 			if($(this).prop('checked') == true) {
@@ -121,6 +162,10 @@
 				$('#senhas').slideDown();
 			}
 		});
+
+		$(document).on('blur', '[name="usuario"]', function(){
+			checaUsername();
+		});
 	});
-	</script>
+</script>
 @endsection

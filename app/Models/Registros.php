@@ -171,7 +171,7 @@ class Registros extends Model {
             $where = array();
             if($params['surdoid'] != 0) { // SURDOID
                 array_push($where, 'registro.mapa_id = :surdoid');
-                $s = $mapa->surdoId($params['surdoid']);
+                $s = json_decode($mapa->surdoID($params['surdoid']));
                 array_push($logStr, 'do(a) surdo(a) '.$s->nome.' ['.$s->bairro.']');
             }
 
@@ -218,7 +218,7 @@ class Registros extends Model {
             $where = array();
             if($params['surdoid'] != 0) { // SURDOID
                 array_push($where, 'registro.mapa_id = :surdoid');
-                $s = $mapa->surdoId($params['surdoid']);
+                $s = json_decode($mapa->surdoID($params['surdoid']));
                 array_push($logStr, 'do(a) surdo(a) '.$s->nome.' ['.$s->bairro.']');
             }
 
@@ -288,7 +288,7 @@ class Registros extends Model {
                  */
                 $log = new LOG();
                 $mapa = new Mapa();
-                $s = $mapa->surdoId($reg->mapa_id);
+                $s = json_decode($mapa->surdoID($reg->mapa_id));
                 $log->novo(LOG::TIPO_REMOVE, 'apagou registro [ID: '.$regid.'] do surdo <i>'.$s->nome.' ['.$s->bairro.']</i>.');
                 echo true;
             } catch(PDOException $e) {

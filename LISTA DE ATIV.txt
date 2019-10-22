@@ -6,8 +6,8 @@ Pendências para correção ou implementação:
 
 
 002:
-- Registros > Buscar não funciona.
-- Correção das telas de Cadastro e Cadastro Editar: campos em UPPERCASE e aceitando acentos.
-- Tela de informações do surdo não exibe últimos registros.
-- Ao criar novo usuário uma verificação do nome de usuário deve ser realizado.
-- BD: Tabela login, coluna "user" deve ser modificada para tipo "Único", para não aceitar duplicações.
+- Registros > Buscar não funciona. [ CORRIGIDO ]
+- Correção das telas de Cadastro e Cadastro Editar: campos em UPPERCASE e aceitando acentos. [ CORRIGIDO ]
+- Tela de informações do surdo não exibe últimos registros. [ CORRIGIDO ]
+- Ao criar novo usuário uma verificação do nome de usuário deve ser realizado. [ CORRIGIDO ]
+- BD: Tabela login, coluna "user" deve ser modificada para tipo "Único", para não aceitar duplicações. [ CORRIGIDO ]

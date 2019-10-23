@@ -123,14 +123,14 @@
             </div>
             <div class="mb-2 col-12 col-md-7 col-lg-6">
                 <div class="row" id="divBtn">
-                    <div class="col-6">
+                    <div class="col-12">
                         <h6 class="text-center mb-3"><strong>IMPRIMIR</strong></h6>
                         <button class="btn btn-block btn-sm btn-primary btnTog" disabled onclick="printMapas()">Imprimir mapas</button>
                         <button class="btn btn-block btn-sm btn-primary btnTog" disabled onclick="printReg()">Registro (frente)</button>
                         <button class="btn btn-block btn-sm btn-primary" onclick="printVerso()">Registro (verso)</button>
                         <button class="btn btn-block btn-sm btn-primary btnTog" disabled onclick="printQR()">Código QR</button>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6" style="display:none">
                         <h6 class="text-center mb-3"><strong>PDF</strong></h6>
                         <button class="btn btn-block btn-sm btn-info btnTog" disabled onclick="pdfMapas()">Gerar mapas</button>
                         <button class="btn btn-block btn-sm btn-info btnTog" disabled onclick="pdfReg()">Gerar registro (frente)</button>

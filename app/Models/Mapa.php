@@ -509,6 +509,18 @@ class Mapa extends Model {
         }
     }
 
+    function listaSocial() // Lista todos os surdos com contatos em rede social (telefone, WhatsApp e Facebook)
+    {
+        $abc = $this->pdo->query('SELECT mapa.*, '.
+        'if((SELECT COUNT(`registro`.`id`) FROM `registro` WHERE `registro`.`mapa_id` = `mapa`.`id` AND (`registro`.`data_visita` >= "'.$this->periodoIni.'" AND `registro`.`data_visita` <= "'.$this->periodoFim.'") LIMIT 0, 1)>0, TRUE, FALSE) as encontrado, '.
+        'ter.bairro FROM mapa LEFT JOIN ter ON mapa.bairro_id = ter.id WHERE (mapa.whats <> "" OR mapa.tel <> "" OR mapa.facebook <> "") AND mapa.ativo = TRUE AND mapa.ocultar = FALSE ORDER BY ter.regiao ASC, ter.bairro ASC, mapa.nome ASC');
+        if($abc->rowCount() == 0) {
+            return false;
+        } else {
+            return $abc->fetchAll(PDO::FETCH_OBJ);
+        }
+    }
+
     function listaSurdosSemTP()
     {
         $abc = $this->pdo->query('SELECT mapa.id, mapa.nome, mapa.mapa, ter.bairro FROM `mapa` LEFT JOIN ter ON mapa.bairro_id = ter.id WHERE tp_pub = 0 AND mapa.ativo = TRUE AND mapa.ocultar = FALSE ORDER BY ter.regiao ASC, ter.bairro ASC, mapa.nome ASC');

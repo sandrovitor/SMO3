@@ -591,6 +591,7 @@ class PageController
         
         $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
         return $blade->run("registros",array(
+            'smoMSG' => SessionMessage::ler(),
             'router' => PageController::router(),
             'uNome'=> $_SESSION['nome'],
             'anoCorrente' => date('Y'),
@@ -731,6 +732,84 @@ class PageController
 
     }
 
+    function registroEdita(array $params)
+    {
+        // Checa se está autenticado
+        PageController::authorized();
+
+        $registro = new Registros();
+        $reg = json_decode($registro->busca($params));
+        $reg = $reg[0];
+
+        // Verifica se há parametros
+        $surdoId = (int)$reg->mapa_id;
+        $surdoUnico = false;
+
+        $user = new User();
+        $listaUsuarios = $user->listaUsuarios(TRUE);
+
+        $publicadores = '';
+        foreach($listaUsuarios as $b) {
+            if($b->id == $reg->pub_id) {
+                $publicadores .= '<option value="'.$b->id.'" selected>'.$b->nome.' '.$b->sobrenome.'</option> ';
+            } else {
+                $publicadores .= '<option value="'.$b->id.'">'.$b->nome.' '.$b->sobrenome.'</option> ';
+            }
+        }
+
+        $mapa = new Mapa();
+        $listaSurdos = $mapa->listaSurdos();
+        $x = ''; $group = '';
+        foreach($listaSurdos as $b) {
+            if($group == '') {
+                $x .= '<optgroup label="'.$b->bairro.'"> ';
+                $group = $b->bairro;
+            } else if($group != $b->bairro) {
+                $x .= '</optgroup> <optgroup label="'.$b->bairro.'"> ';
+                $group = $b->bairro;
+            }
+
+            // Verifica se um surdo especifico foi enviado!
+            if($surdoId != '' && $b->id == $surdoId) {
+                $x .= '<option value="'.$b->id.'" data-be="'.$b->be.'" data-resp-id="'.$b->resp_id.'" data-resp="'.$b->resp.'" selected>'.$b->nome.'</option> ';
+            } else {
+                $x .= '<option value="'.$b->id.'" data-be="'.$b->be.'" data-resp-id="'.$b->resp_id.'" data-resp="'.$b->resp.'">'.$b->nome.'</option> ';
+            }
+        }
+        $x.= '</optgroup>';
+
+        $surdos = $x;
+
+        
+        $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("registrosEditar",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => PageController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'publicadores' => $publicadores,
+            'surdos' => $surdos,
+            'surdoId' => $surdoId,
+            'surdoUnico' => $surdoUnico,
+            'registro' => $reg,
+        ));
+    }
+
+    function registroSalva()
+    {
+
+        $reg = new Registros();
+        $res = $reg->salva($_POST);
+        if($res === TRUE) {
+            header('Location: /registros');
+            
+        } else {
+            header('/registros/editar/'.$_POST['regid']);
+
+        }
+        return true;
+    }
+
     function registrosUltimos()
     {
         $registros = new Registros();
@@ -807,13 +886,19 @@ class PageController
     {
         // Checa se está autenticado
         PageController::authorized();
+        $config = new Config();
+        $mapa = new Mapa();
 
 
         $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
         return $blade->run("social",array(
+            'smoMSG' => SessionMessage::ler(),
+            'containertipo' => 'container-fluid',
             'router' => PageController::router(),
             'uNome'=> $_SESSION['nome'],
             'anoCorrente' => date('Y'),
+            'social' => $config->get('social'),
+            'surdos' => $mapa->listaSocial(),
         ));
     }
 

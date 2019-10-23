@@ -53,7 +53,8 @@ $router->map('GET', '/registros/?', 'PageController#registros', 'registros');
         $router->map('POST', '/registros/buscar/surdo/[i:surdoid]/publicador/[i:pubid]/?', 'PageController#registrosConsulta'); // Retorna alguns registros (por SURDOS E PUBLICADORES)!
         $router->map('POST', '/registros/buscar/surdo/[i:surdoid]/publicador/[i:pubid]/[:querystr]?', 'PageController#registrosConsulta'); // Retorna alguns registros (por SURDOS E PUBLICADORES) + QUERY STRING!
     
-    $router->map('GET', '/registros/editar/[i:regid]/?', function(){echo '<kbd>Em desenvolvimento...</kbd>';});
+    $router->map('GET', '/registros/editar/[i:regid]/?', 'PageController#registroEdita');
+    $router->map('POST', '/registros/editar', 'PageController#registroSalva', 'registroEditarPOST');
     $router->map('POST', '/registros/deleta/[i:regid]/?', 'PageController#registroDeleta');
 
 

@@ -132,9 +132,9 @@ class Registros extends Model {
 
             if($abc->rowCount() > 0)  {
                 $x = $abc->fetchAll(PDO::FETCH_OBJ);
-                echo json_encode($x);
+                return json_encode($x);
             } else {
-                echo '{0}';
+                return '{0}';
             }
 
             /**
@@ -197,9 +197,9 @@ class Registros extends Model {
 
             if($abc->rowCount() > 0)  {
                 $x = $abc->fetchAll(PDO::FETCH_OBJ);
-                echo json_encode($x);
+                return json_encode($x);
             } else {
-                echo '{0}';
+                return '{0}';
             }
 
             /**
@@ -244,9 +244,9 @@ class Registros extends Model {
 
             if($abc->rowCount() > 0)  {
                 $x = $abc->fetchAll(PDO::FETCH_OBJ);
-                echo json_encode($x);
+                return json_encode($x);
             } else {
-                echo '{0}';
+                return '{0}';
             }
 
             /**
@@ -303,8 +303,99 @@ class Registros extends Model {
         
     }
 
-    function salva() { // EDITAR REGISTRO
+    function salva(array $params)
+    { // EDITAR REGISTRO
+        // Analisa variável por variável e cria QUERY de UPATE
+        $sql = 'UPDATE `registro` SET mapa_id = :surdo, data_visita = :data, texto = :texto, pub_id = :publicador, encontrado = :enc, conferencia = :conf, campanha = :camp WHERE id = :regid';
+        if(!isset($params['surdo']) || $params['surdo'] == '') {
+            echo 'Surdo inválido';
+            SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro: SURDO INVÁLIDO. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
+            return false;
+        } else {
+            $surdo = $params['surdo'];
+        }
 
+        if(!isset($params['data']) || $params['data'] == '') {
+            echo 'Data inválida';
+            SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro: DATA INVÁLIDA. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
+            return false;
+        } else {
+            $data = $params['data'];
+        }
+
+        if(!isset($params['publicador']) || $params['publicador'] == '') {
+            echo 'Publicador inválido';
+            SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro: PUBLICADOR INVÁLIDO. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
+            return false;
+        } else {
+            $publicador = $params['publicador'];
+        }
+
+        if(!isset($params['texto']) || $params['texto'] == '') {
+            echo 'Texto inválido';
+            SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro: TEXTO DO REGISTRO INVÁLIDO. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
+            return false;
+        } else {
+            $texto = addslashes(utf8_encode($params['texto']));
+        }
+
+        if(isset($params['encontrado'])) {
+            $enc = TRUE;
+        } else {
+            $enc = FALSE;
+        }
+
+        if(isset($params['social'])) {
+            $conf = TRUE;
+        } else {
+            $conf = FALSE;
+        }
+
+        if(isset($params['campanha'])) {
+            $camp = TRUE;
+        } else {
+            $camp = FALSE;
+        }
+        
+        
+        // Valida variáveis no PDO
+        //$abc = $this->pdo->prepare($sql);
+        
+        $abc = $this->pdo->prepare($sql);
+        $abc->bindValue(':surdo', $surdo, PDO::PARAM_INT);
+        $abc->bindValue(':data', $data, PDO::PARAM_STR);
+        $abc->bindValue(':texto', $texto, PDO::PARAM_STR);
+        $abc->bindValue(':publicador', $publicador, PDO::PARAM_INT);
+        $abc->bindValue(':enc', $enc, PDO::PARAM_BOOL);
+        $abc->bindValue(':conf', $conf, PDO::PARAM_BOOL);
+        $abc->bindValue(':camp', $camp, PDO::PARAM_BOOL);
+        $abc->bindValue(':regid', $params['regid'], PDO::PARAM_INT);
+
+        try {
+            $abc->execute();
+            SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Registro atualizado.', 'tipo' => 'success'));
+        } catch(PDOException $e) {
+            SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro no BD. '.$e->getMessage().'. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
+            return false;
+
+        }
+
+        if(isset($params['be'])) {
+            // Define surdo como BE
+            $abc = $mod->pdo->prepare('UPDATE `mapa` SET `be` = TRUE, `resp_id` = :resp WHERE `id` = :id');
+            $abc->bindValue(':resp', $publicador, PDO::PARAM_INT);
+            $abc->bindValue(':id', $surdo, PDO::PARAM_INT);
+            try {
+                $abc->execute();
+                SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Surdo adicionado à sua lista de estudantes.', 'tipo' => 'success'));
+            } catch(PDOException $e) {
+                SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro no BD ao definir o surdo como estudante. '.$e->getMessage().'. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
+                return false;
+    
+            }
+
+        }
+        return true;
     }
     
 }

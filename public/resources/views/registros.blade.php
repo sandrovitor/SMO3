@@ -1,6 +1,17 @@
 @extends('layouts.layoutindex')
 
+@php
+        $mensagemDeRetorno = '';
+        if($smoMSG != false) {
+            foreach($smoMSG as $s) {
+                $mensagemDeRetorno .= '<div class="alert alert-'.$s['tipo'].'"><strong>'. $s['titulo']. '</strong> '. $s['texto'].'</div>';
+            }
+        }
+@endphp
+
 @section ('paginaCorrente', 'Registros')
+
+@section ('mensagemDeRetorno', $mensagemDeRetorno)
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="/">Início</a></li>

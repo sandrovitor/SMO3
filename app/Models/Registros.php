@@ -50,7 +50,7 @@ class Registros extends Model {
             SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro: TEXTO DO REGISTRO INVÁLIDO. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
             return false;
         } else {
-            $texto = addslashes(utf8_encode($params['texto']));
+            $texto = addslashes($params['texto']);
         }
 
         if(isset($params['encontrado'])) {
@@ -288,7 +288,7 @@ class Registros extends Model {
                  */
                 $log = new LOG();
                 $mapa = new Mapa();
-                $s = json_decode($mapa->surdoID($reg->mapa_id));
+                $s = json_decode($mapa->surdoID((int)$reg->mapa_id));
                 $log->novo(LOG::TIPO_REMOVE, 'apagou registro [ID: '.$regid.'] do surdo <i>'.$s->nome.' ['.$s->bairro.']</i>.');
                 echo true;
             } catch(PDOException $e) {
@@ -336,7 +336,7 @@ class Registros extends Model {
             SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro: TEXTO DO REGISTRO INVÁLIDO. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
             return false;
         } else {
-            $texto = addslashes(utf8_encode($params['texto']));
+            $texto = addslashes($params['texto']);
         }
 
         if(isset($params['encontrado'])) {

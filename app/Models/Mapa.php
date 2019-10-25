@@ -1318,12 +1318,13 @@ class Mapa extends Model {
 
                     $abc->execute();
                     
-                    $s = json_decode($this->surdoId((int) $pre->id));
-                    $log = new LOG();
-                    $log->novo(LOG::TIPO_ATUALIZA, 'recuperou o histórico de dados do surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
+                    $s = json_decode($this->surdoId((int)$pre->id));
                 } catch(PDOException $e) {
                     return 'Erro na base de dados: '.$e->getMessage();
                 }
+
+                $log = new LOG();
+                $log->novo(LOG::TIPO_ATUALIZA, 'recuperou o histórico de dados do surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
 
                 // Confirma operação de atualização no pré cadastro.
                 $abc = $this->pdo->query('UPDATE pre_cadastro SET pendente = FALSE, aprovado = TRUE, data_aprovacao = "'.date('Y-m-d H:i:s').'" WHERE id = '.$pre->id);

@@ -40,7 +40,7 @@
                             if($a->encontrado == '0' && $a->be == '0') {
                                 $encontradoLogo = '<span class="badge badge-light text-muted" data-toggle="tooltip" title="Não encontrado"><i class="fas fa-check"></i></span>';
                             } else {
-                                $encontradoLogo = '<span class="badge badge-light text-primary" data-toggle="tooltip" title="Não encontrado"><i class="fas fa-check-double"></i></span>';
+                                $encontradoLogo = '<span class="badge badge-light text-primary" data-toggle="tooltip" title="Encontrado"><i class="fas fa-check-double"></i></span>';
                             }
 
                         @endphp

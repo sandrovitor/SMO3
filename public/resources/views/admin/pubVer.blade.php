@@ -30,6 +30,8 @@
 			@foreach($usuarios as $u)
 			@php
 				$bloq = FALSE;
+				$difStr = '';
+				
 
 				$expira = new DateTime($u->expira);
 				$hoje = new DateTime();
@@ -52,9 +54,28 @@
 				} else {
 					$bloq = '';
 				}
+
+				$diff = $hoje->diff($expira);
+				//var_dump($diff);
+				if($diff->invert == 1) {
+					$difStr = '<span class="badge badge-danger">- ';
+				} else {
+					if($diff->days > 60) {
+						$difStr = '<span class="badge badge-primary">';
+					} else if($diff->days >= 30) {
+						$difStr = '<span class="badge badge-warning">';
+					} else {
+						$difStr = '<span class="badge badge-danger">';
+					}
+				}
+				$difStr .= $diff->days.' dia(s)</span>'
 			@endphp
 			<div class="carduser shadow-sm p-2 mb-2 mr-2" smo-pubid="{{$u->id}}">
 				<strong class="{{$bloq}}">{{$u->nome}} {{$u->sobrenome}}</strong>  <small><i>{{$u->user}}</i></small>
+				<div class="d-flex justify-content-between">
+					<div class="mr-auto mr-1"><span class="badge badge-secondary">Nível {{$u->nivel}}</span></div>
+					<div class="ml-auto ml-1">{!!$difStr!!}</div>
+				</div>
 			</div>
 			@endforeach
 			@endif

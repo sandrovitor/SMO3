@@ -111,6 +111,10 @@ class User extends Model {
 
             return $retorno;
         } else {
+            $abc = $this->pdo->prepare('UPDATE '.$this->tabela.' SET tentativas = tentativas + 1 WHERE `user` = :username');
+            $abc->bindValue(':username', $username, PDO::PARAM_STR);
+            $abc->execute();
+
             return false;
         }
     }

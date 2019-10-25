@@ -23,3 +23,8 @@ Pendências para correção ou implementação:
 004:
 - Administração > Sistema > Impressão: remover opções PDF. [ CORRIGIDO ]
 - Registros: criar tela de edição. [ CORRIGIDO ]
+
+005:
+- Tela de Login não registra tentativas erradas de login. [ CORRIGIDO ]
+- Bug na exibição do status do surdo na tela de Território Pessoal. [ CORRIGIDO ]
+- Administração > Publicadores > Listar exibe Nivel e Validade do perfil. [ CORRIGIDO ]

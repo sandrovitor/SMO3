@@ -1205,12 +1205,6 @@ class Mapa extends Model {
         }
     }
 
-    function contaPendencias()
-    {
-        $abc = $this->pdo->query('SELECT id FROM `pre_cadastro` WHERE pendente = TRUE');
-        return $abc->rowCount();
-    }
-
     function pendLista()
     {
         $abc = $this->pdo->query('SELECT pre_cadastro.*,(SELECT ter.bairro FROM ter WHERE ter.id = pre_cadastro.bairro_id) as bairro, (SELECT login.nome FROM login WHERE login.id = pre_cadastro.cad_autor) as autor FROM `pre_cadastro` WHERE pendente = TRUE');

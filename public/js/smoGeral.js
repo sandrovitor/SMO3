@@ -632,12 +632,26 @@ function checaPendencias()
         if(isJson(data)) {
             var res = JSON.parse(data);
             console.log(data);
+            if(res.qtd == 0) {
+                $('#pend-card .card-header').html('<strong>PENDÊNCIAS &nbsp; <span class="badge badge-success"><i class="fas fa-check"></i></span></strong>');
+                $('#pend-body').html('Tudo tranquilo no SMO.');
+            } else {
+                let pend = res.dados;
+                $('#pend-body').html('');
+                $('#pend-card .card-header').html('<strong>PENDÊNCIAS &nbsp; <span class="badge badge-dark">'+res.qtd+'</span></strong>');
+                
+                pend.forEach(function(valor){
+                    $('#pend-body').append('<a href="'+valor.link+'"><div class="alert alert-'+valor.tipo+' py-2 px-3 mb-1"><strong>'+valor.titulo+'</strong> '+valor.texto+' </div></a>');
+                });
+            }
 
+            /*
             $('#pend-body').html('');
             $('#pend-card .card-header').html('<strong>PENDÊNCIAS &nbsp; <span class="badge badge-dark">'+res.length+'</span></strong>');
             res.forEach(function(valor){
                 $('#pend-body').append('<a href="'+valor.link+'"><div class="alert alert-'+valor.tipo+' py-2 px-3 mb-1"><strong>'+valor.titulo+'</strong> '+valor.texto+' </div></a>');
             });
+            */
         }
     });
 }

@@ -391,19 +391,10 @@ class PageController
          */
         $x = array();
 
-        $mapa = new Mapa();
-        $abc = $mapa->contaPendencias();
-        if($abc > 0) {
-            array_push($x, array('titulo' => 'Pré-cadastro:', 'texto' => 'Há '. $abc .' pendências aguardando análise.', 'tipo' => 'warning', 'link' => '/admin/surdo/pendencias'));
-        }
+        $mod = new Model();
+        $abc = $mod->contaPendencias();
 
-
-
-        if(count($x) == 0) {
-            return '{0}';
-        } else {
-            return json_encode($x);
-        }
+        return json_encode($abc);
     }
 
     function login()

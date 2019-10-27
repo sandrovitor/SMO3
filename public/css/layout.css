@@ -146,6 +146,9 @@ form.form-rounded {
 .bg-oculto {
     background-color: #bee5eb !important;
 }
+.bg-white {
+    background-color: #ffffff!important;
+}
 
 /*
  * ################################################# INDEX

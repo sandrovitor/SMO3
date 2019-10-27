@@ -84,7 +84,7 @@
 						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admSisEditarMapas')}}">Edição de Mapas</a></li>
 						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admSisImpressao')}}">Impressão</a></li>
 						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admSisLOG')}}">Registro de Eventos</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Relatórios</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{$router->generate('admSisRelatorio')}}">Relatórios</a></li>
 					</ul>
 				</div>
 				<div class="tab-pane container {{$bdPill or 'fade'}}" id="pill-bd">

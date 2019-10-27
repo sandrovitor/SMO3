@@ -1537,6 +1537,37 @@ class AdmController
         ));
     }
 
+    function sisRelatorio()
+    {
+        AdmController::authorized(4);
+        $rel = new Relatorio();
+
+        $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("admin.sistemaRelatorio",array(
+            'smoMSG' => SessionMessage::ler(),
+            'router' => AdmController::router(),
+            'uNome'=> $_SESSION['nome'],
+            'anoCorrente' => date('Y'),
+            'periodoIni' => $rel->getPeriodoIni(),
+            'periodoFim' => $rel->getPeriodoFim(),
+
+        ));
+    }
+
+    function sisGetRelatorio()
+    {
+        //var_dump($_POST);
+        $rel = new Relatorio;
+
+        if($_POST['tipo'] === 'geral') {
+            return $rel->Geral();
+        } else if($_POST['tipo'] === 'visitas') {
+            return $rel->EntreVisitas();
+        } else {
+            return 'Tipo de relatório inválido.';
+        }
+    }
+
     function bdDownload($obj)
     {
         // Procurar arquivo

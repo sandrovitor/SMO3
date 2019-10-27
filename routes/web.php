@@ -198,6 +198,8 @@ $router->map('GET', '/admin', 'AdmController#index', 'admIndex');
         $router->map('GET', '/admin/sistema/editarmapas', 'AdmController#sisEditarMapas', 'admSisEditarMapas');
         $router->map('GET', '/admin/sistema/impressao', 'AdmController#sisImpressao', 'admSisImpressao');
         $router->map('GET', '/admin/sistema/log', 'AdmController#sisLOG', 'admSisLOG');
+        $router->map('GET', '/admin/sistema/relatorio', 'AdmController#sisRelatorio', 'admSisRelatorio');
+        $router->map('POST', '/admin/sistema/relatorio', 'AdmController#sisGetRelatorio', 'admSisRelatorioPOST');
 
         /**
          * ADM BANCO DE DADOS

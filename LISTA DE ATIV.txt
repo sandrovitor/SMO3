@@ -28,3 +28,6 @@ Pendências para correção ou implementação:
 - Tela de Login não registra tentativas erradas de login. [ CORRIGIDO ]
 - Bug na exibição do status do surdo na tela de Território Pessoal. [ CORRIGIDO ]
 - Administração > Publicadores > Listar exibe Nivel e Validade do perfil. [ CORRIGIDO ]
+
+006:
+- Administração > Relatorios: criar tela.

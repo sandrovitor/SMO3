@@ -133,13 +133,34 @@ class Mapa extends Model {
         }
     }
 
+    function setBE(int $surdoId, int $publicadorId, bool $SessionMensagem = TRUE)
+    {
+        $abc = $this->pdo->prepare('UPDATE `mapa` SET `be` = TRUE, `resp_id` = :resp WHERE `id` = :id');
+        
+        $abc->bindValue(':resp', $publicadorId, PDO::PARAM_INT);
+        $abc->bindValue(':id', $surdoId, PDO::PARAM_INT);
+        try {
+            $abc->execute();
+            if($SessionMensagem === TRUE) {
+                SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Vínculo de estudo e instrutor realizado.', 'tipo' => 'success'));
+            }
+            return true;
+        } catch(PDOException $e) {
+            if($SessionMensagem === TRUE) {
+                SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro no BD ao definir o surdo como estudante. '.$e->getMessage().'. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
+            }
+            return false;
+
+        }
+    }
+
     function removeBE(int $surdoId)
     {
         $abc = $this->pdo->prepare('UPDATE mapa SET resp_id = "0", be = FALSE WHERE id = :id');
         $abc->bindValue(':id', $surdoId, PDO::PARAM_INT);
         try {
             $abc->execute();
-            $s = json_decode($this->surdoId((int) $id));
+            $s = json_decode($this->surdoId((int) $surdoId));
             $log = new LOG();
             $log->novo(LOG::TIPO_ATUALIZA, 'definiu o surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a> como Bíblia Não Estuda.');
             return true;
@@ -300,7 +321,7 @@ class Mapa extends Model {
 
         // Retorna informações completas ou não.
         if($infoCompleta == FALSE) {
-            $sql = 'SELECT `mapa`.`id`, `mapa`.`nome`, `ter`.`bairro`, `mapa`.`ativo`, `mapa`.`mapa`, `mapa`.`ocultar`, `mapa`.`be`, `mapa`.`resp_id`, `mapa`.`tp_pub`, (SELECT `login`.`nome` FROM `login` WHERE `login`.`id` = `mapa`.`resp_id`) as `resp` FROM `mapa` LEFT JOIN `ter` ON `mapa`.`bairro_id` = `ter`.`id` WHERE '.$parametro.' ORDER BY `ter`.`bairro` ASC, `mapa`.`nome` ASC';
+            $sql = 'SELECT `mapa`.`id`, `mapa`.`nome`, `ter`.`bairro`, `ter`.`regiao`, `mapa`.`ativo`, `mapa`.`mapa`, `mapa`.`ocultar`, `mapa`.`be`, `mapa`.`resp_id`, `mapa`.`tp_pub`, (SELECT `login`.`nome` FROM `login` WHERE `login`.`id` = `mapa`.`resp_id`) as `resp` FROM `mapa` LEFT JOIN `ter` ON `mapa`.`bairro_id` = `ter`.`id` WHERE '.$parametro.' ORDER BY `ter`.`bairro` ASC, `mapa`.`nome` ASC';
         } else {
             $sql = 'SELECT `mapa`.*, `ter`.`bairro`, (SELECT `login`.`nome` FROM `login` WHERE `login`.`id` = `mapa`.`resp_id`) as `resp` FROM `mapa` LEFT JOIN `ter` ON `mapa`.`bairro_id` = `ter`.`id` WHERE '.$parametro.' ORDER BY `ter`.`bairro` ASC, `mapa`.`nome` ASC';
         }

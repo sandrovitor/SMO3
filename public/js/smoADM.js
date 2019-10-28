@@ -122,7 +122,7 @@ function pendAction( pendId, confPend )
 }
 
 function cardBodyCollapse(x) {
-	$(x).parents('.card').children('.card-body.collapse').collapse('toggle');
+	$(x).parents('.card:eq(0)').children('.card-body.collapse').collapse('toggle');
 }
 
 $(document).ready(function(){

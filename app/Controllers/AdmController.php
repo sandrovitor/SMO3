@@ -367,6 +367,30 @@ class AdmController
                     return 'Nome de usuário já está em uso.';
                 }
                 break;
+
+            case 'setBE':
+                $mapa = new Mapa();
+                if($_POST['be'] == '0') {
+                    // remove estudo
+                    $res = $mapa->removeBE((int)$_POST['surdo']);
+                    if($res === TRUE) {
+                        return 'OK';
+                    } else {
+                        return 'Ocorreu um erro aqui. Atualize a página e tente de novo.';
+                    }
+                } else if($_POST['be'] == '1') {
+                    // Adiciona ou altera estudo
+                    $res = $mapa->setBE((int)$_POST['surdo'], (int)$_POST['resp'], FALSE);
+                    if($res === TRUE) {
+                        return 'OK';
+                    } else {
+                        return 'Ocorreu um erro aqui. Atualize a página e tente de novo.';
+                    }
+                } else {
+                    return 'Parâmetos inválidos. Estudo não pode ser definido.';
+                }
+                
+                break;
         }
         
     }
@@ -1427,6 +1451,9 @@ class AdmController
     static function pubEstudos()
     {
         AdmController::authorized(4);
+        $mapa = new Mapa();
+        $surdos = $mapa->listaSurdos(TRUE);
+        $user = new User();
         
 
         $blade = new BladeOne(AdmController::VIEWS,AdmController::CACHE,BladeOne::MODE_AUTO);
@@ -1436,6 +1463,9 @@ class AdmController
             'uNome'=> $_SESSION['nome'],
             'anoCorrente' => date('Y'),
             'config' => new Config(),
+            'surdos' => $surdos,
+            'bairros' => $mapa->listaBairro(),
+            'publicadores' => $user->listaUsuarios(),
         ));
     }
 

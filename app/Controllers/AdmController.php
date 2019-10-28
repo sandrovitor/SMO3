@@ -23,7 +23,7 @@ class AdmController
     const VIEWS = '../public/resources/views';
     const CACHE = '../cache';
 
-    function authorized(int $nivel)
+    static function authorized(int $nivel)
     {
         // Verifica se está autenticado
         $auth = new Auth();
@@ -34,14 +34,14 @@ class AdmController
         return false;
     }
 
-    private function router()
+    private static function router()
     {
         $router = new AltoRouter();
         include('../routes/web.php');
         return $router;
     }
 
-    function functions()
+    static function functions()
     {
         if(!isset($_POST['funcao']) || $_POST['funcao'] == '') {
             http_response_code(403);
@@ -371,7 +371,7 @@ class AdmController
         
     }
 
-    function index()
+    static function index()
     {
         AdmController::authorized(4);
 
@@ -384,7 +384,7 @@ class AdmController
         ));
     }
     
-    function impressao()
+    static function impressao()
     {
         AdmController::authorized(4);
         $config = new Config();
@@ -654,7 +654,7 @@ class AdmController
         
     }
 
-    protected function impressaoMapasGeraHTML($mapas) {
+    protected static function impressaoMapasGeraHTML($mapas) {
         
         //var_dump($mapas);
         // Variáveis de controle
@@ -901,7 +901,7 @@ class AdmController
         return $html;
     }
 
-    protected function impressaoRegGeraHTML($mapas) {
+    protected static function impressaoRegGeraHTML($mapas) {
 
         // Variáveis de controle
         $html = '';
@@ -1136,7 +1136,7 @@ class AdmController
         return $html;
     }
 
-    function surdo()
+    static function surdo()
     {
         AdmController::authorized(4);
 
@@ -1150,7 +1150,7 @@ class AdmController
         ));
     }
 
-    function publicador()
+    static function publicador()
     {
         AdmController::authorized(4);
 
@@ -1164,7 +1164,7 @@ class AdmController
         ));
     }
 
-    function sistema()
+    static function sistema()
     {
         AdmController::authorized(4);
 
@@ -1178,7 +1178,7 @@ class AdmController
         ));
     }
 
-    function bd()
+    static function bd()
     {
         AdmController::authorized(4);
 
@@ -1192,7 +1192,7 @@ class AdmController
         ));
     }
 
-    function surdoNovo()
+    static function surdoNovo()
     {
         AdmController::authorized(4);
         $mapa = new Mapa();
@@ -1207,7 +1207,7 @@ class AdmController
         ));
     }
     
-    function surdoVer()
+    static function surdoVer()
     {
         AdmController::authorized(4);
         $mapa = new Mapa();
@@ -1222,7 +1222,7 @@ class AdmController
         ));
     }
 
-    function surdoEditar(array $p)
+    static function surdoEditar(array $p)
     {
         AdmController::authorized(4);
 
@@ -1250,7 +1250,7 @@ class AdmController
         ));
     }
 
-    function surdoPendencias()
+    static function surdoPendencias()
     {
         AdmController::authorized(5);
         $mapa = new Mapa();
@@ -1277,7 +1277,7 @@ class AdmController
         ));
     }
 
-    function surdoPendAction(array $p)
+    static function surdoPendAction(array $p)
     {
         $mapa = new Mapa();
         $pendId = (int)$p['pendId'];
@@ -1295,7 +1295,7 @@ class AdmController
         }
     }
 
-    function surdoHistorico()
+    static function surdoHistorico()
     {
         AdmController::authorized(4);
         $mapa = new Mapa();
@@ -1310,21 +1310,21 @@ class AdmController
         ));
     }
 
-    function surdoHistoricoVer(array $p)
+    static function surdoHistoricoVer(array $p)
     {
 
         $mapa = new Mapa();
         return $mapa->historicoVer($p['id']);
     }
 
-    function surdoHistoricoCompara(array $p)
+    static function surdoHistoricoCompara(array $p)
     {
 
         $mapa = new Mapa();
         return $mapa->historicoCompara($p['id']);
     }
 
-    function pubNovo()
+    static function pubNovo()
     {
         AdmController::authorized(4);
         
@@ -1339,7 +1339,7 @@ class AdmController
         ));
     }
 
-    function pubNovoPOST()
+    static function pubNovoPOST()
     {
         $user = new User();
         $res = $user->novo($_POST);
@@ -1351,7 +1351,7 @@ class AdmController
         header('Location: /admin/publicadores/novo');
     }
 
-    function pubVer()
+    static function pubVer()
     {
         AdmController::authorized(4);
         $user = new User();
@@ -1368,7 +1368,7 @@ class AdmController
         ));
     }
 
-    function pubEditar($p)
+    static function pubEditar($p)
     {
         AdmController::authorized(4);
         
@@ -1385,7 +1385,7 @@ class AdmController
         ));
     }
 
-    function pubEditarPOST($p)
+    static function pubEditarPOST($p)
     {
         //var_dump($_POST, $p);
         if($p['pubid'] != $_POST['id']) {
@@ -1403,7 +1403,7 @@ class AdmController
         header('Location: /admin/publicadores/editar/'.$p['pubid']);
     }
 
-    function pubTpessoal()
+    static function pubTpessoal()
     {
         AdmController::authorized(4);
         $mapa = new Mapa();
@@ -1424,7 +1424,7 @@ class AdmController
         ));
     }
 
-    function pubEstudos()
+    static function pubEstudos()
     {
         AdmController::authorized(4);
         
@@ -1439,7 +1439,7 @@ class AdmController
         ));
     }
 
-    function sisConfig()
+    static function sisConfig()
     {
         AdmController::authorized(5);
         $mapa = new Mapa();
@@ -1454,7 +1454,7 @@ class AdmController
         ));
     }
 
-    function sisBairros()
+    static function sisBairros()
     {
         AdmController::authorized(5);
         $mapa = new Mapa();
@@ -1471,7 +1471,7 @@ class AdmController
         ));
     }
 
-    function sisVerMapas()
+    static function sisVerMapas()
     {
         AdmController::authorized(4);
         $mapa = new Mapa();
@@ -1488,7 +1488,7 @@ class AdmController
         ));
     }
 
-    function sisEditarMapas()
+    static function sisEditarMapas()
     {
         AdmController::authorized(5);
         $mapa = new Mapa();
@@ -1505,7 +1505,7 @@ class AdmController
         ));
     }
 
-    function sisLOG()
+    static function sisLOG()
     {
         AdmController::authorized(4);
         $user = new User();
@@ -1520,7 +1520,7 @@ class AdmController
         ));
     }
 
-    function sisImpressao()
+    static function sisImpressao()
     {
         AdmController::authorized(4);
         $bairro = new Bairro();
@@ -1537,7 +1537,7 @@ class AdmController
         ));
     }
 
-    function sisRelatorio()
+    static function sisRelatorio()
     {
         AdmController::authorized(4);
         $rel = new Relatorio();
@@ -1554,7 +1554,7 @@ class AdmController
         ));
     }
 
-    function sisGetRelatorio()
+    static function sisGetRelatorio()
     {
         //var_dump($_POST);
         $rel = new Relatorio;
@@ -1568,7 +1568,7 @@ class AdmController
         }
     }
 
-    function bdDownload($obj)
+    static function bdDownload($obj)
     {
         // Procurar arquivo
         $bd = new BD();
@@ -1586,7 +1586,7 @@ class AdmController
         }
     }
 
-    function bdBackup()
+    static function bdBackup()
     {
         AdmController::authorized(5);
         
@@ -1601,7 +1601,7 @@ class AdmController
         ));
     }
 
-    function bdSQL()
+    static function bdSQL()
     {
         AdmController::authorized(5);
         

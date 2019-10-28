@@ -2,7 +2,7 @@
 
 class SessionMessage
 {
-    function ler()
+    static function ler()
     {
         @session_start();
         if(isset($_SESSION['smoMsgRetorno']) && $_SESSION['smoMsgRetorno'] != '') {
@@ -14,7 +14,7 @@ class SessionMessage
         }
     }
 
-    function lerFormatado() {
+    static function lerFormatado() {
         /*
          * Retorna STRING formatada ou FALSE se não tiver mensagem
          */
@@ -38,7 +38,7 @@ class SessionMessage
         }
     }
 
-    function novo(array $mensagem)
+    static function novo(array $mensagem)
     {
         /*
          * ARRAY $mensagem:
@@ -78,7 +78,7 @@ class SessionMessage
 
     }
 
-    function delete()
+    static function delete()
     {
         @session_start();
         $_SESSION['smoMsgRetorno'] = null;

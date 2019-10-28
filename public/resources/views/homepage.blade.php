@@ -1,4 +1,8 @@
 @extends('layouts.layoutindex')
+@php
+    $mensagem = new Mensagem();
+    $msg = $mensagem->getMsg();
+@endphp
 
 @section ('paginaCorrente', 'Início')
 
@@ -91,4 +95,37 @@
         </div>
     </div>
     @endif
+
+    @if($msg !== false)
+    <div class="modal fade" id="modMensagem">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold">{!!$msg['header']!!}</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    {!!$msg['body']!!}
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+@endsection
+
+@section('script')
+<script>
+    $(document).ready(function(){
+        $('#modMensagem').modal('show');
+        setTimeout(function(){$('#modal01_biblia').slideDown(1000);}, 1200);
+    });
+</script>
 @endsection

@@ -211,14 +211,16 @@ function consultaResultadoInfo(id)
                     }
 
                     
-                    var bAtivo, bBE, bEncontrado; // Para controle de badges
+                    var bAtivo, bBE, bEncontrado, motivo = ''; // Para controle de badges
 
                     if((surdo.ativo == "1" || surdo.ativo == true) && (surdo.ocultar == "0" || surdo.ocultar == false)) { // ATIVO e VISÍVEL
                         bAtivo = '<span class="badge badge-success" data-toggle="tooltip" title="ATIVO!"><i class="fas fa-star"></i> ATIVO</span>';
                     } else if((surdo.ativo == "1" || surdo.ativo == true) && (surdo.ocultar == "1" || surdo.ocultar == true)) { // ATIVO e OCULTO
                         bAtivo = '<span class="badge badge-info" data-toggle="tooltip" title="Oculto"><i class="far fa-star-half"></i> OCULTO</span>';
+                        motivo = '<div class="bg-info text-white text-center py-2 px-3"><strong>MOTIVO:</strong> <i>"'+ surdo.motivo +'"</i></div>';
                     } else { // DESATIVADO
                         bAtivo = '<span class="badge badge-danger" data-toggle="tooltip" title="Desativado"><i class="far fa-star"></i> DESATIVADO</span>';
+                        motivo = '<div class="bg-danger text-white text-center py-2 px-3"><strong>MOTIVO:</strong> <i>"'+ surdo.motivo +'"</i></div>';
                     }
                     
                     if(surdo.be == "1") { // BIBLIA ESTUDA
@@ -289,7 +291,7 @@ function consultaResultadoInfo(id)
                     
 
                     $('#resultado-info .card-body').html('')
-                        .append('<h3><strong>'+surdo.nome+'</strong> <small style="font-size: .875rem">[ID: '+surdo.id+']</small><br>'+ bAtivo + bEncontrado + bBE +'</h3><hr>')
+                        .append('<h3><strong>'+surdo.nome+'</strong> <small style="font-size: .875rem">[ID: '+surdo.id+']</small><br>'+ bAtivo + bEncontrado + bBE +'</h3>'+motivo+'<hr>')
                         .append('<dl><dt>Endereço:</dt><dd>'+surdo.endereco+'</dd> <dt>Bairro:</dt><dd>'+surdo.bairro+'</dd> <dt>Ponto de Referência:</dt><dd>'+surdo.p_ref+'</dd> <dt>Família:</dt><dd>'+surdo.familia+'</dd>'+
                         '<dt><i class="fab fa-facebook-f"></i> Facebook:</dt><dd>'+surdo.facebook+'</dd> <dt><i class="fab fa-whatsapp"></i> Whatsapp:</dt><dd>'+surdo.whats+'</dd> <dt>Telefone(s):</dt><dd>'+surdo.tel+'</dd> <dt>Faixa Etária:</dt><dd>'+surdo.idade+'</dd> <dt>Observações:</dt><dd>'+surdo.obs+'</dd>' +
                         '<dt>Turno:</dt><dd>'+surdo.turno+'</dd> <dt>Hora Melhor:</dt><dd>'+surdo.hora_melhor+'</dd> <dt>Dia Melhor:</dt><dd>'+cDias+'</dd> <dt>Bíblia Estuda:</dt><dd>'+cBE+'</dd>' +
@@ -551,7 +553,6 @@ function registroUltimos()
             //console.log(jqXHR);
         } // Quando a conexão finalizar (com sucesso ou erro)
     });
-    return false;
 }
     
 function initMap(draggable = false, gps_marker = '')

@@ -288,7 +288,7 @@ class User extends Model {
         }
         
         
-        if($abc->rowCount() == 0) {
+        if($abc->rowCount() === 0) {
             return false;
         }
 

@@ -1,7 +1,7 @@
 @extends('layouts.layoutindex')
 
 @section('estiloPersonalizado')
-    <link href="css/layoutConsulta.css" rel="stylesheet">
+    <link href="/css/layoutConsulta.css" rel="stylesheet">
 @endsection
 
 @section ('paginaCorrente', 'Consulta')
@@ -87,7 +87,8 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm" onclick="consultaPesquisa()"><span class="glyphicon glyphicon-search"></span> Pesquisar</button>
+                        <button type="submit" class="btn btn-primary btn-sm" onclick="consultaPesquisa()"><span class="glyphicon glyphicon-search"></span> Pesquisar</button> &nbsp;
+                        <button type="button" class="btn btn-info btn-sm" onclick="$('#modLegenda').modal('show');"><span class="glyphicon glyphicon-info-sign"></span> Legenda</button>
                     </form>
                         
                 </div>
@@ -104,6 +105,73 @@
             <div class="card">
                 <div class="card-body">
 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modLegenda">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold">Legenda</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    Os surdos possuem novas classificações e novos ícones de status. Veja:<br><br>
+                    <div class="row">
+                        <div class="col-6 col-lg-3 text-center">
+                            <div class="border border-dark p-2 mb-3 rounded-sm">
+                                <h4><span class="badge badge-success" data-toggle="tooltip" title="ATIVO!"><i class="fas fa-star"></i></span></h4>
+                                <strong>Surdo ativo</strong>.<br> Todos podem visitar normalmente!
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 text-center">
+                            <div class="border border-dark p-2 mb-3 rounded-sm">
+                                <h4><span class="badge badge-info" data-toggle="tooltip" title="Oculto"><i class="far fa-star-half"></i></span></h4>
+                                <strong>Surdo oculto</strong>.<br> Há algum motivo para o surdo estar oculto.
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 text-center">
+                            <div class="border border-dark p-2 mb-3 rounded-sm">
+                                <h4><span class="badge badge-danger" data-toggle="tooltip" title="Desativado"><i class="far fa-star"></i></span></h4>
+                                <strong>Surdo desativado</strong>.<br> Esses surdos foram removidos do mapa por um motivo particular. Não visite esses surdos sem autorização do SS!
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 text-center">
+                            <div class="border border-dark p-2 mb-3 rounded-sm">
+                                <h4><span class="badge badge-light text-muted" data-toggle="tooltip" title="Não encontrado"><i class="fas fa-check"></i></span></h4>
+                                <strong>Surdo não encontrado</strong>.<br> Surdos que ainda não foi encontrado na pregação.
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 text-center">
+                            <div class="border border-dark p-2 mb-3 rounded-sm">
+                                <h4><span class="badge badge-light text-primary" data-toggle="tooltip" title="ENCONTRADO!"><i class="fas fa-check-double"></i></span></h4>
+                                <strong>Surdo encontrado</strong>.<br> Esses surdos foram encontrados durante a pregação. Que bom!
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 text-center">
+                            <div class="border border-dark p-2 mb-3 rounded-sm">
+                                <h4><span class="badge badge-light text-muted" data-toggle="tooltip" title="Não estuda Bíblia"><i class="far fa-heart"></i></span></h4>
+                                <strong>Não estuda a Bíblia</strong>.<br> Surdo disponível para estudar a Bíblia. Tente marcar uma revisita.
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3 text-center">
+                            <div class="border border-dark p-2 mb-3 rounded-sm">
+                                <h4><span class="badge badge-light text-danger" data-toggle="tooltip" title="Bíblia Estuda!"><i class="fas fa-heart"></i></span></h4>
+                                <strong>Estuda a Bíblia</strong>.<br> Surdo já estuda a Bíblia com alguém. Que bom!
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h5 class="text-center font-weight-bold">Qualquer dúvida que surgir, não hesite em contatar um ancião ou administrador para te ajudar.</h5>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>

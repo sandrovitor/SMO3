@@ -71,10 +71,13 @@
 
         if(($surdo->ativo == "1" || $surdo->ativo == true) && ($surdo->ocultar == "0" || $surdo->ocultar == false)) { // ATIVO e VISÍVEL
             $bAtivo = '<span class="badge badge-success" data-toggle="tooltip" title="ATIVO!"><i class="fas fa-star"></i> ATIVO</span>';
+            $motivo = '';
         } else if(($surdo->ativo == "1" || $surdo->ativo == true) && ($surdo->ocultar == "1" || $surdo->ocultar == true)) { // ATIVO e OCULTO
             $bAtivo = '<span class="badge badge-info" data-toggle="tooltip" title="Oculto"><i class="far fa-star-half"></i> OCULTO</span>';
+            $motivo = '<div class="bg-info text-white text-center py-2 px-3"><strong>MOTIVO:</strong> <i>"'. $surdo->motivo .'"</i></div>';
         } else { // DESATIVADO
             $bAtivo = '<span class="badge badge-danger" data-toggle="tooltip" title="Desativado"><i class="far fa-star"></i> DESATIVADO</span>';
+            $motivo = '<div class="bg-danger text-white text-center py-2 px-3"><strong>MOTIVO:</strong> <i>"'. $surdo->motivo .'"</i></div>';
         }
         
         if($surdo->be == "1") { // BIBLIA ESTUDA
@@ -113,7 +116,7 @@
     <div class="row">
         <div class="col-12 col-lg-6">
             <h3><strong>{{$surdo->nome}}</strong> <small style="font-size: .875rem">[ID: {{$surdo->id}}]</small><br>
-            {!!$bAtivo!!} {!!$bEncontrado!!} {!!$bBE!!}</h3><hr>
+            {!!$bAtivo!!} {!!$bEncontrado!!} {!!$bBE!!}</h3> {!!$motivo!!}<hr>
             <div class="row">
                 <div class="col-12 col-md-6">
                     <dl>

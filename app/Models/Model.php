@@ -11,13 +11,56 @@ class Model
     protected $username = "root";
     protected $password = "";
     protected $prefix = "";
+    protected $charset = "";
 
     protected $pdo;
 
     function __construct ()
     {
+        $caminho = substr(__DIR__, 0, strrpos(__DIR__, '/app'));
+        $caminho .= '/.env';
+
+        if(file_exists($caminho)) {
+            $handler = fopen($caminho, 'r');
+            $arquivo = fread($handler, filesize($caminho));
+            $config = explode("\n", $arquivo);
+            foreach($config as $c) {
+                $a = explode('=', $c);
+                switch($a[0]) {
+                    case 'DB_CONNECTION':
+                        $this->driver = trim($a[1]);
+                        break;
+
+                    case 'DB_HOST':
+                        $this->host = trim($a[1]);
+                        break;
+
+                    case 'DB_DATABASE':
+                        $this->banco = trim($a[1]);
+                        break;
+                        
+                    case 'DB_USERNAME':
+                        $this->username = trim($a[1]);
+                        break;
+
+                    case 'DB_PASSWORD':
+                        $this->password = trim($a[1]);
+                        break;
+                        
+                    case 'DB_CHARSET':
+                        $this->charset = trim($a[1]);
+                        break;
+                        
+                }
+            }
+        }
         
-        $dsn = $this->driver.':host='.$this->host.';dbname='.$this->banco;
+        if($this->charset == '') {
+            $dsn = $this->driver.':host='.$this->host.';dbname='.$this->banco;
+        } else {
+            $dsn = $this->driver.':host='.$this->host.';dbname='.$this->banco.';charset='.$this->charset;
+        }
+        
 
         try {
             $this->pdo = new PDO($dsn, $this->username, $this->password);

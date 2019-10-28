@@ -20,9 +20,11 @@ if($_SERVER['REQUEST_SCHEME'] === 'http') {
 @require_once('../app/Models/BD.php');
 @require_once('../app/Models/MA.php');
 @require_once('../app/Models/Relatorio.php');
+@require_once('../app/Models/Mensagem.php');
 
 // Autoload do Composer
 require_once('../vendor/autoload.php');
+@session_start();
 
 
 

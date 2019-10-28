@@ -15,7 +15,7 @@ class PageController
     const VIEWS = '../public/resources/views';
     const CACHE = '../cache';
 
-    function authorized()
+    static function authorized()
     {
         // Verifica se está autenticado
         $auth = new Auth();
@@ -26,14 +26,14 @@ class PageController
         return true;
     }
 
-    private function router()
+    private static function router()
     {
         $router = new AltoRouter();
         include('../routes/web.php');
         return $router;
     }
 
-    function functions()
+    static function functions()
     {
         if(!isset($_POST['funcao']) || $_POST['funcao'] == '') {
             http_response_code(403);
@@ -83,7 +83,7 @@ class PageController
         }
     }
 
-    function maFunc()
+    static function maFunc()
     {
         if(!isset($_POST['funcao']) || $_POST['funcao'] == '') {
             http_response_code(403);
@@ -117,7 +117,7 @@ class PageController
         }
     }
 
-    function maRelatorio($p)
+    static function maRelatorio($p)
     {
         if((int)$p['mes'] < 10) {
             $p['mes'] = '0'.(int)$p['mes'];
@@ -212,7 +212,7 @@ class PageController
         return $html;
     }
 
-    function maRelatorioRange($p)
+    static function maRelatorioRange($p)
     {
         if((int)$p['mes1'] < 10) {
             $p['mes1'] = '0'.(int)$p['mes1'];
@@ -380,7 +380,7 @@ class PageController
         return $html;
     }
 
-    function pendencias()
+    static function pendencias()
     {
         // Dá um retorno das pendências
         /**
@@ -397,7 +397,7 @@ class PageController
         return json_encode($abc);
     }
 
-    function login()
+    static function login()
     {
         // Verifica se já está autenticado
         $auth = new Auth();
@@ -413,7 +413,7 @@ class PageController
         ));
     }
 
-    function loga($params)
+    static function loga($params)
     {
         // Chama autenticação de usuário
         $auth = new Auth();
@@ -453,7 +453,7 @@ class PageController
         
     }
 
-    function logout()
+    static function logout()
     {
         // Verifica se está logado
         $auth = new Auth();
@@ -469,7 +469,7 @@ class PageController
         header('Location: /login');
     }
 
-    function index()
+    static function index()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -483,7 +483,7 @@ class PageController
         ));
     }
 
-    function consulta()
+    static function consulta()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -517,7 +517,7 @@ class PageController
         ));
     }
 
-    function surdo(array $p)
+    static function surdo(array $p)
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -534,7 +534,7 @@ class PageController
         ));
     }
 
-    function consultaPesquisa()
+    static function consultaPesquisa()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -561,7 +561,7 @@ class PageController
         return $mapa->pesquisa($variaveis);
     }
 
-    function consultaId()
+    static function consultaId()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -574,7 +574,7 @@ class PageController
         
     }
 
-    function registros()
+    static function registros()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -591,7 +591,7 @@ class PageController
         ));
     }
 
-    function registrosNovo(array $params)
+    static function registrosNovo(array $params)
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -655,7 +655,7 @@ class PageController
         ));
     }
 
-    function registrosBuscar(array $params)
+    static function registrosBuscar(array $params)
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -705,7 +705,7 @@ class PageController
         ));
     }
 
-    function registrosConsulta(array $params)
+    static function registrosConsulta(array $params)
     {
 
         /*
@@ -723,7 +723,7 @@ class PageController
 
     }
 
-    function registroEdita(array $params)
+    static function registroEdita(array $params)
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -786,7 +786,7 @@ class PageController
         ));
     }
 
-    function registroSalva()
+    static function registroSalva()
     {
 
         $reg = new Registros();
@@ -801,13 +801,13 @@ class PageController
         return true;
     }
 
-    function registrosUltimos()
+    static function registrosUltimos()
     {
         $registros = new Registros();
         echo $registros->ultimos();
     }
 
-    function registroDeleta(array $params)
+    static function registroDeleta(array $params)
     {
         $auth = new Auth();
         if($auth->authorized() == false) {
@@ -820,7 +820,7 @@ class PageController
         $r->deleta($params['regid']);
     }
 
-    function cadastro()
+    static function cadastro()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -837,7 +837,7 @@ class PageController
         ));
     }
 
-    function cadastroEditar(array $obj)
+    static function cadastroEditar(array $obj)
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -855,7 +855,7 @@ class PageController
         ));
     }
 
-    function tpessoal()
+    static function tpessoal()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -873,7 +873,7 @@ class PageController
         ));
     }
 
-    function social()
+    static function social()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -893,7 +893,7 @@ class PageController
         ));
     }
 
-    function campanha()
+    static function campanha()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -907,7 +907,7 @@ class PageController
         ));
     }
 
-    function perfil()
+    static function perfil()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -924,7 +924,7 @@ class PageController
         ));
     }
 
-    function perfilSalvaDados(array $obj)
+    static function perfilSalvaDados(array $obj)
     {
         $user = new User($obj['id']);
         //var_dump($user);
@@ -945,13 +945,13 @@ class PageController
 
     }
 
-    function perfilTrocaSenha(array $obj)
+    static function perfilTrocaSenha(array $obj)
     {
         $user = new User();
         return $user->setSenha($obj['id'], $obj['senha_atual'], $obj['senha_nova'], $obj['senha_confirma']);
     }
 
-    function ma()
+    static function ma()
     {
         // Checa se está autenticado
         PageController::authorized();
@@ -975,7 +975,7 @@ class PageController
         ));
     }
 
-    function teste()
+    static function teste()
     {
         return 'Uma página de teste';
     }

@@ -68,7 +68,7 @@
                         <td class="mes-status">-</td>
                     </tr>
                     <tr>
-                        <th>Alvo de horas por dia</th>
+                        <th>Alvo de horas por dia </th>
                         <td class="hora-alvo-dia">-</td>
                     </tr>
                 </table>

@@ -124,6 +124,7 @@
 @section('script')
 <script>
     $(document).ready(function(){
+        $('[data-toggle="popover"]').popover({html:true});
         $('#modMensagem').modal('show');
         setTimeout(function(){$('#modal01_biblia').slideDown(1000);}, 1200);
     });

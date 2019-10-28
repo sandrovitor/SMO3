@@ -665,7 +665,7 @@ function checaPendencias()
 $(document).ready(function(){
     // Ativa os tooltips
     $('[data-toggle="tooltip"]').tooltip();
-    $('[data-toggle="popover"]').popover({html: true});
+    $('[data-toggle="popover"]').popover({html: true, sanitize: false});
     
     $(document).ajaxStart(function(){
 		$('[data-toggle="tooltip"]').tooltip('disable');

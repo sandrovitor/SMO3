@@ -45,7 +45,7 @@ class Mensagem extends Model
         <h5 class="text-center font-weight-bold">Qualquer dúvida que surgir, não hesite em contatar um ancião ou administrador para te ajudar.</h5>
         
         <hr>
-        <span class="text-primary"><strong>OBS.:</strong> Se você já usou o SMO na versão 1.0, deve ter notado que a quantidade de acessos foi zerada. Isso foi intencional. Vamos todos começar de novo, juntos!</span>';
+        <span class="text-primary"><strong>OBS.:</strong> Se você já usou o SMO na versão 2.0, deve ter notado que a quantidade de acessos foi zerada. Isso foi intencional. Vamos todos começar de novo, juntos!</span>';
     }
 
     private function msg25()

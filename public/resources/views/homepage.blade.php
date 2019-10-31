@@ -98,7 +98,7 @@
 
     @if($msg !== false)
     <div class="modal fade" id="modMensagem">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header">

@@ -11,6 +11,12 @@ $router->map('POST', '/login', 'PageController#loga');
 // LOGOUT
 $router->map('GET', '/logout', 'PageController#logout', 'logout');
 
+// Esqueci a senha
+$router->map('GET', '/forgot', 'PageController#esqueciSenha', 'esqueciSenha');
+$router->map('POST', '/forgot', 'PageController#esqueciSenhaPOST');
+$router->map('GET', '/redefine', 'PageController#redefineSenha');
+$router->map('POST', '/redefine', 'PageController#redefineSenhaPOST');
+
 // INICIO
 $router->map('GET', '/', 'PageController#index','homepage');
 

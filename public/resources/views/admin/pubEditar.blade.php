@@ -93,6 +93,7 @@
 @section('breadcrumb')
 	<li class="breadcrumb-item"><a href="{{$router->generate('admIndex')}}">Administração</a></li>
 	<li class="breadcrumb-item"><a href="{{$router->generate('admPublicador')}}">Publicadores</a></li>
+	<li class="breadcrumb-item"><a href="{{$router->generate('admPubVer')}}">Listar</a></li>
 	<li class="breadcrumb-item active">Editar: {{$u->nome}} {{$u->sobrenome}}</li>
 @endsection
 

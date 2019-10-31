@@ -75,7 +75,7 @@ class User extends Model {
 
             if($reg->pass === hash('sha256', $senhaAntiga)) {
                 // Atualiza
-                $abc = $this->pdo->prepare('UPDATE login SET pass = :senha WHERE :id = :id');
+                $abc = $this->pdo->prepare('UPDATE login SET pass = :senha WHERE id = :id');
                 $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
                 $abc->bindValue(':senha', hash('sha256', $senha1), PDO::PARAM_INT);
                 try {
@@ -94,6 +94,25 @@ class User extends Model {
             }
         } else {
             return 'Usuário não encontrado. Nnehuma alteração realizada.';
+        }
+    }
+
+    function redefineSenha(int $usuarioId, $senha)
+    {
+        // Atualiza
+        $abc = $this->pdo->prepare('UPDATE login SET pass = :senha, token = "", change_pass = "n" WHERE id = :id');
+        $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
+        $abc->bindValue(':senha', hash('sha256', $senha), PDO::PARAM_INT);
+        try {
+            $abc->execute();
+            /**
+             * LOG DE ATIVIDADES
+             */
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'redefiniu a senha.', $usuarioId);
+            return true;
+        } catch(PDOException $e) {
+            return $e->getMessage();
         }
     }
 
@@ -122,7 +141,7 @@ class User extends Model {
     public function confirmAuth(int $id)
     {
         // Atualiza quantidade de tentativas para 0 e incrementar quantidade de logins
-        $abc = $this->pdo->prepare('UPDATE '.$this->tabela.' SET `tentativas` = 0, `qtd_login` = `qtd_login`+1 WHERE `id` = :id');
+        $abc = $this->pdo->prepare('UPDATE '.$this->tabela.' SET `tentativas` = 0, `token`="", `qtd_login` = `qtd_login`+1 WHERE `id` = :id');
         $abc->bindValue(':id', $id, PDO::PARAM_INT);
 
         $abc->execute();
@@ -479,5 +498,141 @@ class User extends Model {
 
         SessionMessage::novo(array('titulo' => 'Sucesso!', 'tipo' => 'success', 'texto' => 'Usuário '.$u->nome.' '.$u->sobrenome.' [ID: '.$u->id.'] foi removido com sucesso.'));
         return true;
+    }
+
+    public function esqueciSenha(int $usuarioId)
+    {
+        //var_dump($usuarioId);
+
+        // Recupera dados do usuário
+        $u = $this->getInfo($usuarioId);
+        if($u === false) {
+            SessionMessage::novo(array('titulo' => 'Não encontrado!', 'texto' => 'Não localizamos sua conta. Contate o administrador.', 'tipo' => 'warning'));
+            header('Location: /login');
+            exit();
+        } else {
+            //var_dump($u);
+            // Verifica se o usuário possui um e-mail de recuperação.
+            if($u->email == '') {
+                SessionMessage::novo(array('titulo' => 'Não consegui!', 'texto' => 'Você não possui um e-mail para continuar o procedimento. Contate o administrador.', 'tipo' => 'warning'));
+                header('Location: /login');
+                exit();
+            } else {
+                // Envia e-mail de recuperação.
+                /**
+                 * A URL de definição será composta por nome de usuario, token de redefinição (randChar) e um hash das duas informações (md5).
+                 * Exemplo: USER=teste&TOKEN=sadvavjuqUBPIU&VERIFY=SABVAbbkbbB5163
+                 */
+
+                $t = $this->randChar(24);
+                $token = substr($t, 0,4).'-'.substr($t, 4,4).'-'.substr($t, 8,4).'-'.substr($t, 12,4).'-'.substr($t, 16,4).'-'.substr($t, 20,4);
+
+                
+
+                $verify = md5($u->user.$token);
+                $url = 'https://'.$_SERVER['HTTP_HOST'].'/redefine?user='.$u->user.'&token='.$token.'&verify='.$verify;
+                // Salva token no banco de dados
+                $abc = $this->pdo->query('UPDATE '.$this->tabela.' SET token = "'.$token.'" WHERE id = '.$u->id);
+
+                // Envia email.
+
+                $html = '
+                <html>
+                    <head>
+                        <title>Redefinir senha - Sistema de Hospedagem LS-03</title>
+                        <style>
+                        @import url(\'https://fonts.googleapis.com/css?family=Lato\');
+                        .bg-smo {
+                            background-color: rgba(0,121,107,1);
+                            color: rgb(236, 236, 236);
+                        }
+                        body {
+                            font-size:16px;
+                            font-family: \'Lato\', sans-serif;
+                        }
+                        </style>
+                    </head>
+                    <body>
+                        <div style="background-color: rgba(0,121,107,1); font-size: 1.3rem; padding: .5rem 1rem;color:white; font-weight:bold;">SMO :: Sistema de Mapas Online</div>
+                        <div style="padding: 2rem 1rem; font-size: 1.2rem; line-height: 1.8rem;">
+                            <h3>Olá '.$u->nome.' '.$u->sobrenome.' <small style="color: #6c757d; font-size:.75rem;"><i>'.$u->user.'</i></small>.</h3>
+
+                            Você solicitou redefinição de senha pelo site. Após a redefinição, você poderá entrar no sistema com seu Usuário e a nova senha.<br>
+                            <a href="'.$url.'" target="_blank">Clique aqui para ser direcionado à tela de redefinição de senha</a>.<br><small>Esse link expira no seu próximo login ou se uma nova redefinição de senha for solicitada.</small><br><br>
+                            
+                            Caso você não tenha solicitado essa redefinição, ignore este e-mail. Suas credenciais de acesso não foram afetadas.<br><br>
+                            
+                            Att,<br>
+                            Sistema de Mapas Online.
+                        </div>
+                        <div style="background-color: #00796b34; font-size: .8rem; padding: .2rem 1rem;color:black; border-top: 2px solid #00796b;">
+                            * Não responder este e-mail pois ele foi gerado automaticamente.<br>
+                            ** Em caso de dúvidas, consulte um dos administradores.<br>
+                            *** Esse sistema não tem vínculo com o site JW.ORG.
+                        </div>
+                    </body>
+                </html>
+                ';
+                
+
+                $headers = array('MIME-Version: 1.0', 'Content-type: text/html; charset=utf-8');
+                $headers[] = 'To: '.$u->email;
+                $headers[] = 'From: naoresponda@lscb.dssmart.com.br';
+                $headers[] = 'Reply-To: '.$u->email;
+
+
+                $send = mail($u->email, 'Redefina sua senha', $html, implode("\r\n", $headers));
+                $mailStr = explode('@',$u->email);
+                $mailStr[0] = substr($mailStr[0], 0, 1).'***'.substr($mailStr[0],strlen($mailStr[0])-2, 1);
+                $mailStr = implode('@', $mailStr);
+
+                if($send == true) {
+                    SessionMessage::novo(array('titulo' => 'Enviado!', 'texto' => 'E-mail de redefinição foi enviado para <strong>'.$mailStr.'</strong>.', 'tipo' => 'success'));
+                } else {
+                    SessionMessage::novo(array('titulo' => 'Falha!', 'texto' => 'Não conseguimos enviar e-mail de redefinição.', 'tipo' => 'warning'));
+                }
+                
+                header('Location: /login');
+                exit();
+            }
+        }
+        
+        
+    }
+
+    public function buscaEmail(string $email)
+    {
+        $abc = $this->pdo->prepare('SELECT id FROM login WHERE email = :email');
+        try {
+            $abc->bindValue(':email', $email, PDO::PARAM_STR);
+            $abc->execute();
+
+            if($abc->rowCount() == 0) {
+                return false;
+            } else {
+                $reg = $abc->fetch(PDO::FETCH_OBJ);
+                return $reg->id;
+            }
+        } catch(PDOException $e) {
+            return 'erro';
+        }
+    }
+
+    public function buscaUsuario(string $user)
+    {
+        $abc = $this->pdo->prepare('SELECT id FROM login WHERE user = :user');
+        try {
+            $abc->bindValue(':user', $user, PDO::PARAM_STR);
+            $abc->execute();
+
+            if($abc->rowCount() == 0) {
+                return false;
+            } else {
+                $reg = $abc->fetch(PDO::FETCH_OBJ);
+                return $reg->id;
+            }
+        } catch(PDOException $e) {
+            return 'erro';
+        }
     }
 }

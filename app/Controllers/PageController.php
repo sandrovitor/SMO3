@@ -469,6 +469,134 @@ class PageController
         header('Location: /login');
     }
 
+    static function esqueciSenha()
+    {
+        // Verifica se já está autenticado
+        $auth = new Auth();
+        if($auth->getIsLogged()) {
+            header('Location: /');
+            return false;
+        }
+
+        // Exibe tela de Esqueci a senha
+        $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
+        return $blade->run("esqueciSenha", array(
+            'smoMSG' => SessionMessage::lerFormatado()
+        ));
+    }
+
+    static function esqueciSenhaPOST()
+    {
+        // Verifica se já está autenticado
+        $auth = new Auth();
+        if($auth->getIsLogged()) {
+            header('Location: /');
+            return false;
+        }
+
+        if(strrpos($_POST['usuario'], '@') !== false) {
+            // E-mail
+            print('E-mail');
+            $user = new User();
+            $u = $user->buscaEmail($_POST['usuario']);
+            if($u === false) {
+                SessionMessage::novo(array('titulo' => '', 'texto' => 'E-mail não localizado. Contate um dos administradores.', 'tipo' => 'danger'));
+                header('Location: /forgot');
+                exit();
+            } else if( $u == 'erro') {
+                SessionMessage::novo(array('titulo' => '', 'texto' => 'Ocorreu um erro interno. Contate um dos administradores.', 'tipo' => 'danger'));
+                header('Location: /forgot');
+                exit();
+            } else {
+                $user->esqueciSenha((int) $u);
+            }
+        } else {
+            // Nome de usuário
+            print('Nome de usuário');
+            $user = new User();
+            $u = $user->buscaUsuario($_POST['usuario']);
+            if($u === false) {
+                SessionMessage::novo(array('titulo' => '', 'texto' => 'Nome de usuário não localizado. Contate um dos administradores.', 'tipo' => 'danger'));
+                header('Location: /forgot');
+                exit();
+            } else if( $u == 'erro') {
+                SessionMessage::novo(array('titulo' => '', 'texto' => 'Ocorreu um erro interno. Contate um dos administradores.', 'tipo' => 'danger'));
+                header('Location: /forgot');
+                exit();
+            } else {
+                $user->esqueciSenha((int) $u);
+            }
+        }
+        //var_dump($_POST);
+    }
+
+    static function redefineSenha()
+    {
+        // Verifica se já está autenticado
+        $auth = new Auth();
+        if($auth->getIsLogged()) {
+            header('Location: /');
+            return false;
+        }
+
+
+        // Verifica se os dados enviados estão íntegros (sem distorção)
+        $usuario = $_GET['user'];
+        $token = $_GET['token'];
+        $verify = md5($usuario.$token);
+        if($verify !== $_GET['verify']) {
+            SessionMessage::novo(array('titulo' => 'Inválido!', 'texto' => 'Sinto muito! Esse link está com a integridade corrompida.', 'tipo' => 'danger'));
+            header('Location: /login');
+            exit();
+        } else {
+            // verifica se o token é válido
+            $user = new User();
+            $uid = $user->buscaUsuario($usuario);
+            if($uid == 'erro' || $uid === false) {
+                SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Há algo de errado com os dados do usuário. Contate administrador.', 'tipo' => 'danger'));
+                header('Location: /login');
+                exit();
+            } else {
+                $u = $user->getInfo($uid);
+                if($u->token === $token) {
+                    // Exibe tela de Esqueci a senha
+                    $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
+                    return $blade->run("redefineSenha", array(
+                        'smoMSG' => SessionMessage::lerFormatado(),
+                        'u' => $u,
+                        'usuario' => $u->user,
+                        'token' => $token,
+                        'uid' => $uid,
+                    ));
+                } else {
+                    SessionMessage::novo(array('titulo' => 'Token inválido!', 'texto' => 'Esse token de redefinição é inválido. Contate administrador.', 'tipo' => 'danger'));
+                    header('Location: /login');
+                    exit();
+                }
+            }
+
+        }
+    }
+
+    static function redefineSenhaPOST()
+    {
+        $user = new User();
+        $u = $user->getInfo((int)$_POST['uid']);
+
+        if($u->token === $_POST['token']) {
+            $res = $user->redefineSenha($u->id, $_POST['senha'] );
+            if($res === true) {
+                SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Senha redefinida com sucesso. A nova senha já pode ser usada.', 'tipo' => 'success'));
+                return 'OK';
+            } else {
+                return $res;
+            }
+        } else {
+            return 'TOKEN inválido! Esse link de redefinição não é mais válido.';
+        }
+        
+    }
+
     static function index()
     {
         // Checa se está autenticado
@@ -641,18 +769,32 @@ class PageController
 
         $surdos = $x;
 
-        
-        $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
-        return $blade->run("registrosNovo",array(
-            'smoMSG' => SessionMessage::ler(),
-            'router' => PageController::router(),
-            'uNome'=> $_SESSION['nome'],
-            'anoCorrente' => date('Y'),
-            'publicadores' => $publicadores,
-            'surdos' => $surdos,
-            'surdoId' => $surdoId,
-            'surdoUnico' => $surdoUnico
-        ));
+        if($_SESSION['modo_facil'] === TRUE) {
+            $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
+            return $blade->run("registrosNovoMF",array(
+                'smoMSG' => SessionMessage::ler(),
+                'router' => PageController::router(),
+                'uNome'=> $_SESSION['nome'],
+                'anoCorrente' => date('Y'),
+                'publicadores' => $publicadores,
+                'surdos' => $surdos,
+                'surdoId' => $surdoId,
+                'surdoUnico' => $surdoUnico,
+                'mfIcon' => 'badge-primary'
+            ));
+        } else {
+            $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
+            return $blade->run("registrosNovo",array(
+                'smoMSG' => SessionMessage::ler(),
+                'router' => PageController::router(),
+                'uNome'=> $_SESSION['nome'],
+                'anoCorrente' => date('Y'),
+                'publicadores' => $publicadores,
+                'surdos' => $surdos,
+                'surdoId' => $surdoId,
+                'surdoUnico' => $surdoUnico
+            ));
+        }
     }
 
     static function registrosBuscar(array $params)

@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- jQuery (necessario para os plugins Javascript do Bootstrap) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- jQuery -->
-<script src="js/bootstrap.min.js"></script>
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
@@ -15,132 +14,134 @@
 <link rel="icon" href="resources/images/favicon_64.png" />
 <title>SMO ::: LOGIN</title>
 <style>
-body {
-	padding-top: 15px;
-    background: #f1fef4;
+body, html {
+	padding: 0px;
+	margin: 0px;
+	background: #f8f8f7;
+	font-family: Montserrat, sans-serif;
+	overflow: hidden;
 }
-.form-box {
-	width: 300px;
-	border: 1px solid #065a1a;
-    background: #ffffff;
-	margin: 0 auto;
-	margin-top: 10px;
-	padding: 30px 20px 10px;
-	box-sizing: border-box;
-	border-radius: 4px;
-	box-shadow: 0px 0px 10px #999;
-	position: relative;
+#body {
+	position: absolute;
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	overflow: hidden;
 }
-.msg-copyright {
-	width: 300px;
-	box-sizing: border-box;
-	padding: 5px;
-	margin:0 auto;
-	margin-top: 20px;
-	margin-bottom: 10px;
-	position:relative;
-	font-family: 'Saira Semi Condensed', sans-serif;
-	
+.content {
+	max-width: 400px;
+	width: 100%;
 }
-hr {
-	width:150px;
-	border: 1px solid #eee;
+.box-content, .msg-retorno {
+	max-width: 800px;
+	width:100%;
+	margin-bottom: 1rem;
 }
-.outbox {
-	margin:0 auto;
-	max-width:150px;
-	
+.box-content{
+	background: #ffffff;
+	border: 1px solid #eaeae8;
+	display: flex;
+	flex-direction:row;
+	border-radius: 3px;
 }
-
+.content-image {
+	max-width: 400px;
+	width: 100%;
+	background: url("@yield('loginFoto')");
+	background-repeat: no-repeat;
+}
+.content {
+	padding: 2rem;
+	max-width: 400px;
+	width: 100%;	
+}
+.content > h3 {
+	margin-top: 0;
+	margin-bottom: 3rem;
+}
 .textbox {
-    padding:10px 15px;
-    width: 100%;
-	border-radius: 10px;
-	border: 1px solid #bbb;
-	outline: 0;
-    transition: all .4s ease-in-out;
-    font-weight: bold;
-    color: #065a1a;
-}
-.textbox input[type='text'],
-.textbox input[type='password'],
-.textbox input[type='text']:FOCUS,
-.textbox input[type='password']:FOCUS,
-.textbox input[type='text']:ACTIVE,
-.textbox input[type='password']:ACTIVE {
-    height: 32px;
-	font-family: 'Saira Semi Condensed', sans-serif;
-	font-size: 18px;
-    outline:0;
-    border:0;
-    letter-spacing: 1px;
-}
-.textbox input[type='password'] {
-    width: 200px;
-    max-width: 205px;
-}
-.textbox button {
-    height: 32px;
-    padding:0;
-    padding-top: 5px;
-    border:0;
-    outline:0;
-    background:none;
-    font-size: 20px;
-    float:right;
-    color:#999;
-    transition-duration: .3s
-}
-.textbox button:HOVER {
-    color: #333;
+	border:1px solid #D5D4D2;
+	transition: all .3s ease-in-out;
 }
 .textbox:focus-within {
-	border-color: #065a1a;
-}
-.fonte2 {
-	font-family: 'Oxygen', sans-serif;
-	font-weight: bold;
-	font-size: 32px;
-}
-#esqueceu_senha {
-	z-index: 100;
-	position: absolute;
-	top:0;
-	left: 0;
-	background: #1abaa4;
-	width: 100%;
-	height:100%;
-	border-radius: 4px;
-	box-sizing: border-box;
-	padding: 20px;
-	color: #fff;
-	display:none;
-}
-#esqueceu_senha > h4 {
-	color: #212326;
-	margin-bottom: 20px;
+	box-shadow: 0 0 5px #cccccc;
 }
 
-/* ICON CLOSE */
-.bar1, .bar2 {
-	width: 25px;
-	height: 3px;
-	background-color: #444;
-	margin-bottom: 5px;
+input[type="text"],
+input[type="password"] {
+	width: 100%;
+	height: 40px;
+	line-height:24px;
+	font-size: 1.5rem;
+	padding: 5px 10px;
+	border:none;
+	outline: 0;
 }
-.bar1 {
-	transform: rotate(-45deg) translate(-5px, 0px);
+input[type="password"],
+input[name="senha"] {
+	width: calc(100% - 40px);
 }
-.bar2 {
-	transform: rotate(45deg) translate(-5px, -1px);
+button {
+	padding: 1rem 2rem;
+	color: white;
+	background-color: #006bb3;
+	border: 0;
 }
-.icon-close {
-	position:absolute;
-	top: 30px;
-	right: 15px;
-	cursor: pointer;
+.senha-util {
+	background: transparent;
+	padding:0;
+	color: #007acc;
+	font-size: 1.8rem;
+	width: 35px;
 }
-/* ICON CLOSE */
+
+.msg-copyright {
+	max-width: 800px;
+	padding: 0 2rem;
+	margin: 0 auto;
+}
+.body-head {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	max-width: 100vw;
+	background-color: #c4ffdb;
+	height: 50px;
+	
+}
+.body-head img {
+	max-height: 50px;
+	height: auto;
+}
+
+.body-foot {
+	position:fixed;
+	bottom:0;
+	left:0;
+	width:100%;
+	max-width: 100vw;
+	background-color: #dedede;
+	padding: 1rem .5rem 1rem;
+}
+.bg-smo {
+    background-color: rgba(0,121,107,1);
+    color: rgb(236, 236, 236);
+}
+@media ( max-width: 991px ) {
+	.content-image {
+		display:none;
+	}
+	.box-content, .msg-copyright, .msg-retorno {
+		max-width: 400px;
+	}
+}
+
+
+
 </style>
 <script>
 function divClose() {
@@ -149,8 +150,11 @@ function divClose() {
 function divOpen() {
 	$('#esqueceu_senha').fadeIn('fast');
 }
+function esqueciSenha() {
+	alert('Avise para os administradores.');
+}
 $(document).ready(function(){
-	$(document).on('click', '.mostra_senha',function(){
+	$(document).on('click', '.senha-util',function(){
 		var icon = $(this).find('span.glyphicon');
 		// Verifica se há um TARGET definido
 		if($(this).data('target') != ''){
@@ -176,53 +180,44 @@ $(document).ready(function(){
 
 
 <body>
-	<h3 class="text-center fonte2">LS Castelo Branco
-		<br><small>Sistema de Mapas Online</small>
-	</h3>
-	<div class="outbox" title="versão 3.0"><img class="outbox" src="resources/images/v3.png"></div>
-	<hr>
-	
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
-				@yield('msgRetorno')
+	<div id="body">
+		<div class="body-head">
+			<img src="/resources/images/smo.png" class="bg-smo" style="padding: 0px .5rem; margin-right:.5rem;" alt="Logo do SMO"> Sistema de Mapas Online
+		</div>
+		<div class="msg-retorno">
+			@yield('msgRetorno')
+		</div>
+		<div class="box-content">
+			<div class="content-image">
+			</div>
+			<div class="content">
+				<h3>SMO :: Entrar<br>
+				<small>Sistema de Mapas Online 3.0</small></h3>
+				<form method="post" action="login">
+					<div class="form-group textbox">
+						<input type="text" name="usuario" required value="{{$_SESSION['user'] or ''}}" @yield('afUser')>
+					</div>
+					<div class="form-group textbox">
+						<input type="password" name="senha" required @yield('afSenha')>
+						<button type="button" class="senha-util" data-target="" title="Mostrar senha" class="mostra_senha"><span class="glyphicon glyphicon-eye-open"></span></button>
+					</div>
+					<div class="form-group">
+						<input type="checkbox" name="save_user" value="yes" @yield('saveuserChecked')> Lembrar meu nome de usuário
+					</div>
+					<div class="form-group">
+						<button type="submit">Entrar</button>
+					</div>
+					
+					<a href="javascript:void(0)" onclick="esqueciSenha();">Esqueci a senha</a>
+				</form>
 			</div>
 		</div>
-	</div>
-
-	<div class="form-box">
-		<div id="esqueceu_senha">
-			<h4>Esqueceu sua senha?</h4>
-			Entre em contato com o administrador do sistema para que ele possa resetar sua senha e devolver seu acesso.
-			
-			<div class="icon-close" onclick="divClose()">
-				<div class="bar1"></div>
-				<div class="bar2"></div>
-			</div>
+		<div class="body-foot text-center">
+		
+		<div class="text-center msg-copyright">
+			<strong>LSCB &copy;2017 - {{date('Y')}}</strong>. É proibido a reprodução ou cópia do conteúdo deste site para qualquer fim.
 		</div>
-		<form action="login" method="post">
-			
-			<div class="form-group textbox">
-				<input type="text" name="usuario" placeholder="login" required value="{{$_SESSION['user'] or ''}}">
-			</div>
-			<div class="form-group textbox">
-				<input type="password" name="senha" placeholder="senha" required>
-				<button type="button" data-target="" title="Mostrar senha" class="mostra_senha"><span class="glyphicon glyphicon-eye-open"></span></button>
-			</div>
-			<div class="form-group">
-				<label style="margin-left: 14px; cursor:pointer;">
-					<input type="checkbox" name="save_user" value="yes"> Lembrar meu usuário
-				</label>
-			</div>
-			<div class="form-group text-center">
-				<input type="hidden" name="urlBack" value="">
-				<button type="submit" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-log-in"></span> <strong>Acessar</strong></button>
-				<button type="button" class="btn btn-sm btn-default" onclick="divOpen()">Esqueci minha senha</button>
-			</div>
-		</form>
-	</div>
-	<div class="text-center msg-copyright">
-		<strong>LSCB &copy;2017</strong> É proibido a reprodução ou cópia do conteúdo deste site para qualquer fim.
+		</div>
 	</div>
 </body>
 <!-- jQuery library -->

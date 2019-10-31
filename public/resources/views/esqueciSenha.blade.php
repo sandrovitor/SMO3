@@ -56,29 +56,22 @@
 	<div class="content-image">
 	</div>
 	<div class="content">
-		<h3>SMO :: Entrar<br>
+		<h3>SMO :: Esqueceu a senha<br>
 		<small class="text-muted">Sistema de Mapas Online 3.0</small></h3>
-		<form method="post" action="login">
+		<form method="post" action="forgot">
+			<label>Informe seu nome de usuário ou e-mail.</label>
 			<div class="form-group textbox">
-				<input type="text" name="usuario" required value="{{$_SESSION['user'] or ''}}" @yield('afUser')>
-			</div>
-			<div class="form-group textbox">
-				<input type="password" name="senha" required @yield('afSenha')>
-				<button type="button" class="senha-util" data-target="" title="Mostrar senha" class="mostra_senha"><i class="fas fa-eye"></i></button>
+				<input type="text" name="usuario" required autofocus>
 			</div>
 			<div class="form-group">
-				<input type="checkbox" name="save_user" value="yes" @yield('saveuserChecked')> Lembrar meu nome de usuário
-			</div>
-			<div class="form-group">
-				<button type="submit">Entrar</button>
+				<button type="submit">Procurar</button>
 			</div>
 
-			<a href="/forgot">Esqueci a senha</a>
 		</form>
 	</div>
 @endsection
 
-@section('titulo', 'SMO ::: LOGIN')
+@section('titulo', 'SMO ::: Esqueci a senha')
 @section ('msgRetorno', $msgRetorno)
 @section ('loginFoto', $loginFoto)
 @section ('saveuserChecked', $saveuserChecked)

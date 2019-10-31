@@ -4,21 +4,24 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- jQuery (necessario para os plugins Javascript do Bootstrap) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> <!-- jQuery -->
 <!-- Bootstrap CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous"> <!-- Font Awesome 5 -->
+<!-- jQuery library -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Saira+Semi+Condensed" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
+<!--<link href="https://fonts.googleapis.com/css?family=Saira+Semi+Condensed" rel="stylesheet">-->
+<!--<link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">-->
 <link rel="icon" href="resources/images/favicon_64.png" />
-<title>SMO ::: LOGIN</title>
+<title>@yield('titulo')</title>
 <style>
 body, html {
 	padding: 0px;
 	margin: 0px;
 	background: #f8f8f7;
 	font-family: Montserrat, sans-serif;
+	overflow: hidden;
+	font-size: 14px;
 }
 #body {
 	position: absolute;
@@ -28,10 +31,12 @@ body, html {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	overflow: hidden;
 }
 .content {
+	padding: 20px;
 	max-width: 400px;
-	width: 100%;
+	width: 100%;	
 }
 .box-content, .msg-retorno {
 	max-width: 800px;
@@ -51,14 +56,12 @@ body, html {
 	background: url("@yield('loginFoto')");
 	background-repeat: no-repeat;
 }
-.content {
-	padding: 2rem;
-	max-width: 400px;
-	width: 100%;	
-}
 .content > h3 {
 	margin-top: 0;
-	margin-bottom: 3rem;
+	margin-bottom: 30px;
+}
+h3 > small {
+	font-size:1.1rem;
 }
 .textbox {
 	border:1px solid #D5D4D2;
@@ -73,7 +76,7 @@ input[type="password"] {
 	width: 100%;
 	height: 40px;
 	line-height:24px;
-	font-size: 1.5rem;
+	/*font-size: 1.5rem;*/
 	padding: 5px 10px;
 	border:none;
 	outline: 0;
@@ -83,7 +86,7 @@ input[name="senha"] {
 	width: calc(100% - 40px);
 }
 button {
-	padding: 1rem 2rem;
+	padding: 10px 20px;
 	color: white;
 	background-color: #006bb3;
 	border: 0;
@@ -92,13 +95,42 @@ button {
 	background: transparent;
 	padding:0;
 	color: #007acc;
-	font-size: 1.8rem;
+	font-size: 1.5rem;
 	width: 35px;
 }
 
 .msg-copyright {
 	max-width: 800px;
 	padding: 0 2rem;
+	margin: 0 auto;
+}
+.body-head {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	max-width: 100vw;
+	background-color: #c4ffdb;
+	height: 50px;
+	
+}
+.body-head img {
+	max-height: 50px;
+	height: auto;
+}
+
+.body-foot {
+	position:fixed;
+	bottom:0;
+	left:0;
+	width:100%;
+	max-width: 100vw;
+	background-color: #dedede;
+	padding: .8rem .5rem .8rem;
+}
+.bg-smo {
+    background-color: rgba(0,121,107,1);
+    color: rgb(236, 236, 236);
 }
 @media ( max-width: 991px ) {
 	.content-image {
@@ -122,9 +154,17 @@ function divOpen() {
 function esqueciSenha() {
 	alert('Avise para os administradores.');
 }
+function verSenhas() {
+	let alvo = $('.senha');
+	if(alvo.attr('type') == 'password') {
+		alvo.attr('type', 'text');
+	} else {
+		alvo.attr('type', 'password');
+	}
+}
 $(document).ready(function(){
 	$(document).on('click', '.senha-util',function(){
-		var icon = $(this).find('span.glyphicon');
+		var icon = $(event.target);
 		// Verifica se há um TARGET definido
 		if($(this).data('target') != ''){
 			var alvo = $($(this).data('target'));
@@ -150,55 +190,23 @@ $(document).ready(function(){
 
 <body>
 	<div id="body">
+		<div class="body-head">
+			<img src="/resources/images/smo.png" class="bg-smo" style="padding: 0px .5rem; margin-right:.5rem;" alt="Logo do SMO"> Sistema de Mapas Online
+		</div>
 		<div class="msg-retorno">
 			@yield('msgRetorno')
 		</div>
 		<div class="box-content">
-			<div class="content-image">
-			</div>
-			<div class="content">
-				<h3>SMO :: Entrar<br>
-				<small>Sistema de Mapas Online 3.0</small></h3>
-				<form method="post" action="login">
-					<div class="form-group textbox">
-						<input type="text" name="usuario" required value="{{$_SESSION['user'] or ''}}" @yield('afUser')>
-					</div>
-					<div class="form-group textbox">
-						<input type="password" name="senha" required @yield('afSenha')>
-						<button type="button" class="senha-util" data-target="" title="Mostrar senha" class="mostra_senha"><span class="glyphicon glyphicon-eye-open"></span></button>
-					</div>
-					<div class="form-group">
-						<input type="checkbox" name="save_user" value="yes" @yield('saveuserChecked')> Lembrar meu nome de usuário
-					</div>
-					<div class="form-group">
-						<button type="submit">Entrar</button>
-					</div>
-					
-					<a href="javascript:void(0)" onclick="esqueciSenha();">Esqueci a senha</a>
-				</form>
-			</div>
+			@yield('conteudo')
 		</div>
+		<div class="body-foot text-center">
+		
 		<div class="text-center msg-copyright">
-			<strong>LSCB &copy;2017</strong> É proibido a reprodução ou cópia do conteúdo deste site para qualquer fim.
+			<strong>LSCB &copy;2017 - {{date('Y')}}</strong>. É proibido a reprodução ou cópia do conteúdo deste site para qualquer fim.
+		</div>
 		</div>
 	</div>
-	<!--
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-12 col-md-8 col-md-offset-2">
-				@yield('msgRetorno')
-			</div>
-		</div>
-	</div>
-
-	<div class="box-content">
-		X
-	</div>
-	
-	-->
 </body>
-<!-- jQuery library -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- Latest compiled JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </html>

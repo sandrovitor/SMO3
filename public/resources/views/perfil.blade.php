@@ -95,7 +95,7 @@
                 <strong>Usuário BETA:</strong> &nbsp;&nbsp; {!!$beta!!} <br>
                 <strong>Status da senha:</strong> &nbsp;&nbsp; {!!$trocasenha!!} <br>
                 <strong>Acessos:</strong> &nbsp;&nbsp; <span class="badge badge-info">{!!$user->qtd_login!!}</span> <br>
-                <strong>Modo fácil:</strong> &nbsp;&nbsp; {!!$facil!!} <br>
+                <strong><i class="fas fa-ribbon"></i> Modo fácil:</strong> &nbsp;&nbsp; {!!$facil!!} <br>
                 <hr>
                 <h5><strong>Assistente de Ministério &nbsp;</strong></h5>
                 @if(isset($_SESSION['ma']) && $_SESSION['ma'] === TRUE)

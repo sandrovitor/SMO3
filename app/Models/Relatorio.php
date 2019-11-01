@@ -295,12 +295,6 @@ class Relatorio extends Model {
         }
 
         unset($b1, $b2);
-
-        // Total de surdos encontrados
-        $surdosEncP = ($surdosEnc * 100)/ $surdosQtd;
-
-        // Total de surdos BE.
-        $surdosBEP = ($surdosBE * 100)/ $surdosQtd;
         
         // Categoria dos surdos (ativo, oculto, desativado)
         $abc = $this->pdo->query('SELECT (SELECT COUNT(id) FROM mapa WHERE ocultar = 1) as oculto, (SELECT COUNT(id) FROM mapa WHERE ativo = 1 AND ocultar = 0) as ativo FROM mapa LIMIT 0,1');
@@ -309,6 +303,12 @@ class Relatorio extends Model {
         $surdoAtivo = $reg->ativo;              $surdoAtivoP = round(($surdoAtivo * 100) / $surdoTerritorioTotal, 0);
         $surdoOculto = $reg->oculto;            $surdoOcultoP = round(($surdoOculto * 100) / $surdoTerritorioTotal, 0);
 
+
+        // Total de surdos encontrados
+        $surdosEncP = ($surdosEnc * 100)/ $surdoTerritorioTotal;
+
+        // Total de surdos BE.
+        $surdosBEP = ($surdosBE * 100)/ $surdoTerritorioTotal;
 
         $html .= '
         <h4><strong>Relatório entre Visitas</strong> [<i>'.$periodoIni->format('d/m/Y').' a '.$periodoFim->format('d/m/Y').'</i>] <br><small class="text-muted"><i>(gerado em '.$hoje->format('d/m/Y \à\s H:i:s').')</i></small></h4>
@@ -321,7 +321,7 @@ class Relatorio extends Model {
                     <div class="progress-bar bg-success" data-toggle="tooltip" title="'.$surdoAtivo.' ativos" style="width:'.$surdoAtivoP.'%;height:20px">
                         '.$surdoAtivoP.'%
                     </div>
-                    <div class="progress-bar bg-success" data-toggle="tooltip" title="'.$surdoOculto.' ativos" style="width:'.$surdoOcultoP.'%;height:20px">
+                    <div class="progress-bar bg-info" data-toggle="tooltip" title="'.$surdoOculto.' ocultos" style="width:'.$surdoOcultoP.'%;height:20px">
                         '.$surdoOcultoP.'%
                     </div>
                 </div>
@@ -330,11 +330,29 @@ class Relatorio extends Model {
         </div>
 
         <div class="row">
+            <div class="col-12 col-md-12">
+                <strong>SURDOS encontrados</strong> <span class="badge badge-primary px-2">'.($surdosEnc - $surdosBE).'</span>
+                <span class="d-none d-sm-inline">&nbsp; | &nbsp;</span>
+                <br class="d-block d-sm-none">
+                <strong>SURDOS Bíblia Estuda Já</strong> <span class="badge badge-info px-2">'.$surdosBE.'</span>
+                <div class="progress" style="">
+                    <div class="progress-bar bg-primary" style="width:'.($surdosEncP - $surdosBEP).'%;" title="Surdos Encontrados que não Estudam a Biblia: '.($surdosEnc - $surdosBE).'" data-toggle="tooltip">
+                        '.round($surdosEncP - $surdosBEP).'%
+                    </div>
+                    <div class="progress-bar bg-info" style="width:'.$surdosBEP.'%;" title="Surdos que Estudam a Biblia: '.$surdosBE.'" data-toggle="tooltip">
+                        '.round($surdosBEP).'%
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--
+        <div class="row">
             <div class="col-12 col-md-6">
                 <strong>SURDOS encontrados</strong> <span class="badge badge-dark">'.$surdosEnc.'</span>
                 <div class="progress" style="">
                     <div class="progress-bar" style="width:'.$surdosEncP.'%;">
-                        
+                        '.round($surdosEncP).'%
                     </div>
                 </div>
             </div>
@@ -342,11 +360,12 @@ class Relatorio extends Model {
                 <strong>SURDOS Bíblia Estuda Já</strong> <span class="badge badge-dark">'.$surdosBE.'</span>
                 <div class="progress" style="">
                     <div class="progress-bar" style="width:'.$surdosBEP.'%;">
-                        
+                        '.round($surdosBEP).'%
                     </div>
                 </div>
             </div>
         </div>
+        -->
         <br>
 
         <div class="row">

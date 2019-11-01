@@ -10,6 +10,9 @@ class BD extends Model {
     function __construct()
     {
         parent::__construct();
+        $caminho = substr(__DIR__, 0, strrpos(__DIR__, '/app'));
+        $caminho .= '/backup';
+        $this->backupFolder = $caminho;
         if(!file_exists($this->backupFolder)) {
             mkdir($this->backupFolder);
         }

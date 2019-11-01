@@ -535,7 +535,7 @@ class Mapa extends Model {
 
     function listaTP() // Lista todos os territórios pessoais no SMO
     {
-        $abc = $this->pdo->query('SELECT login.id, login.nome, login.sobrenome, login.user, (SELECT COUNT(*) FROM mapa WHERE mapa.tp_pub = login.id) as surdosTP FROM `login` WHERE 1 ORDER BY login.nome ASC, login.sobrenome ASC');
+        $abc = $this->pdo->query('SELECT login.id, login.nome, login.sobrenome, login.user, (SELECT COUNT(*) FROM mapa WHERE mapa.ativo = TRUE AND mapa.ocultar = FALSE AND mapa.tp_pub = login.id) as surdosTP FROM `login` WHERE 1 ORDER BY login.nome ASC, login.sobrenome ASC');
 
         if($abc->rowCount() == 0) {
             return false;
@@ -630,7 +630,7 @@ class Mapa extends Model {
 
     function campanhaResultado(string $campanhaInicio, string $campanhaFinal)
     {
-        $abc = $this->pdo->query('SELECT mapa.id, mapa.nome, ter.bairro, IF((SELECT registro.data_visita FROM registro WHERE registro.mapa_id = mapa.id AND registro.campanha = TRUE AND registro.data_visita >= "'.$campanhaInicio.'" AND registro.data_visita <= "'.$campanhaFinal.'") <> "", TRUE, FALSE) as campanha FROM mapa LEFT JOIN ter ON mapa.bairro_id = ter.id WHERE mapa.ativo = TRUE ORDER BY ter.bairro ASC, mapa.nome ASC');
+        $abc = $this->pdo->query('SELECT mapa.id, mapa.nome, ter.bairro, IF((SELECT COUNT(registro.data_visita) FROM registro WHERE registro.mapa_id = mapa.id AND registro.campanha = TRUE AND registro.data_visita >= "'.$campanhaInicio.'" AND registro.data_visita <= "'.$campanhaFinal.'") > 0, TRUE, FALSE) as campanha FROM mapa LEFT JOIN ter ON mapa.bairro_id = ter.id WHERE mapa.ativo = TRUE ORDER BY ter.bairro ASC, mapa.nome ASC');
 
         $reg = $abc->fetchAll(PDO::FETCH_OBJ);
 

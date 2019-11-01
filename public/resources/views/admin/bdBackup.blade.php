@@ -156,6 +156,7 @@
         },function(data){
             if(data == '') {
                 alert('Servidor retornou um mensagem inválida.');
+                console.log(data);
             } else {
                 if(data.length > 50) {
                     alert(data);

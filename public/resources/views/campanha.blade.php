@@ -59,6 +59,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     @php
+                                    
                                         $listaSurdos = $mapa->campanhaResultado($campanha['inicio'], $campanha['fim']);
                                         $totalSurdos = count($listaSurdos);
                                         $totalCampanhaRecebido = 0;
@@ -67,6 +68,7 @@
                                                 $totalCampanhaRecebido++;
                                             }
                                         }
+                                        
                                         //var_dump($listaSurdos);
                                     @endphp
                                     <input type="text" class="form-control" data-toggle="filter" data-target="#table-campanha" placeholder="Digite um bairro ou nome para pesquisar"><br>

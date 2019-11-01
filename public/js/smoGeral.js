@@ -668,11 +668,14 @@ $(document).ready(function(){
     $('[data-toggle="popover"]').popover({html: true, sanitize: false});
     
     $(document).ajaxStart(function(){
-		$('[data-toggle="tooltip"]').tooltip('disable');
-        $('[data-toggle="popover"]').popover('disable');
+		//$('[data-toggle="tooltip"]').tooltip('disable');
+        //$('[data-toggle="popover"]').popover('disable');
 	});
 	$(document).ajaxStop(function(){
-		setTimeout(function(){$('[data-toggle="tooltip"]').tooltip(); $('[data-toggle="popover"]').popover({html:true});}, 500);
+		setTimeout(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover({html:true, sanitize: false});
+        }, 500);
     });
     $(document).on('click', '.backTop', function(){
         goAnchor('#topo');

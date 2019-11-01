@@ -366,38 +366,50 @@ class Mapa extends Model {
 
         
         $controle = array();
+        $logStr = array();
 
         if($nome != '') {
             $sql .= '`mapa`.`nome` LIKE :nome AND ';
             array_push($controle, ':nome');
+            array_push($logStr, '<span class="badge badge-dark">Nome</span>');
         }
         if($bairro != '') {
             $sql .= '`mapa`.`bairro_id` = :bairro AND ';
             array_push($controle, ':bairro');
+            array_push($logStr, '<span class="badge badge-dark">Bairro</span>');
         }
         if($turno != '') {
             $sql .= '`mapa`.`turno` LIKE :turno AND ';
             array_push($controle, ':turno');
+            array_push($logStr, '<span class="badge badge-dark">Turno</span>');
         }
         if($idade != '') {
             $sql .= '`mapa`.`idade` LIKE :idade AND ';
             array_push($controle, ':idade');
+            array_push($logStr, '<span class="badge badge-dark">Idade</span>');
         }
         if($be != '') {
             $sql .= '`mapa`.`be` = :be AND ';
             array_push($controle, ':be');
+            array_push($logStr, '<span class="badge badge-dark">Bíblia Estuda</span>');
         }
         if($oculto != '' && $oculto != 'AMBOS') {
             $sql .= '`mapa`.`ocultar` = :oculto AND ';
             array_push($controle, ':oculto');
+            array_push($logStr, '<span class="badge badge-dark">Ocultos</span>');
         }
         if($desativado != 'yes') {
             $sql .= '`mapa`.`ativo` = TRUE AND ';
+        } else {
+            
+            array_push($logStr, '<span class="badge badge-dark">Desativados</span>');
         }
 
-        // Remove últimos 4 caracteres
+        // Remove últimos 4 caracteres da query
         if(count($controle) > 0) {
             $sql = substr($sql,0,-4);
+
+            $logStr = implode(', ', $logStr);
         }
 
         $sql .= 'ORDER BY `ter`.`regiao` ASC, `ter`.`bairro` ASC, `mapa`.`nome` ASC';
@@ -500,6 +512,9 @@ class Mapa extends Model {
         }
 
         //var_dump($surdos);
+
+        $log = new LOG();
+        $log->novo(LOG::TIPO_CONSULTA, 'pesquisou surdos com os parâmetros '.$logStr.'.');
         
         return json_encode($surdos);
     }

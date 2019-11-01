@@ -23,6 +23,7 @@
         <div class="col-12">
             <div class="shadow-sm p-3 mb-3 border border-1">
                 <h3><strong>Bem vindo de volta, {{$user->nome}}.</strong></h3>
+                <a href="{{$router->generate('maExportXLS')}}" target="_blank" class="btn btn-secondary btn-sm"><i class="far fa-file-excel"></i> Exportar XLS</a>
             </div>
         </div>
     </div>
@@ -68,7 +69,10 @@
                         <td class="mes-status">-</td>
                     </tr>
                     <tr>
-                        <th>Alvo de horas por dia </th>
+                        <th>Alvo de horas por dia
+                            <span class="badge badge-info badge-pill" title="Como é calculado?" data-content="O alvo de horas é calculado com base na quantidade de horas que você precisa fazer neste mês dividido pela quantidade de dias restantes.
+                            <br><br><i>Exemplo:</i><br><br> 70h / 20 dias = <strong>3h30min/dia</strong><br> 70h / 5 dias = <strong>14h/dia</strong>" data-toggle="popover" data-trigger="click hover"><i class="fas fa-info"></i></span>
+                        </th>
                         <td class="hora-alvo-dia">-</td>
                     </tr>
                 </table>
@@ -243,6 +247,7 @@
     var meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     var exiMesAtual = {{date('n')}};
 
+
     function minutosToHora(minutos)
     {
         let h, m, retorno;
@@ -327,8 +332,10 @@
             if(isJson(retorno)) {
                 horasRAW = JSON.parse(retorno);
                 relatorioAtual();
+                restartPlugins();
             } else if(retorno !== '{0}') {
                 alert('Mensagem:'+"\n"+retorno);
+                restartPlugins();
             }
         });
     }
@@ -572,6 +579,61 @@
         $('#mdListaHora').modal();
     }
 
+    function listaHoraMesAnterior()
+    {
+        let tabela = $(event.target).parents('table:eq(0)');
+        let horas = tabela.attr('smo-horas');
+        
+        if(horas !== false && horas !== 'false') {
+            $('#mdListaHora .modal-body').html('');
+
+            horas = JSON.parse(horas);
+            horas.forEach(function(x){
+                let y = x.data.split('-');
+                let m = parseInt(y[1]);
+                let a = parseInt(y[0]);
+
+                let textoDescricao = new Array();
+                if(x.hora > 0) {
+                    textoDescricao.push(minutosToHora(x.hora)+' horas');
+                }
+                if(x.horaldc > 0) {
+                    textoDescricao.push(minutosToHora(x.horaldc)+' horas na LDC');
+                }
+                if(x.publicacao > 0) {
+                    textoDescricao.push(x.publicacao+' publicações');
+                }
+                if(x.video > 0) {
+                    textoDescricao.push(x.video+' vídeos');
+                }
+                if(x.revisitas > 0) {
+                    textoDescricao.push(x.revisitas+' revisitas');
+                }
+
+                if(textoDescricao.length > 0) {
+                    textoDescricao = textoDescricao.join(', ');
+                }
+
+                if(x.comentario != '') {
+                    textoDescricao += '<br>'+x.comentario;
+                }
+                
+
+                $('#mdListaHora .modal-body').append(
+                    '<div class="mb-2" onclick="editaHora(\''+y[0]+'-'+y[1]+'-'+y[2]+'\')">'+
+                        '<strong>'+y[2] +' de '+meses[y[1]-1]+' de '+y[0]+'</strong>'+
+                        '<br>'+
+                        '<small>'+textoDescricao+'</small>'+
+                    '</div>'
+                );
+            });
+
+            $('#mdListaHora .modal-title').html('<strong>Horas do mês de '+ tabela.find('th:eq(0)').text()+'</strong>');
+            $('#mdListaHora').modal();
+        }
+        
+    }
+
     function editaHora(dia)
     {
         $('#mdAddHora [name="data"]').val(dia).trigger('change');
@@ -580,13 +642,29 @@
 
     }
 
+    function restartPlugins()
+    {
+        //$('[data-toggle="tooltip"]').tooltip('disable');
+        //$('[data-toggle="popover"]').popover('disable');
+        setTimeout(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover({html:true, sanitize: false});
+        }, 500);
+    }
+
     
 
     
     $(document).ready(function(){
+        
         getHoras(120);
         relatorioAnterior();
         relatorioAno();
+
+        $(document).ajaxComplete(function() {
+            //$('[data-toggle="popover"]').popover({html:true, sanitize: false});
+            restartPlugins();
+        });
         $(document).on('click', '#btAddHora',function(){
             if(horasRAW != undefined) {
                 horasRAW.forEach(function(x){
@@ -634,6 +712,8 @@
                 form.find('[name="comentario"]').val('');
             }
         });
+        
     });
+    
 </script>
 @endsection

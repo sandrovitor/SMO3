@@ -99,7 +99,7 @@ class Model
 
         // Perfis expirados.
         $hoje = new DateTime();
-        $abc = $this->pdo->query('SELECT id FROM `login` WHERE expira <= "'.$hoje->format('Y-m-d H:i:s').'"');
+        $abc = $this->pdo->query('SELECT id FROM `login` WHERE bloqueado = 0 AND expira <= "'.$hoje->format('Y-m-d H:i:s').'"');
         if($abc->rowCount() > 0) {
             $qtd++;
             array_push($pend, array('titulo' => 'Publicador(es) expirado(s):', 'texto' => 'Há '. $abc->rowCount() .' publicador(es) com o perfil expirado.', 'tipo' => 'danger', 'link' => '/admin/publicadores/ver'));
@@ -108,7 +108,7 @@ class Model
         // Perfis proximo de expirar
         $futuro = new DateTime();
         $futuro->add(new DateInterval('P60D'));
-        $abc = $this->pdo->query('SELECT id FROM `login` WHERE expira > "'.$hoje->format('Y-m-d H:i:s').'" AND expira <= "'.$futuro->format('Y-m-d H:i:s').'"');
+        $abc = $this->pdo->query('SELECT id FROM `login` WHERE bloqueado = 0 AND expira > "'.$hoje->format('Y-m-d H:i:s').'" AND expira <= "'.$futuro->format('Y-m-d H:i:s').'"');
         if($abc->rowCount() > 0) {
             $qtd++;
             array_push($pend, array('titulo' => 'Publicador(es) perto de expirar:', 'texto' => 'Há '. $abc->rowCount() .' publicador(es) que vão expirar nos próximos 60 dias.', 'tipo' => 'warning', 'link' => '/admin/publicadores/ver'));

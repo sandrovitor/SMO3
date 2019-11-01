@@ -22,28 +22,17 @@
 
 @section('conteudo')
     @if($campanha['ativo'] == 'not')
-        <div class="row">
-            <div class="col-12 col-sm-12">
-                <div class="card border-primary">
-                    <div class="card-body text-center">
-                        <strong>Infelizmente não há campanhas ativas.</strong>
-                    </div>
-                </div>
-            </div>
+        <div class="text-center border border-primary rounded-sm mb-2 p-3 shadow-sm">
+            <strong>Infelizmente não há campanhas ativas.</strong>
         </div>
+        
     
     @elseif($campanha['InicioDateTime'] > $hoje)
-        <div class="row">
-            <div class="col-12 col-sm-12">
-                <div class="card border-primary">
-                    <div class="card-body text-center">
-                        <h3>
-                            <span class="badge badge-light">CAMPANHA {{$campanha['nome']}}</span>
-                        </h3><br>
-                        <strong>Início da Campanha:</strong> <span class="badge badge-secondary">{{$campanha['InicioDateTime']->format('d/m/Y')}}</span>
-                    </div>
-                </div>
-            </div>
+        <div class="text-center border border-primary rounded-sm mb-2 p-3 shadow-sm">
+            <h3>
+                <span class="badge badge-light">CAMPANHA {{$campanha['nome']}}</span>
+            </h3><br>
+            <strong>Início da Campanha:</strong> <span class="badge badge-secondary">{{$campanha['InicioDateTime']->format('d/m/Y')}}</span>
         </div>
 
     @else

@@ -102,6 +102,8 @@
                 $('#resultado').html(data);
             });
         });
+
+        $('.btnFiltro').trigger('click');
     });
 </script>
 @endsection

@@ -288,7 +288,7 @@ class PageController
 
         for($i = 0; $i < count($lista); $i++) {
             $data = new DateTime($lista[$i]);
-            $res = $ma->getHoraMes($data);
+            //$res = $ma->getHoraMes($data);
 
             $res = $ma->getHoraMes($data);
             $ano = $data->format('Y');
@@ -344,7 +344,7 @@ class PageController
             }
 
             $html .= '
-                        <table id="tabRelatorio'.$ano.$mes.'" class="table table-sm" smo-mes="'.$mes.'" smo-ano="'.$ano.'">
+                        <table id="tabRelatorio'.$ano.$mes.'" class="table table-sm" smo-mes="'.$mes.'" smo-ano="'.$ano.'" smo-horas=\''.json_encode($res).'\' onclick="listaHoraMesAnterior()" style="cursor:pointer">
                             <thead>
                                 <tr>
                                     <th colspan="2" class="text-center">'.$mesesArr[$mes-1].'/'.$ano.'</th>
@@ -1115,6 +1115,92 @@ class PageController
             'anoCorrente' => date('Y'),
             'user' => $user->getInfo($_SESSION['id']),
         ));
+    }
+
+    static function maExportXLS()
+    {
+        if($_SESSION['ma'] === FALSE) {
+            http_response_code(404);
+            exit();
+        }
+        $ma = new MA($_SESSION['id']);
+        $horas = json_decode($ma->getHorasAll());
+        //$horas = json_decode('{0}');
+
+        if($horas == null) {
+            return 'Não há nada no seu relatório para exportar.';
+        }
+
+        //var_dump($horas);
+        $html = '<table border="1">
+        <tr style="height:24px; vertical-aling:middle; font-weight:bold;"><td>Data</td> <td>Horas</td> <td>Horas LDC</td> <td>Publicações</td> <td>Vídeos</td> <td>Revisitas</td> <td>Comentário</td></tr>';
+        $mesAtual = '';
+
+        foreach($horas as $h) {
+            $data = new DateTime($h->data);
+
+            if($mesAtual == '') {
+                $html .= '<tr><td colspan="7" style="text-align:center;padding: 10px 0;font-weight:bold;">Mês '.$data->format('m/Y').'</td></tr>';
+                $mesAtual = $data->format('m');
+            } else if($mesAtual != $data->format('m')) {
+                $html .= '<tr><td colspan="7" style="text-align:center; padding:10px 0; font-weight:bold;">Mês '.$data->format('m/Y').'</td></tr>';
+                $mesAtual = $data->format('m');
+            }
+
+            //var_dump($h);
+            $horaldc = $h->horaldc;
+            $publicacao = $h->publicacao;
+            $videos = $h->videos;
+            $revisitas = $h->revisitas;
+            $comentario = $h->comentario;
+
+            // Minutos para horas: HORAS
+            $minutos = (int)$h->hora;
+            $m = $minutos%60;
+            $h = ($minutos - $m)/60;
+            
+            if($h < 10) {
+                $retorno = '0'.$h.':';
+            } else {
+                $retorno = $h.':';
+            }
+
+            if($m < 10) {
+                $retorno .= '0'.$m;
+            } else {
+                $retorno .= $m;
+            }
+            $hor = $retorno;
+
+            
+            // Minutos para horas: HORAS LDC
+            $minutos = (int)$horaldc;
+            $m = $minutos%60;
+            $h = ($minutos - $m)/60;
+            
+            if($h < 10) {
+                $retorno = '0'.$h.':';
+            } else {
+                $retorno = $h.':';
+            }
+
+            if($m < 10) {
+                $retorno .= '0'.$m;
+            } else {
+                $retorno .= $m;
+            }
+            $horaldc = 0;
+
+            $html .= '
+            <tr> <td>'.$data->format('d/m/Y').'</td> <td>'.$hor.'</td> <td>'.$horaldc.'</td> <td>'.$publicacao.'</td> <td>'.$videos.'</td> <td>'.$revisitas.'</td> <td>'.$comentario.'</td> </tr>';
+        }
+
+        $html .='</table>';
+        header ('Cache-Control: no-cache, must-revalidate');
+        header ('Pragma: no-cache');
+        header('Content-Type: application/x-msexcel');
+        header ("Content-Disposition: attachment; filename=\"MeuRelatorio.xls\"");
+        echo $html;
     }
 
     static function teste()

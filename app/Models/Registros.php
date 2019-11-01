@@ -75,6 +75,7 @@ class Registros extends Model {
         // Valida variáveis no PDO
         //$abc = $this->pdo->prepare($sql);
         $mod = new Model();
+        $log = new LOG();
         $abc = $mod->pdo->prepare($sql);
         $abc->bindValue(':surdo', $surdo, PDO::PARAM_INT);
         $abc->bindValue(':data', $data, PDO::PARAM_STR);
@@ -87,6 +88,9 @@ class Registros extends Model {
         try {
             $abc->execute();
             SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Registro adicionado.', 'tipo' => 'success'));
+            $mapa = new Mapa();
+            $s = json_decode($mapa->surdoId((int)$surdo));
+            $log->novo(LOG::TIPO_CADASTRO, 'adicionou novo registro de visita de <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>');
         } catch(PDOException $e) {
             SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro no BD. '.$e->getMessage().'. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));
             return false;
@@ -279,7 +283,7 @@ class Registros extends Model {
     function deleta(int $regid)
     {
         
-        $abc = $this->pdo->prepare('SELECT id FROM registro WHERE id = :regid');
+        $abc = $this->pdo->prepare('SELECT * FROM registro WHERE id = :regid');
         $abc->bindValue(':regid', $regid, PDO::PARAM_INT);
         $abc->execute();
 
@@ -297,7 +301,7 @@ class Registros extends Model {
                 $log = new LOG();
                 $mapa = new Mapa();
                 $s = json_decode($mapa->surdoID((int)$reg->mapa_id));
-                $log->novo(LOG::TIPO_REMOVE, 'apagou registro [ID: '.$regid.'] do surdo <i>'.$s->nome.' ['.$s->bairro.']</i>.');
+                $log->novo(LOG::TIPO_REMOVE, 'apagou registro [ID: '.$regid.'] do surdo <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>.');
                 echo true;
             } catch(PDOException $e) {
                 echo 'Falha no BD: '.$e->getMessage();
@@ -381,6 +385,10 @@ class Registros extends Model {
 
         try {
             $abc->execute();
+            $mapa = new Mapa();
+            $s = json_decode($mapa->surdoId((int)$surdo));
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'atualizou o registro de visita [ID: '.$params['regid'].'] de <a href="/surdo/'.$s->id.'" target="_blank"><i>'.$s->nome.' ['.$s->bairro.']</i></a>');
             SessionMessage::novo(array('titulo' => 'Sucesso!', 'texto' => 'Registro atualizado.', 'tipo' => 'success'));
         } catch(PDOException $e) {
             SessionMessage::novo(array('titulo' => 'Erro!', 'texto' => 'Ocorreu um erro no BD. '.$e->getMessage().'. <strong>Tente novamente mais tarde.</strong>', 'tipo' => 'danger'));

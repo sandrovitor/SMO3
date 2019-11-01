@@ -26,6 +26,16 @@ class MA extends Model {
         }
     }
 
+    function getHorasAll()
+    {
+        $abc = $this->pdo->query('SELECT * FROM '.$this->maTable.' ORDER BY data DESC');
+        if($abc->rowCount() > 0) {
+            return json_encode($abc->fetchAll(PDO::FETCH_OBJ));
+        } else {
+            return '{0}';
+        }
+    }
+
     function getHoraMes(DateTime $def)
     {
         $data = new DateTime($def->format('Y-m-d'));

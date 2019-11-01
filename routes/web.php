@@ -106,6 +106,7 @@ $router->map('GET', '/ma', 'PageController#ma', 'ma');
 $router->map('POST', '/ma-func/', 'PageController#maFunc', 'maFunc');
 $router->map('POST', '/ma/relatorio/[i:ano]/[i:mes]/', 'PageController#maRelatorio');
 $router->map('POST', '/ma/relatorio/[i:ano1]/[i:mes1]/[i:ano2]/[i:mes2]/', 'PageController#maRelatorioRange');
+$router->map('GET', '/ma/export/xls', 'PageController#maExportXLS', 'maExportXLS');
 
 // PERFIL
 $router->map('GET', '/perfil', 'PageController#perfil', 'perfil');

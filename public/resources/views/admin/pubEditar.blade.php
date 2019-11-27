@@ -133,7 +133,9 @@
 					<option value="2" {{$n2}}>Nível 2 - Publicador</option>
 					<option value="3" {{$n3}}>Nível 3 - Pioneiro Regular</option>
 					<option value="4" {{$n4}}>Nível 4 - Ancião</option>
+					@if($_SESSION['nivel'] == 5 || $n5 != '')
 					<option value="5" {{$n5}}>Nível 5 - Administrador</option>
+					@endif
 				</select>
 			</div>
 		</div>

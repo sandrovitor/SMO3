@@ -1,12 +1,12 @@
 @extends('layouts.layoutindex')
 
 @php
-        $mensagemDeRetorno = '';
-        if($smoMSG != false) {
-            foreach($smoMSG as $s) {
-                $mensagemDeRetorno .= '<div class="alert alert-'.$s['tipo'].'"><strong>'. $s['titulo']. '</strong> '. $s['texto'].'</div>';
-            }
+    $mensagemDeRetorno = '';
+    if($smoMSG != false) {
+        foreach($smoMSG as $s) {
+            $mensagemDeRetorno .= '<div class="alert alert-'.$s['tipo'].'"><strong>'. $s['titulo']. '</strong> '. $s['texto'].'</div>';
         }
+    }
 @endphp
 
 @section ('paginaCorrente', 'Registros')

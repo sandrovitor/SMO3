@@ -2,9 +2,18 @@
 @php
     $mensagem = new Mensagem();
     $msg = $mensagem->getMsg();
+
+    $mensagemDeRetorno = '';
+    if($smoMSG != false) {
+        foreach($smoMSG as $s) {
+            $mensagemDeRetorno .= '<div class="alert alert-'.$s['tipo'].'"><strong>'. $s['titulo']. '</strong> '. $s['texto'].'</div>';
+        }
+    }
 @endphp
 
 @section ('paginaCorrente', 'Início')
+
+@section ('mensagemDeRetorno', $mensagemDeRetorno)
 
 @section('breadcrumb')
         <li class="breadcrumb-item active">Início</li>
@@ -93,6 +102,13 @@
 
             
         </div>
+    </div>
+    @endif
+
+    @if(isset($_SESSION['email']) && $_SESSION['email'] == '')
+    <div class="alert alert-info alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong><i class="far fa-lightbulb"></i> DICA!</strong> Adicione um endereço de e-mail ao seu perfil clicando <a href="/perfil">aqui</a>.
     </div>
     @endif
 

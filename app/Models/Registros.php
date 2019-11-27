@@ -144,6 +144,9 @@ class Registros extends Model {
 
             if($abc->rowCount() > 0)  {
                 $x = $abc->fetchAll(PDO::FETCH_OBJ);
+                foreach($x as $key => $value) {
+                    $x[$key]->texto = stripslashes($value->texto);
+                }
                 return json_encode($x);
             } else {
                 return '{0}';
@@ -209,6 +212,9 @@ class Registros extends Model {
 
             if($abc->rowCount() > 0)  {
                 $x = $abc->fetchAll(PDO::FETCH_OBJ);
+                foreach($x as $key => $value) {
+                    $x[$key]->texto = stripslashes($value->texto);
+                }
                 return json_encode($x);
             } else {
                 return '{0}';
@@ -256,6 +262,9 @@ class Registros extends Model {
 
             if($abc->rowCount() > 0)  {
                 $x = $abc->fetchAll(PDO::FETCH_OBJ);
+                foreach($x as $key => $value) {
+                    $x[$key]->texto = stripslashes($value->texto);
+                }
                 return json_encode($x);
             } else {
                 return '{0}';
@@ -274,6 +283,10 @@ class Registros extends Model {
         $abc = $this->pdo->query('SELECT mapa.nome, registro.*, (SELECT ter.bairro FROM ter WHERE ter.id = mapa.bairro_id) as bairro, (SELECT login.nome FROM login WHERE login.id = registro.pub_id) as publicador FROM registro LEFT JOIN mapa ON registro.mapa_id = mapa.id WHERE 1 ORDER BY registro.data_visita DESC LIMIT 0, 5 ');
         if($abc->rowCount() > 0) {
             $x = $abc->fetchAll(PDO::FETCH_OBJ);
+            foreach($x as $key => $value) {
+                $x[$key]->texto = stripslashes($value->texto);
+            }
+            
             echo json_encode($x);
         } else {
             echo '{0}';

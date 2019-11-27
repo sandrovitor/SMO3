@@ -30,4 +30,4 @@ Pendências para correção ou implementação:
 - Administração > Publicadores > Listar exibe Nivel e Validade do perfil. [ CORRIGIDO ]
 
 006:
-- Administração > Relatorios: criar tela.
+- Administração > Relatorios: criar tela. 

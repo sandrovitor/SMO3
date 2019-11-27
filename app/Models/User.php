@@ -30,6 +30,7 @@ class User extends Model {
              */
             $log = new LOG();
             $log->novo(LOG::TIPO_ATUALIZA, 'alterou nome de <i>'.$u->nome.'</i> para <i>'.$valor.'</i>.');
+            $_SESSION['nome'] = $valor;
             return true;
         } catch(PDOException $e) {
             return $e->getMessage();
@@ -50,6 +51,28 @@ class User extends Model {
              */
             $log = new LOG();
             $log->novo(LOG::TIPO_ATUALIZA, 'alterou sobrenome de <i>'.$u->sobrenome.'</i> para <i>'.$valor.'</i>.');
+            $_SESSION['sobrenome'] = $valor;
+            return true;
+        } catch(PDOException $e) {
+            return $e->getMessage();
+        }
+    }
+
+    function setEmail(int $usuarioId, $valor = '')
+    {
+        $u = $this->getInfo($usuarioId);
+
+        $abc = $this->pdo->prepare('UPDATE login SET email = :email WHERE id = :id');
+        $abc->bindValue(':email', $valor, PDO::PARAM_STR);
+        $abc->bindValue(':id', $usuarioId, PDO::PARAM_INT);
+        try {
+            $abc->execute();
+            /**
+             * LOG DE ATIVIDADES
+             */
+            $log = new LOG();
+            $log->novo(LOG::TIPO_ATUALIZA, 'alterou o email de <i>'.$u->email.'</i> para <i>'.$valor.'</i>.');
+            $_SESSION['email'] = $valor;
             return true;
         } catch(PDOException $e) {
             return $e->getMessage();
@@ -118,8 +141,18 @@ class User extends Model {
 
     public function auth($username, $password)
     {
-        // Procura no banco de dados usuário e senha.
-        $abc = $this->pdo->prepare('SELECT * FROM '.$this->tabela.' WHERE `user` = :username AND `pass` = :pass');
+        // Verifica se é nome de usuário ou e-mail.
+        if(strpos($username, '@') !== FALSE) {
+            // Enviado endereço de e-mail.
+            // Procura no banco de dados e-mail e senha.
+            $abc = $this->pdo->prepare('SELECT * FROM '.$this->tabela.' WHERE `email` = :username AND `pass` = :pass');
+        } else {
+            // Enviado nome de usuário
+            // Procura no banco de dados usuário e senha.
+            $abc = $this->pdo->prepare('SELECT * FROM '.$this->tabela.' WHERE `user` = :username AND `pass` = :pass');
+        }
+
+        
         $abc->bindValue(':username', $username, PDO::PARAM_STR);
         $abc->bindValue(':pass', hash('sha256', $password), PDO::PARAM_STR);
 
@@ -130,7 +163,13 @@ class User extends Model {
 
             return $retorno;
         } else {
-            $abc = $this->pdo->prepare('UPDATE '.$this->tabela.' SET tentativas = tentativas + 1 WHERE `user` = :username');
+            if(strpos($username, '@') !== FALSE) {
+                // Email
+                $abc = $this->pdo->prepare('UPDATE '.$this->tabela.' SET tentativas = tentativas + 1 WHERE `email` = :username');
+            } else {
+                // Nome de usuário
+                $abc = $this->pdo->prepare('UPDATE '.$this->tabela.' SET tentativas = tentativas + 1 WHERE `user` = :username');
+            }
             $abc->bindValue(':username', $username, PDO::PARAM_STR);
             $abc->execute();
 
@@ -141,7 +180,7 @@ class User extends Model {
     public function confirmAuth(int $id)
     {
         // Atualiza quantidade de tentativas para 0 e incrementar quantidade de logins
-        $abc = $this->pdo->prepare('UPDATE '.$this->tabela.' SET `tentativas` = 0, `token`="", `qtd_login` = `qtd_login`+1 WHERE `id` = :id');
+        $abc = $this->pdo->prepare('UPDATE '.$this->tabela.' SET `tentativas` = 0, `token`="", `qtd_login` = `qtd_login`+1, `atualizado` = NOW() WHERE `id` = :id');
         $abc->bindValue(':id', $id, PDO::PARAM_INT);
 
         $abc->execute();

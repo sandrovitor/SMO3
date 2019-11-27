@@ -48,7 +48,7 @@
 					<a class="dropdown-item" href="{{$router->generate('campanha')}}"><span class="glyphicon glyphicon-briefcase"></span> Campanha de Pregação</a>
 				</div>
 			</li>
-			@if ($_SESSION['nivel'] == 5)
+			@if ($_SESSION['nivel'] >= 4)
 			<li class="nav-item">
 				<a class="nav-link" href="{{$router->generate('admIndex')}}"><span class="glyphicon glyphicon-cog"></span> Administração</a>
 			</li>

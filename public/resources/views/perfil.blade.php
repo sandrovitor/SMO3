@@ -138,6 +138,10 @@
                                 <input type="text" name="sobrenome" class="form-control form-control-sm" value="{{$user->sobrenome}}" maxlength="25" required>
                             </div>
                             <div class="form-group">
+                                <label>Endereço de e-mail</label>
+                                <input type="email" name="email" class="form-control form-control-sm" value="{{$user->email}}" maxlength="40">
+                            </div>
+                            <div class="form-group">
                                 <input type="hidden" name="id" value="{{$user->id}}">
                                 <button type="submit" class="btn btn-success btn-sm">Salvar</button>
                             </div>

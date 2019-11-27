@@ -605,6 +605,7 @@ class PageController
 
         $blade = new BladeOne(PageController::VIEWS,PageController::CACHE,BladeOne::MODE_AUTO);
         return $blade->run("homepage",array(
+            'smoMSG' => SessionMessage::ler(),
             'router' => PageController::router(),
             'uNome'=> $_SESSION['nome'],
             'anoCorrente' => date('Y'),
@@ -1069,16 +1070,25 @@ class PageController
     static function perfilSalvaDados(array $obj)
     {
         $user = new User($obj['id']);
+        $u = $user->info;
         //var_dump($user);
-        if($user->nome !== $obj['nome']) {
+
+        if($u->nome !== $obj['nome']) {
             $res = $user->setNome((int)$obj['id'], $obj['nome']);
             if($res !== true) {
                 return $res;
             }
         }
 
-        if($user->sobrenome !== $obj['sobrenome']) {
+        if($u->sobrenome !== $obj['sobrenome']) {
             $res = $user->setSobrenome((int)$obj['id'], $obj['sobrenome']);
+            if($res !== true) {
+                return $res;
+            }
+        }
+
+        if($u->email !== $obj['email']) {
+            $res = $user->setEmail((int)$obj['id'], $obj['email']);
             if($res !== true) {
                 return $res;
             }

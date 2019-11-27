@@ -96,7 +96,8 @@ class Auth
             
             $_SESSION['logado'] = true;
             $_SESSION['nome'] = $aut->nome;
-			$_SESSION['sobrenome'] = $aut->sobrenome;
+            $_SESSION['sobrenome'] = $aut->sobrenome;
+            $_SESSION['email'] = $aut->email;
 			$_SESSION['id'] = (int)$aut->id;
 			$_SESSION['user'] = $aut->user;
 			$_SESSION['nivel'] = (int)$aut->nivel;
@@ -150,6 +151,9 @@ class Auth
             // Caso o nível de acesso da SESSION seja inferior ao nível exigido, recebe mensagem de erro na página inicial.
             SessionMessage::novo(array('titulo' => 'Acesso negado!', 'texto' => 'Você não pode acessar a página <i>'.$_SERVER['REQUEST_URI'].'</i>, porque não possui o nível de acesso permitido. [Acesso nível: '.$nivel.'].', 'tipo'=> 'warning'));
             header('Location: /');
+
+            //exit('<div class="alert alert-danger"><strong><i class="fas fa-ban"></i> Acesso negado!</strong> Você não pode acessar a página <i>'.$_SERVER['REQUEST_URI'].'</i>, porque não possui o nível de acesso permitido. [Acesso nível: '.$nivel.'].</div>');
+            exit();
             return false;
         }
 

@@ -60,14 +60,14 @@
 		<small class="text-muted">Sistema de Mapas Online 3.0</small></h3>
 		<form method="post" action="login">
 			<div class="form-group textbox">
-				<input type="text" name="usuario" required value="{{$_SESSION['user'] or ''}}" @yield('afUser')>
+				<input type="text" name="usuario" placeholder="Nome de usuário ou e-mail" required value="{{$_SESSION['user'] or ''}}" @yield('afUser')>
 			</div>
 			<div class="form-group textbox">
-				<input type="password" name="senha" required @yield('afSenha')>
+				<input type="password" name="senha" placeholder="Senha" required @yield('afSenha')>
 				<button type="button" class="senha-util" data-target="" title="Mostrar senha" class="mostra_senha"><i class="fas fa-eye"></i></button>
 			</div>
 			<div class="form-group">
-				<input type="checkbox" name="save_user" value="yes" @yield('saveuserChecked')> Lembrar meu nome de usuário
+				<input type="checkbox" name="save_user" value="yes" {{$saveuserChecked}}> Lembrar meu nome de usuário
 			</div>
 			<div class="form-group">
 				<button type="submit">Entrar</button>
@@ -81,6 +81,5 @@
 @section('titulo', 'SMO ::: LOGIN')
 @section ('msgRetorno', $msgRetorno)
 @section ('loginFoto', $loginFoto)
-@section ('saveuserChecked', $saveuserChecked)
 @section ('afUser', $afUser)
 @section ('afSenha', $afSenha)

@@ -72,7 +72,9 @@
 						<option value="2">Nível 2 - Publicador</option>
 						<option value="3">Nível 3 - Pioneiro Regular</option>
 						<option value="4">Nível 4 - Ancião</option>
+						@if($_SESSION['nivel'] == 5)
 						<option value="5">Nível 5 - Administrador</option>
+						@endif
 					</select>
 				</div>
 				<div class="form-group">

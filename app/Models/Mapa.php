@@ -40,7 +40,7 @@ class Mapa extends Model {
 
     function listaMapas()
     {
-        $abc = $this->pdo->query('SELECT DISTINCT mapa.mapa, ter.bairro FROM mapa LEFT JOIN ter ON mapa.bairro_id = ter.id WHERE mapa.mapa <> "" ORDER BY mapa.mapa ASC');
+        $abc = $this->pdo->query('SELECT DISTINCT mapa.mapa, ter.bairro FROM mapa LEFT JOIN ter ON mapa.bairro_id = ter.id WHERE mapa.ativo = TRUE AND mapa.ocultar = FALSE AND mapa.mapa <> "" ORDER BY mapa.mapa ASC');
         if($abc->rowCount() > 0) {
             return $abc->fetchAll(PDO::FETCH_OBJ);
         }
